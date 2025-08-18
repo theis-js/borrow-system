@@ -1,0 +1,43 @@
+services:
+  #  borrow_system-frontend:
+  #    container_name: borrow_system-frontend
+  #    build: ./frontend
+  #    ports:
+  #      - "8001:8001"
+  #    environment:
+  #      - CHOKIDAR_USEPOLLING=true
+  #    volumes:
+  #      - ./frontend:/app
+  #      - /app/node_modules
+  #    restart: unless-stopped
+
+  borrow_system-backend:
+    container_name: borrow_system-backend
+    build: ./backend
+    ports:
+      - "8002:8002"
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_NAME: borrow_system
+    depends_on:
+      - mysql
+    volumes:
+      - ./backend:/borrow_system-backend
+    restart: unless-stopped
+
+  mysql:
+    container_name: borrow_system-mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: borrow_system
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3309:3306"
+
+volumes:
+  mysql-data:

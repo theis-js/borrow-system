@@ -1,13 +1,6 @@
 import React from "react";
-import { myToast } from "../utils/toastify";
 
 const Form3: React.FC = () => {
-  if (localStorage.getItem("borrowCode")) {
-    myToast("Ausleihe erfolgreich!", "success");
-  } else {
-    myToast("Ausleihe fehlgeschlagen!", "error");
-  }
-
   const code = localStorage.getItem("borrowCode") ?? "—";
 
   return (

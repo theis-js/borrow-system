@@ -11,6 +11,11 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.set("view engine", "ejs");
 app.use(express.json({ limit: "10mb" }));
 
+// Import API router
+import apiRouter from "./routes/api.js";
+
+app.use("/api", apiRouter);
+
 app.get("/", (req, res) => {
   res.render("index.ejs");
 });

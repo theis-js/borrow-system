@@ -1,7 +1,10 @@
 import React from "react";
 import Object from "./Object";
+import { useEffect } from "react";
 
 const Sidebar: React.FC = () => {
+  useEffect(() => {});
+
   const items = JSON.parse(localStorage.getItem("allItems") || "[]");
 
   return (
@@ -20,16 +23,16 @@ const Sidebar: React.FC = () => {
             d="M16.5 7.5V4.75A2.25 2.25 0 0 0 14.25 2.5h-4.5A2.25 2.25 0 0 0 7.5 4.75V7.5m9 0h-9m9 0v11.75A2.25 2.25 0 0 1 14.25 21.5h-4.5A2.25 2.25 0 0 1 7.5 19.25V7.5m9 0h-9"
           />
         </svg>
-        Ausleih-Übersicht
+        Geräte Übersicht
       </h2>
 
       <div className="space-y-4 flex-1 overflow-auto pr-1">
         {items.map((item: any) => (
           <div
-            key={item.id}
+            key={item.item_name}
             className="bg-white/80 rounded-xl p-4 shadow hover:shadow-md transition"
           >
-            <Object title={item.title} description={item.description} />
+            <Object title={item.item_name} description={"test"} />
           </div>
         ))}
       </div>

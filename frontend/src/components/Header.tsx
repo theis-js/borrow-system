@@ -1,4 +1,5 @@
 import React from "react";
+import Cookies from "js-cookie";
 
 const Header: React.FC = () => {
   return (
@@ -9,6 +10,15 @@ const Header: React.FC = () => {
       <p className="text-blue-500 mt-1 md:mt-2 text-base md:text-lg font-medium">
         Schnell und unkompliziert Equipment reservieren
       </p>
+      <button
+        onClick={() => {
+          Cookies.remove("token");
+          window.location.reload();
+        }}
+        className="text-blue-500 hover:underline"
+      >
+        Logout
+      </button>
     </header>
   );
 };

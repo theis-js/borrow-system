@@ -1,0 +1,30 @@
+import mysql from "mysql2";
+import dotenv from "dotenv";
+dotenv.config();
+
+// Ein einzelner Pool reicht; der zweite Pool benutzte fälschlich DB_TABLE als Datenbank
+const pool = mysql
+  .createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  })
+  .promise();
+
+export const loginFunc = async (username, password) => {
+  const [result] = await pool.query(
+    "SELECT * FROM users WHERE username = ? AND password = ?",
+    [username, password]
+  );
+  if (result.length > 0) return { success: true };
+  return { success: false };
+};
+
+export const getItemsFromDatabase = async () => {
+  const [result] = await pool.query("SELECT * FROM items");
+  if (result.length > 0) {
+    return { success: true, data: result };
+  }
+  return { success: false };
+};

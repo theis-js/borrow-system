@@ -1,283 +1,96 @@
-# Borrow System Backend API
+# Backend API docs
 
-Base URL: `http://localhost:8002`
+If you want to cooperate with me, or build something new with my backend API, feel free to reach out!
 
-- App server: [backend/server.js](backend/server.js)
-- Auth/JWT: [`authenticate`](backend/services/tokenService.js), [`generateToken`](backend/services/tokenService.js)
-- App API (JWT): [backend/routes/api.js](backend/routes/api.js)
-- Admin API (key): [backend/routes/apiV2.js](backend/routes/apiV2.js)
-- DB layer: [backend/services/database.js](backend/services/database.js)
-- Schema: [backend/scheme.sql](backend/scheme.sql)
+On this page you will learn how my API works.
 
-## Authentication
+## General information
 
-Most endpoints under `/api` require a Bearer JWT.
+When you look at my backend folder and file structure, you can see that I have two files called `API`. The first file called `api.js` is for my web frontend, because this file works together with my JWT token service.
 
-1. Login to get a token
+But I have built a second API. You can see the second API file in the same directory, the file is called `apiV2.js`.
 
-- POST /api/login
-- Body: `{ "username": string, "password": string }`
-- Response 200: `{ "message": "Login successful", "token": string }`
-- Response 401: `{ "message": "Invalid credentials" }`
+This is the file that you can use to build an API.
 
-Example:
-
-```sh
-curl -s -X POST http://localhost:8002/api/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"alice","password":"password1"}'
-```
-
-2. Use the token for all protected endpoints
-
-- Header: `Authorization: Bearer <token>`
-
-The middleware [`authenticate`](backend/services/tokenService.js) verifies tokens and attaches `req.user = { username, role }`.
-
-Environment:
-
-- SECRET_KEY: HMAC secret for JWT
-- DB_HOST, DB_USER, DB_PASSWORD, DB_NAME: MySQL connection
-- ADMIN_ID: Admin API key for /apiV2
-
-## Data model (items)
-
-Items (as returned by endpoints) have:
-
-- `id`: number
-- `item_name`: string
-- `can_borrow_role`: number (minimum role required)
-- `inSafe`: 0/1 (not in locker / in locker)
-
-See the full schema in [backend/scheme.sql](backend/scheme.sql).
+But first you have to get the Admin API key, stored in an `.env` file on my server.
 
 ---
 
-## App API (JWT) — /api
+## Authentication
 
-All routes below require `Authorization: Bearer <token>` unless noted.
+All endpoints require the Admin API key (`ADMIN_ID`) as a URL parameter.
 
-### GET /api/items
+Example: `/apiV2/items/{ADMIN_ID}`
 
-Returns items filtered by the user role:
+---
 
-- role == 0: all items
-- role > 0: items with `can_borrow_role >= role`
+## Current endpoints
 
-Implements: [`getItemsFromDatabase`](backend/services/database.js)
+### 1. Get All Items
 
-Response 200:
+**GET** `/apiV2/items/:key`
 
-```json
+Returns a list of all items and their details.
+
+#### Example Request
+
+```
+GET /apiV2/items/your_admin_key
+```
+
+#### Example Response
+
+```
 [
-  { "id": 1, "item_name": "Laptop", "can_borrow_role": 1, "inSafe": 1 },
+  {
+    "id": 1,
+    "item_name": "DJI 1er Mikro",
+    "can_borrow_role": "4",
+    "inSafe": 1
+  },
   ...
 ]
 ```
 
-Example:
+Each item has the following properties:
 
-```sh
-curl -s http://localhost:8002/api/items \
-  -H "Authorization: Bearer $TOKEN"
+- `id`: The unique identifier for the item.
+- `item_name`: The name of the item.
+- `can_borrow_role`: The role ID that is allowed to borrow the item.
+- `inSafe`: Indicates whether the item is currently in the locker (1) or not (0).
+
+---
+
+### 2. Change Item Safe State
+
+**POST** `/apiV2/controlInSafe/:key/:itemId/:state`
+
+Updates the `inSafe` state of an item (whether it is in the locker).
+
+- `state` must be `"1"` (in safe) or `"0"` (not in safe).
+
+#### Example Request
+
+```
+POST /apiV2/controlInSafe/your_admin_key/5/0
 ```
 
-### GET /api/loans
+#### Example Response
 
-Returns all loans.
-
-Implements: [`getLoansFromDatabase`](backend/services/database.js)
-
-Response 200:
-
-```json
-[
-  {
-    "id": 1,
-    "username": "alice",
-    "loan_code": 1001,
-    "start_date": "2025-08-01T09:00:00.000Z",
-    "end_date": "2025-08-10T09:00:00.000Z",
-    "returned_date": null,
-    "created_at": "2025-08-01T09:00:00.000Z",
-    "loaned_items_id": [1, 2],
-    "loaned_items_name": ["Laptop", "Projector"]
-  }
-]
 ```
-
-### GET /api/userLoans
-
-Returns loans for the authenticated user.
-
-Implements: [`getUserLoansFromDatabase`](backend/services/database.js)
-
-Response 200:
-
-- On success: `Loan[]`
-- If none found: `"No loans found for this user"` (string)
-
-Tip: Treat a non-array response as “no loans”.
-
-### DELETE /api/deleteLoan/:id
-
-Deletes a loan by numeric ID.
-
-Implements: [`deleteLoanFromDatabase`](backend/services/database.js)
-
-- 200: `{ "message": "Loan deleted successfully" }`
-- 500: `{ "message": "Failed to delete loan" }`
-
-Example:
-
-```sh
-curl -s -X DELETE http://localhost:8002/api/deleteLoan/42 \
-  -H "Authorization: Bearer $TOKEN"
-```
-
-### POST /api/borrowableItems
-
-Returns items available in the given time range (excludes items with overlapping loans). Also enforces role filtering.
-
-Implements: [`getBorrowableItemsFromDatabase`](backend/services/database.js)
-
-Request body:
-
-```json
-{ "startDate": "2025-08-01T09:00:00Z", "endDate": "2025-08-02T09:00:00Z" }
-```
-
-- 200: `Item[]`
-- 400: `{ "message": "startDate and endDate are required" }`
-- 500: `{ "message": "Failed to fetch borrowable items" }`
-
-Example:
-
-```sh
-curl -s -X POST http://localhost:8002/api/borrowableItems \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"startDate":"2025-08-01T09:00:00Z","endDate":"2025-08-02T09:00:00Z"}'
-```
-
-### POST /api/createLoan
-
-Creates a loan for the authenticated user.
-
-Implements: [`createLoanInDatabase`](backend/services/database.js)
-
-Request body:
-
-```json
 {
-  "items": [1, 2, 3], // array of item IDs (required)
-  "startDate": "2025-08-01T09:00:00Z", // required
-  "endDate": "2025-08-02T09:00:00Z" // required
+  "message": "Item state updated successfully"
 }
 ```
 
-Notes:
+---
 
-- IDs are coerced to numbers; invalid entries are dropped.
-- Date range must be valid and `startDate < endDate`.
-- Overlaps with existing loans cause 409 Conflict.
-- On success, returns the generated `loanCode`.
+## Error Handling
 
-Responses:
-
-- 201:
-
-```json
-{
-  "message": "Loan created successfully",
-  "loanId": 123,
-  "loanCode": 1007
-}
-```
-
-- 400: `{ "message": "Items array is required" | "No valid item IDs provided" | "Invalid date range" | ... }`
-- 409: `{ "message": "Items not available in the selected period" }`
-- 500: `{ "message": "Failed to create loan" }`
-
-Example:
-
-```sh
-curl -s -X POST http://localhost:8002/api/createLoan \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"items":[1,2],"startDate":"2025-08-01T09:00:00Z","endDate":"2025-08-02T09:00:00Z"}'
-```
+- `403 Forbidden`: Invalid or missing API key.
+- `400 Bad Request`: Invalid parameters (e.g., wrong state value).
+- `500 Internal Server Error`: Database or server error.
 
 ---
 
-## Admin API — /apiV2
-
-These endpoints are protected by a static admin key in the path. Set `ADMIN_ID` in environment. No JWT required.
-
-### GET /apiV2/items/:key
-
-Returns all items (no role filtering).
-
-Implements: [`getItemsFromDatabaseV2`](backend/services/database.js)
-
-- 200: `Item[]`
-- 403: `{ "message": "Access denied" }`
-
-Example:
-
-```sh
-curl -s http://localhost:8002/apiV2/items/$ADMIN_ID
-```
-
-### POST /apiV2/controlInSafe/:key/:itemId/:state
-
-Updates `inSafe` state (0 or 1) for an item by ID.
-
-Implements: [`changeInSafeStateV2`](backend/services/database.js)
-
-- `state`: `"0"` or `"1"`
-- 200: `{ "message": "Item state updated successfully" }`
-- 400: `{ "message": "Invalid state value" }`
-- 403: `{ "message": "Access denied" }`
-- 500: `{ "message": "Failed to update item state" }`
-
-Example:
-
-```sh
-curl -s -X POST http://localhost:8002/apiV2/controlInSafe/$ADMIN_ID/5/0
-```
-
----
-
-## Error handling summary
-
-- 400 Bad Request: invalid payloads or missing fields
-- 401 Unauthorized: missing/invalid JWT (for `/api` routes)
-- 403 Forbidden: wrong admin key (for `/apiV2` routes)
-- 409 Conflict: loan overlaps with selected period
-- 500 Internal Server Error: unexpected server/database errors
-
----
-
-## Running locally
-
-With Docker Compose: [docker-compose.yml](docker-compose.yml)
-
-- Backend: http://localhost:8002 (mounted from [backend](backend))
-- MySQL: root password from `.env` as `DB_PASSWORD`, port 3309 on host
-- Seed schema/data: import [backend/scheme.sql](backend/scheme.sql) into the DB
-
-Environment required by backend:
-
-- `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
-- `SECRET_KEY`
-- `ADMIN_ID`
-
----
-
-References:
-
-- App routes: [backend/routes/api.js](backend/routes/api.js)
-  - [`loginFunc`](backend/services/database.js), [`getItemsFromDatabase`](backend/services/database.js), [`getLoansFromDatabase`](backend/services/database.js), [`getUserLoansFromDatabase`](backend/services/database.js), [`deleteLoanFromDatabase`](backend/services/database.js), [`getBorrowableItemsFromDatabase`](backend/services/database.js), [`createLoanInDatabase`](backend/services/database.js)
-- Admin routes: [backend/routes/apiV2.js](backend/routes/apiV2.js)
-- Auth: [`authenticate`](backend/services/tokenService.js),
+If you have questions or want to collaborate, please reach out to me!

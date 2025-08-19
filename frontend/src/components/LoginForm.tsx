@@ -15,7 +15,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
     e.preventDefault();
     const result = await loginUser(username, password);
     if (result.success) {
-      myToast("Login successful!", "success");
       onLogin();
     } else {
       myToast("Login failed. Please check your credentials.", "error");

@@ -6,14 +6,17 @@ import Form2 from "./components/Form2";
 import Form3 from "./components/Form3";
 import LoginForm from "./components/LoginForm";
 import Cookies from "js-cookie";
-import { ToastContainer } from "react-toastify";
+import { fetchAllData, ALL_ITEMS_UPDATED_EVENT } from "./utils/fetchData";
+import { myToast } from "./utils/toastify";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (Cookies.get("token")) {
+    const token = Cookies.get("token");
+    if (token) {
       setIsLoggedIn(true);
+      fetchAllData(token);
     }
 
     localStorage.setItem("borrowableItems", JSON.stringify([]));
@@ -21,8 +24,17 @@ function App() {
   }, []);
 
   // Mock flow without real logic: show the three sections stacked for design preview
+  const handleLogout = () => {
+    Cookies.remove("token");
+    localStorage.removeItem("allItems");
+    // Let listeners refresh from empty state
+    window.dispatchEvent(new Event(ALL_ITEMS_UPDATED_EVENT));
+    myToast("Logged out successfully!", "success");
+    setIsLoggedIn(false);
+  };
+
   return isLoggedIn ? (
-    <Layout>
+    <Layout onLogout={handleLogout}>
       <div className="space-y-10">
         <Form1 />
         <div className="h-px bg-blue-100" />
@@ -32,22 +44,7 @@ function App() {
       </div>
     </Layout>
   ) : (
-    <>
-      <LoginForm onLogin={() => setIsLoggedIn(true)} />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="light"
-        className="!z-50"
-      />
-    </>
+    <LoginForm onLogin={() => setIsLoggedIn(true)} />
   );
 }
 

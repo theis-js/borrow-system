@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Object from "./Object";
-import { useEffect } from "react";
+import { ALL_ITEMS_UPDATED_EVENT } from "../utils/fetchData";
 
 const Sidebar: React.FC = () => {
-  useEffect(() => {});
+  const [items, setItems] = useState<any[]>(
+    JSON.parse(localStorage.getItem("allItems") || "[]")
+  );
 
-  const items = JSON.parse(localStorage.getItem("allItems") || "[]");
+  useEffect(() => {
+    const handler = () => {
+      const next = JSON.parse(localStorage.getItem("allItems") || "[]");
+      setItems(next);
+    };
+    // Update immediately in case data changed before this mounted
+    handler();
+    window.addEventListener(ALL_ITEMS_UPDATED_EVENT, handler);
+    return () => window.removeEventListener(ALL_ITEMS_UPDATED_EVENT, handler);
+  }, []);
 
   return (
     <aside className="w-full md:w-80 md:min-h-screen bg-white/90 backdrop-blur md:border-r border-blue-100 shadow-xl flex flex-col p-6">

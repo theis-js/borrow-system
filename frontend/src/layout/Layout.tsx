@@ -1,14 +1,14 @@
 import React from "react";
 import "../App.css";
-import { ToastContainer } from "react-toastify";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 
 type LayoutProps = {
   children: React.ReactNode;
+  onLogout: () => void;
 };
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
   return (
     <div className="min-h-screen flex bg-gradient-to-r from-blue-50 via-white to-blue-100">
       {/* Sidebar */}
@@ -19,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Main */}
       <main className="flex-1 flex flex-col items-center py-10 px-4 md:py-14">
         <div className="w-full max-w-3xl">
-          <Header />
+          <Header onLogout={onLogout} />
         </div>
         <div className="w-full max-w-3xl bg-white/90 shadow-2xl rounded-3xl p-6 md:p-10 ring-1 ring-blue-100">
           {children}
@@ -32,20 +32,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Sidebar />
         </div>
       </div>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="light"
-        className="!z-50"
-      />
     </div>
   );
 };

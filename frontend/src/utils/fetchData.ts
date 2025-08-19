@@ -1,6 +1,9 @@
 import Cookies from "js-cookie";
 import { myToast } from "./toastify";
 
+// Event name used to notify the app when the list of items has been updated
+export const ALL_ITEMS_UPDATED_EVENT = "allItemsUpdated";
+
 export const fetchAllData = async (token: string | undefined) => {
   if (!token) return;
   try {
@@ -19,6 +22,8 @@ export const fetchAllData = async (token: string | undefined) => {
 
     const data = await response.json();
     localStorage.setItem("allItems", JSON.stringify(data));
+    // Notify listeners (e.g., Sidebar) that items have been updated
+    window.dispatchEvent(new Event(ALL_ITEMS_UPDATED_EVENT));
   } catch (error) {
     myToast("An error occurred", "error");
   }

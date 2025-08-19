@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Trash, ArrowLeftRight } from "lucide-react";
 import { handleDeleteLoan } from "../utils/userHandler";
 
 type Loan = {
@@ -31,22 +32,6 @@ const readUserLoansFromStorage = (): Loan[] => {
     return [];
   }
 };
-
-const TrashIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    {...props}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6 7h12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m1 0v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7m3 4v6m4-6v6"
-    />
-  </svg>
-);
 
 const Form4: React.FC = () => {
   const [userLoans, setUserLoans] = useState<Loan[]>(() =>
@@ -131,7 +116,7 @@ const Form4: React.FC = () => {
                 aria-label="Ausleihe löschen"
                 className="flex items-center justify-center rounded-md p-2 text-slate-600 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/30"
               >
-                <TrashIcon className="h-5 w-5" />
+                <Trash className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -204,13 +189,20 @@ const Form4: React.FC = () => {
                       aria-label="Ausleihe löschen"
                       className="inline-flex items-center rounded-md p-2 text-slate-600 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/30"
                     >
-                      <TrashIcon className="h-4 w-4" />
+                      <Trash className="h-4 w-4" />
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+        {/* Scroll hint */}
+        <div className="border-t border-gray-100 px-4 py-2">
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <ArrowLeftRight className="h-4 w-4 text-gray-400" />
+            <span>Hinweis: Horizontal scrollen, um alle Spalten zu sehen.</span>
+          </div>
         </div>
       </div>
     </div>

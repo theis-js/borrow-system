@@ -1,5 +1,13 @@
 import express from "express";
-import { loginFunc, getItemsFromDatabase } from "../services/database.js";
+import {
+  loginFunc,
+  getItemsFromDatabase,
+  getLoansFromDatabase,
+  getUserLoansFromDatabase,
+  deleteLoanFromDatabase,
+  getBorrowableItemsFromDatabase,
+  createLoanInDatabase,
+} from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
 
@@ -24,6 +32,116 @@ router.get("/items", authenticate, async (req, res) => {
     res.status(200).json(result.data);
   } else {
     res.status(500).json({ message: "Failed to fetch items" });
+  }
+});
+
+router.get("/loans", authenticate, async (req, res) => {
+  const result = await getLoansFromDatabase();
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json({ message: "Failed to fetch loans" });
+  }
+});
+
+router.get("/userLoans", authenticate, async (req, res) => {
+  const result = await getUserLoansFromDatabase(req.user.username);
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json({ message: "Failed to fetch user loans" });
+  }
+});
+
+router.delete("/deleteLoan/:id", authenticate, async (req, res) => {
+  const loanId = req.params.id;
+  const result = await deleteLoanFromDatabase(loanId);
+  if (result.success) {
+    res.status(200).json({ message: "Loan deleted successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to delete loan" });
+  }
+});
+
+router.post("/borrowableItems", authenticate, async (req, res) => {
+  const { startDate, endDate } = req.body || {};
+  if (!startDate || !endDate) {
+    return res
+      .status(400)
+      .json({ message: "startDate and endDate are required" });
+  }
+
+  const result = await getBorrowableItemsFromDatabase(
+    startDate,
+    endDate,
+    req.user.role
+  );
+  if (result.success) {
+    // return the array directly for consistency with /items
+    return res.status(200).json(result.data);
+  } else {
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch borrowable items" });
+  }
+});
+
+router.post("/createLoan", authenticate, async (req, res) => {
+  try {
+    const { items, startDate, endDate } = req.body || {};
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: "Items array is required" });
+    }
+
+    // If dates are not provided, default to now .. +7 days
+    const start =
+      startDate ?? new Date().toISOString().slice(0, 19).replace("T", " ");
+    const end =
+      endDate ??
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " ");
+
+    // Coerce item IDs to numbers and filter invalids
+    const itemIds = items
+      .map((v) => Number(v))
+      .filter((n) => Number.isFinite(n));
+
+    if (itemIds.length === 0) {
+      return res.status(400).json({ message: "No valid item IDs provided" });
+    }
+
+    const result = await createLoanInDatabase(
+      req.user.username,
+      start,
+      end,
+      itemIds
+    );
+
+    if (result.success) {
+      return res.status(201).json({
+        message: "Loan created successfully",
+        loanId: result.data.id,
+        loanCode: result.data.loan_code,
+      });
+    }
+
+    if (result.code === "CONFLICT") {
+      return res
+        .status(409)
+        .json({ message: "Items not available in the selected period" });
+    }
+
+    if (result.code === "BAD_REQUEST") {
+      return res.status(400).json({ message: result.message });
+    }
+
+    return res.status(500).json({ message: "Failed to create loan" });
+  } catch (err) {
+    console.error("createLoan error:", err);
+    return res.status(500).json({ message: "Failed to create loan" });
   }
 });
 

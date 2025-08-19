@@ -1,10 +1,25 @@
 import React from "react";
+import Cookies from "js-cookie";
+import { getBorrowableItems } from "../utils/fetchData";
 
 const Form1: React.FC = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold text-blue-700">1. Zeitraum wählen</h2>
-      <form className="space-y-4">
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const form = e.currentTarget as HTMLFormElement;
+          const fd = new FormData(form);
+          const start = (fd.get("startDate") as string) || "";
+          const end = (fd.get("endDate") as string) || "";
+          Cookies.set("startDate", start);
+          Cookies.set("endDate", end);
+          getBorrowableItems();
+          console.log("Zeitraum erfolgreich gesetzt!");
+        }}
+      >
         <div>
           <label
             htmlFor="startDate"
@@ -15,6 +30,7 @@ const Form1: React.FC = () => {
           <input
             type="datetime-local"
             id="startDate"
+            name="startDate"
             className="w-full border border-blue-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none bg-white/70"
           />
         </div>
@@ -28,6 +44,7 @@ const Form1: React.FC = () => {
           <input
             type="datetime-local"
             id="endDate"
+            name="endDate"
             className="w-full border border-blue-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none bg-white/70"
           />
         </div>

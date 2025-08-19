@@ -2,7 +2,6 @@ import mysql from "mysql2";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Ein einzelner Pool reicht; der zweite Pool benutzte fälschlich DB_TABLE als Datenbank
 const pool = mysql
   .createPool({
     host: process.env.DB_HOST,
@@ -21,6 +20,14 @@ export const loginFunc = async (username, password) => {
   return { success: false };
 };
 
+export const getItemsFromDatabaseV2 = async () => {
+  const [rows] = await pool.query("SELECT * FROM items;");
+  if (rows.length > 0) {
+    return { success: true, data: rows };
+  }
+  return { success: false };
+};
+
 export const getItemsFromDatabase = async (role) => {
   const sql =
     role == 0
@@ -34,4 +41,3 @@ export const getItemsFromDatabase = async (role) => {
   }
   return { success: false };
 };
-

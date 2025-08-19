@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import env from "dotenv";
+import apiRouter from "./routes/api.js";
+import apiRouterV2 from "./routes/apiV2.js";
 env.config();
 const app = express();
 const port = 8002;
@@ -11,10 +13,8 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.set("view engine", "ejs");
 app.use(express.json({ limit: "10mb" }));
 
-// Import API router
-import apiRouter from "./routes/api.js";
-
 app.use("/api", apiRouter);
+app.use("/apiV2", apiRouterV2);
 
 app.get("/", (req, res) => {
   res.render("index.ejs");

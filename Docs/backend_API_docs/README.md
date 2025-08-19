@@ -24,6 +24,16 @@ Example: `/apiV2/items/{ADMIN_ID}`
 
 ---
 
+## URL
+
+- The frontend is currently running on `https://insta.the1s.de`.
+
+- The backend is currently running on `https://backend.insta.the1s.de`.
+
+You can see the status of this and all my other services at `https://status.the1s.de`.
+
+---
+
 ## Current endpoints
 
 ### 1. Get All Items
@@ -81,9 +91,9 @@ POST /apiV2/controlInSafe/your_admin_key/5/0
 {}
 ```
 
-*An empty object means, that the operation was successful and no further information is returned.*
+_An empty object means, that the operation was successful and no further information is returned._
 
-*You also get an http 2xx status code.*
+_You also get an http 2xx status code._
 
 ---
 
@@ -107,9 +117,9 @@ POST /apiV2/setReturnDate/your_admin_key/123456
 {}
 ```
 
-*An empty object means, that the operation was successful and no further information is returned.*
+_An empty object means, that the operation was successful and no further information is returned._
 
-*You also get an http 2xx status code.*
+_You also get an http 2xx status code._
 
 ---
 
@@ -133,9 +143,9 @@ POST /apiV2/setTakeDate/your_admin_key/123456
 {}
 ```
 
-*An empty object means, that the operation was successful and no further information is returned.*
+_An empty object means, that the operation was successful and no further information is returned._
 
-*You also get an http 2xx status code.*
+_You also get an http 2xx status code._
 
 ---
 

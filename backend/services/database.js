@@ -39,6 +39,28 @@ export const changeInSafeStateV2 = async (itemId, state) => {
   return { success: false };
 };
 
+export const setReturnDateV2 = async (loanCode) => {
+  const [result] = await pool.query(
+    "UPDATE loans SET returned_date = NOW() WHERE loan_code = ?",
+    [loanCode]
+  );
+  if (result.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};
+
+export const setTakeDateV2 = async (loanCode) => {
+  const [result] = await pool.query(
+    "UPDATE loans SET take_date = NOW() WHERE loan_code = ?",
+    [loanCode]
+  );
+  if (result.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};
+
 export const getItemsFromDatabase = async (role) => {
   const sql =
     role == 0

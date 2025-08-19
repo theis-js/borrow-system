@@ -78,9 +78,51 @@ POST /apiV2/controlInSafe/your_admin_key/5/0
 #### Example Response
 
 ```
-{
-  "message": "Item state updated successfully"
-}
+{}
+```
+
+---
+
+### 3. Set Return Date
+
+**POST** `/apiV2/setReturnDate/:key/:loan_code`
+
+Sets the `returned_date` of a loan to the current server time.
+
+- `loan_code`: The unique code of the loan.
+
+#### Example Request
+
+```
+POST /apiV2/setReturnDate/your_admin_key/123456
+```
+
+#### Example Response
+
+```
+{}
+```
+
+---
+
+### 4. Set Take Date
+
+**POST** `/apiV2/setTakeDate/:key/:loan_code`
+
+Sets the `take_date` of a loan to the current server time.
+
+- `loan_code`: The unique code of the loan.
+
+#### Example Request
+
+```
+POST /apiV2/setTakeDate/your_admin_key/123456
+```
+
+#### Example Response
+
+```
+{}
 ```
 
 ---

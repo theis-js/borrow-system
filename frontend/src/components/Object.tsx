@@ -7,9 +7,9 @@ type ObjectProps = {
 
 const Object: React.FC<ObjectProps> = ({ title, description }) => {
   return (
-    <div>
-      <h3 className="text-sm font-semibold text-blue-800">{title}</h3>
-      <p className="text-xs text-blue-500/80 line-clamp-2">{description}</p>
+    <div className="min-w-0">
+      <h3 className="text-sm font-semibold text-slate-900 truncate">{title}</h3>
+      <p className="text-xs text-slate-600 line-clamp-2">{description}</p>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Trash, ArrowLeftRight } from "lucide-react";
 import { handleDeleteLoan } from "../utils/userHandler";
 
 type Loan = {
@@ -33,12 +32,27 @@ const readUserLoansFromStorage = (): Loan[] => {
   }
 };
 
+const TrashIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M6 7h12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m1 0v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7m3 4v6m4-6v6"
+    />
+  </svg>
+);
+
 const Form4: React.FC = () => {
   const [userLoans, setUserLoans] = useState<Loan[]>(() =>
     readUserLoansFromStorage()
   );
 
-  // Keep in sync if localStorage changes (e.g., other tabs or parts of the app)
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key === "userLoans") {
@@ -60,7 +74,7 @@ const Form4: React.FC = () => {
 
   if (userLoans.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 text-center text-gray-600 shadow-sm">
+      <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-600 shadow-sm">
         <p>Keine Ausleihen gefunden.</p>
       </div>
     );
@@ -68,71 +82,117 @@ const Form4: React.FC = () => {
 
   return (
     <div className="space-y-3">
-      <p className="text-lg font-semibold tracking-tight text-gray-900">
+      <p className="text-lg font-semibold tracking-tight text-slate-900">
         Meine Ausleihen
       </p>
-      <p className="text-sm text-gray-600">
-        Wenn du eine Ausleihe ändern oder löschen möchtest, klicke auf das
-        Papierkorb-Symbol.
+      <p className="text-sm text-slate-600">
+        Tippe auf das Papierkorb-Symbol, um eine Ausleihe zu löschen.
       </p>
 
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+      {/* Mobile: cards */}
+      <div className="space-y-2 sm:hidden">
+        {userLoans.map((loan) => (
+          <div
+            key={loan.id}
+            className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-sm font-semibold text-slate-900">
+                  Leihcode: <span className="font-mono">{loan.loan_code}</span>
+                </div>
+                <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-700">
+                  <div>
+                    <span className="text-slate-500">Start:</span>{" "}
+                    {formatDate(loan.start_date)}
+                  </div>
+                  <div>
+                    <span className="text-slate-500">Ende:</span>{" "}
+                    {formatDate(loan.end_date)}
+                  </div>
+                  <div>
+                    <span className="text-slate-500">Abgeholt:</span>{" "}
+                    {formatDate(loan.take_date)}
+                  </div>
+                  <div>
+                    <span className="text-slate-500">Zurück:</span>{" "}
+                    {formatDate(loan.returned_date)}
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-slate-700">
+                  <span className="text-slate-500">Gegenstände:</span>{" "}
+                  {Array.isArray(loan.loaned_items_name)
+                    ? loan.loaned_items_name.join(", ")
+                    : "-"}
+                </div>
+              </div>
+              <button
+                onClick={() => onDelete(loan.id)}
+                aria-label="Ausleihe löschen"
+                className="flex items-center justify-center rounded-md p-2 text-slate-600 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/30"
+              >
+                <TrashIcon className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop: table */}
+      <div className="hidden sm:block rounded-xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="table-auto min-w-full text-sm text-gray-700">
-            <thead className="sticky top-0 z-10 bg-gray-50">
-              <tr className="border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+          <table className="table-auto min-w-full text-sm text-slate-700">
+            <thead className="sticky top-0 z-10 bg-slate-50">
+              <tr className="border-b border-slate-200">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Leihcode
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Start
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Ende
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Abgeholt
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Zurückgegeben
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Erstellt
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Gegenstände
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Aktionen
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-100">
               {userLoans.map((loan) => (
-                <tr
-                  key={loan.id}
-                  className="odd:bg-white even:bg-gray-50 hover:bg-gray-100/60 transition-colors"
-                >
-                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
+                <tr key={loan.id} className="odd:bg-white even:bg-slate-50">
+                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
                     {loan.loan_code}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
                     {formatDate(loan.start_date)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
                     {formatDate(loan.end_date)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
                     {formatDate(loan.take_date)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
                     {formatDate(loan.returned_date)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
                     {formatDate(loan.created_at)}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <div className="text-gray-900 whitespace-nowrap max-w-none">
+                    <div className="text-slate-900">
                       {Array.isArray(loan.loaned_items_name)
                         ? loan.loaned_items_name.join(", ")
                         : "-"}
@@ -142,23 +202,15 @@ const Form4: React.FC = () => {
                     <button
                       onClick={() => onDelete(loan.id)}
                       aria-label="Ausleihe löschen"
-                      className="inline-flex items-center rounded-md p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                      className="inline-flex items-center rounded-md p-2 text-slate-600 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/30"
                     >
-                      <Trash className="h-4 w-4" />
+                      <TrashIcon className="h-4 w-4" />
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-
-        {/* Scroll hint */}
-        <div className="border-t border-gray-100 px-4 py-2">
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <ArrowLeftRight className="h-4 w-4 text-gray-400" />
-            <span>Hinweis: Horizontal scrollen, um alle Spalten zu sehen.</span>
-          </div>
         </div>
       </div>
     </div>

@@ -22,14 +22,12 @@ function App() {
     localStorage.setItem("borrowableItems", JSON.stringify([]));
   }, []);
 
-  // Mock flow without real logic: show the three sections stacked for design preview
   const handleLogout = () => {
     Cookies.remove("token");
     localStorage.removeItem("allItems");
     localStorage.removeItem("allLoans");
     localStorage.removeItem("userLoans");
     localStorage.removeItem("borrowableItems");
-    // Let listeners refresh from empty state
     window.dispatchEvent(new Event(ALL_ITEMS_UPDATED_EVENT));
     myToast("Logged out successfully!", "success");
     setIsLoggedIn(false);
@@ -37,11 +35,11 @@ function App() {
 
   return isLoggedIn ? (
     <Layout onLogout={handleLogout}>
-      <div className="space-y-10">
+      <div className="space-y-6">
         <Form1 />
-        <div className="h-px bg-blue-100" />
+        <div className="h-px bg-slate-200" />
         <Form2 />
-        <div className="h-px bg-blue-100" />
+        <div className="h-px bg-slate-200" />
         <Form4 />
       </div>
     </Layout>

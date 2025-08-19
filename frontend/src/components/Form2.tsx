@@ -1,7 +1,6 @@
 import React from "react";
 import Cookies from "js-cookie";
-import { createLoan } from "../utils/userHandler";
-import { addToRemove, rmFromRemove } from "../utils/userHandler";
+import { createLoan, addToRemove, rmFromRemove } from "../utils/userHandler";
 import { BORROWABLE_ITEMS_UPDATED_EVENT } from "../utils/fetchData";
 
 interface BorrowItem {
@@ -59,16 +58,13 @@ function useBorrowableItems() {
   }, []);
 
   React.useEffect(() => {
-    // Initial read
     readFromStorage();
 
-    // Cross-tab updates
     const onStorage = (e: StorageEvent) => {
       if (e.key === LOCAL_STORAGE_KEY) readFromStorage();
     };
     window.addEventListener("storage", onStorage);
 
-    // Same-tab updates via Custom Event
     const onBorrowableUpdated = () => readFromStorage();
     window.addEventListener(
       BORROWABLE_ITEMS_UPDATED_EVENT,
@@ -91,58 +87,85 @@ const Form2: React.FC = () => {
   const items = useBorrowableItems();
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-bold text-blue-700">
+    <div className="space-y-4">
+      <h2 className="text-lg sm:text-xl font-bold text-slate-900">
         2. Gegenstand auswählen
       </h2>
 
       {items.length === 0 ? (
-        <div className="text-red-600 font-medium text-center bg-red-50 border border-red-200 rounded-xl p-4">
+        <div className="text-slate-700 text-center bg-slate-100 border border-slate-200 rounded-xl p-4">
           Keine Gegenstände verfügbar für diesen Zeitraum.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-blue-100 shadow-sm bg-white/80">
-          <table className="min-w-full divide-y divide-blue-100">
-            <thead className="bg-blue-50/60">
-              <tr>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-blue-700">
-                  Gegenstand
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-blue-700">
-                  <input type="checkbox" className="invisible" />
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-blue-50">
-              {items.map((item) => (
-                <tr
-                  key={item.id}
-                  className="hover:bg-blue-50/40 transition-colors"
-                >
-                  <td className="px-4 py-2 text-sm font-medium text-blue-900">
+        <>
+          {/* Mobile: card list */}
+          <div className="sm:hidden space-y-2">
+            {items.map((item) => (
+              <label
+                key={item.id}
+                htmlFor={`item-${item.id}`}
+                className="flex items-center justify-between gap-3 p-3 rounded-lg border border-slate-200 bg-white shadow-sm"
+              >
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-slate-900 truncate">
                     {item.item_name}
-                  </td>
-                  <td className="px-4 py-2 text-sm text-blue-700">
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          addToRemove(item.id);
-                        } else {
-                          rmFromRemove(item.id);
-                        }
-                      }}
-                      id={`item-${item.id}`}
-                    />
-                  </td>
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {item.inSafe ? "Verfügbar" : "Nicht im Schließfach"}
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id={`item-${item.id}`}
+                  onChange={(e) => {
+                    if (e.target.checked) addToRemove(item.id);
+                    else rmFromRemove(item.id);
+                  }}
+                  className="h-5 w-5 accent-indigo-600"
+                />
+              </label>
+            ))}
+          </div>
+
+          {/* Desktop: table */}
+          <div className="hidden sm:block overflow-x-auto rounded-xl border border-slate-200 shadow-sm bg-white">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-slate-700">
+                    Gegenstand
+                  </th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-slate-700">
+                    <input type="checkbox" className="invisible" />
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {items.map((item) => (
+                  <tr key={item.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-2 text-sm font-medium text-slate-900">
+                      {item.item_name}
+                    </td>
+                    <td className="px-4 py-2 text-sm text-slate-700 text-right">
+                      <input
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e.target.checked) addToRemove(item.id);
+                          else rmFromRemove(item.id);
+                        }}
+                        id={`item-${item.id}`}
+                        className="h-4 w-4 accent-indigo-600"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
 
-      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row gap-3 pt-1">
         <button
           onClick={() => {
             createLoan(
@@ -151,7 +174,7 @@ const Form2: React.FC = () => {
             );
           }}
           type="button"
-          className="flex-1 sm:flex-none sm:w-40 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-xl shadow transition"
+          className="w-full sm:w-44 bg-indigo-600 text-white font-bold py-2.5 px-4 rounded-lg shadow hover:bg-indigo-700 transition"
         >
           Ausleihen
         </button>

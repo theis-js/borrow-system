@@ -6,20 +6,24 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   return (
-    <header className="mb-6 md:mb-10">
-      <h1 className="text-3xl md:text-4xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">
-        Gegenstand ausleihen
-      </h1>
-      <p className="text-blue-500 mt-1 md:mt-2 text-base md:text-lg font-medium">
-        Schnell und unkompliziert Equipment reservieren
-      </p>
-      <button
-        type="button"
-        onClick={onLogout}
-        className="text-blue-500 hover:underline"
-      >
-        Logout
-      </button>
+    <header className="mb-4 sm:mb-6">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Gegenstand ausleihen
+          </h1>
+          <p className="text-slate-600 mt-1 text-sm sm:text-base">
+            Schnell und unkompliziert Equipment reservieren
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onLogout}
+          className="h-9 px-3 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 transition"
+        >
+          Logout
+        </button>
+      </div>
     </header>
   );
 };

@@ -57,7 +57,7 @@ Each item has the following properties:
 - `id`: The unique identifier for the item.
 - `item_name`: The name of the item.
 - `can_borrow_role`: The role ID that is allowed to borrow the item.
-- `inSafe`: Indicates whether the item is currently in the locker (1) or not (0).
+- `inSafe`: Indicates whether the item is currently in the locker (1) or not (0). This variable/state can change over time.
 
 ---
 
@@ -81,6 +81,10 @@ POST /apiV2/controlInSafe/your_admin_key/5/0
 {}
 ```
 
+*An empty object means, that the operation was successful and no further information is returned.*
+
+*You also get an http 2xx status code.*
+
 ---
 
 ### 3. Set Return Date
@@ -103,6 +107,10 @@ POST /apiV2/setReturnDate/your_admin_key/123456
 {}
 ```
 
+*An empty object means, that the operation was successful and no further information is returned.*
+
+*You also get an http 2xx status code.*
+
 ---
 
 ### 4. Set Take Date
@@ -124,6 +132,10 @@ POST /apiV2/setTakeDate/your_admin_key/123456
 ```
 {}
 ```
+
+*An empty object means, that the operation was successful and no further information is returned.*
+
+*You also get an http 2xx status code.*
 
 ---
 

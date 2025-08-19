@@ -78,7 +78,7 @@ const Form4: React.FC = () => {
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm text-gray-700">
+          <table className="table-auto min-w-full text-sm text-gray-700">
             <thead className="sticky top-0 z-10 bg-gray-50">
               <tr className="border-b border-gray-200">
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
@@ -131,8 +131,8 @@ const Form4: React.FC = () => {
                   <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
                     {formatDate(loan.created_at)}
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="max-w-[22rem] truncate text-gray-900">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-gray-900 whitespace-nowrap max-w-none">
                       {Array.isArray(loan.loaned_items_name)
                         ? loan.loaned_items_name.join(", ")
                         : "-"}

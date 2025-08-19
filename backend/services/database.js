@@ -28,6 +28,17 @@ export const getItemsFromDatabaseV2 = async () => {
   return { success: false };
 };
 
+export const changeInSafeStateV2 = async (itemId, state) => {
+  const [result] = await pool.query(
+    "UPDATE items SET inSafe = ? WHERE id = ?",
+    [state, itemId]
+  );
+  if (result.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};
+
 export const getItemsFromDatabase = async (role) => {
   const sql =
     role == 0

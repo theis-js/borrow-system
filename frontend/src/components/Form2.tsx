@@ -13,12 +13,6 @@ interface BorrowItem {
 
 const LOCAL_STORAGE_KEY = "borrowableItems";
 
-const isBorrowItem = (v: any): v is BorrowItem =>
-  v &&
-  typeof v.id === "number" &&
-  (typeof v.item_name === "string" || typeof v.name === "string") &&
-  (typeof v.can_borrow_role === "string" || typeof v.role === "string");
-
 function normalizeBorrowable(data: any): BorrowItem[] {
   const rawArr = Array.isArray(data)
     ? data

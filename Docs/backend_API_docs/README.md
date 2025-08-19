@@ -1,121 +1,283 @@
-# Backend API docs
+# Borrow System Backend API
 
-If you want to coorperate with me, or build something new with my backend API, feel free to reach out!
+Base URL: `http://localhost:8002`
 
-On this page you will learn how my API works.
+- App server: [backend/server.js](backend/server.js)
+- Auth/JWT: [`authenticate`](backend/services/tokenService.js), [`generateToken`](backend/services/tokenService.js)
+- App API (JWT): [backend/routes/api.js](backend/routes/api.js)
+- Admin API (key): [backend/routes/apiV2.js](backend/routes/apiV2.js)
+- DB layer: [backend/services/database.js](backend/services/database.js)
+- Schema: [backend/scheme.sql](backend/scheme.sql)
 
-## General information
+## Authentication
 
-When you look at my backend folder and file structure, yu can see that I have two files called `API`. The first file called `api.js` is for my web frontend. Because this file works together with my JWT token service.
+Most endpoints under `/api` require a Bearer JWT.
 
-But I have build a second API. You can see the second API file in the same directory, the file is called `apiV2.js`.
+1. Login to get a token
 
-This is the file that you can use to build an API.
+- POST /api/login
+- Body: `{ "username": string, "password": string }`
+- Response 200: `{ "message": "Login successful", "token": string }`
+- Response 401: `{ "message": "Invalid credentials" }`
 
-But first you have to get the Admin API key, stored in an .env file on my server.
+Example:
 
-### Current endpoints
-
-- /apiV2/items/`secretKey`
-
-#### /apiV2/items/
-
-When you call this API you will get like this result back:
-
+```sh
+curl -s -X POST http://localhost:8002/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"password1"}'
 ```
+
+2. Use the token for all protected endpoints
+
+- Header: `Authorization: Bearer <token>`
+
+The middleware [`authenticate`](backend/services/tokenService.js) verifies tokens and attaches `req.user = { username, role }`.
+
+Environment:
+
+- SECRET_KEY: HMAC secret for JWT
+- DB_HOST, DB_USER, DB_PASSWORD, DB_NAME: MySQL connection
+- ADMIN_ID: Admin API key for /apiV2
+
+## Data model (items)
+
+Items (as returned by endpoints) have:
+
+- `id`: number
+- `item_name`: string
+- `can_borrow_role`: number (minimum role required)
+- `inSafe`: 0/1 (not in locker / in locker)
+
+See the full schema in [backend/scheme.sql](backend/scheme.sql).
+
+---
+
+## App API (JWT) — /api
+
+All routes below require `Authorization: Bearer <token>` unless noted.
+
+### GET /api/items
+
+Returns items filtered by the user role:
+
+- role == 0: all items
+- role > 0: items with `can_borrow_role >= role`
+
+Implements: [`getItemsFromDatabase`](backend/services/database.js)
+
+Response 200:
+
+```json
+[
+  { "id": 1, "item_name": "Laptop", "can_borrow_role": 1, "inSafe": 1 },
+  ...
+]
+```
+
+Example:
+
+```sh
+curl -s http://localhost:8002/api/items \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### GET /api/loans
+
+Returns all loans.
+
+Implements: [`getLoansFromDatabase`](backend/services/database.js)
+
+Response 200:
+
+```json
 [
   {
     "id": 1,
-    "item_name": "DJI 1er Mikro",
-    "can_borrow_role": "4",
-    "inSafe": 1
-  },
-  {
-    "id": 2,
-    "item_name": "DJI 2er Mikro 1",
-    "can_borrow_role": "4",
-    "inSafe": 1
-  },
-  {
-    "id": 3,
-    "item_name": "DJI 2er Mikro 2",
-    "can_borrow_role": "4",
-    "inSafe": 1
-  },
-  {
-    "id": 5,
-    "item_name": "Rode Richt Mikrofon",
-    "can_borrow_role": "2",
-    "inSafe": 1
-  },
-  {
-    "id": 6,
-    "item_name": "Kamera Stativ",
-    "can_borrow_role": "1",
-    "inSafe": 1
-  },
-  {
-    "id": 7,
-    "item_name": "SONY Kamera - inkl. Akkus und Objektiv",
-    "can_borrow_role": "1",
-    "inSafe": 1
-  },
-  {
-    "id": 8,
-    "item_name": "MacBook inkl. Adapter",
-    "can_borrow_role": "2",
-    "inSafe": 1
-  },
-  {
-    "id": 9,
-    "item_name": "SD Karten",
-    "can_borrow_role": "3",
-    "inSafe": 1
-  },
-  {
-    "id": 10,
-    "item_name": "Kameragimbal",
-    "can_borrow_role": "1",
-    "inSafe": 1
-  },
-  {
-    "id": 11,
-    "item_name": "ATEM MINI PRO",
-    "can_borrow_role": "1",
-    "inSafe": 1
-  },
-  {
-    "id": 12,
-    "item_name": "Handygimbal",
-    "can_borrow_role": "4",
-    "inSafe": 1
-  },
-  {
-    "id": 13,
-    "item_name": "Kameralüfter",
-    "can_borrow_role": "1",
-    "inSafe": 1
-  },
-  {
-    "id": 14,
-    "item_name": "Kleine Kamera 1 - inkl. Objektiv",
-    "can_borrow_role": "2",
-    "inSafe": 1
-  },
-  {
-    "id": 15,
-    "item_name": "Kleine Kamera 2 - inkl. Objektiv",
-    "can_borrow_role": "2",
-    "inSafe": 1
+    "username": "alice",
+    "loan_code": 1001,
+    "start_date": "2025-08-01T09:00:00.000Z",
+    "end_date": "2025-08-10T09:00:00.000Z",
+    "returned_date": null,
+    "created_at": "2025-08-01T09:00:00.000Z",
+    "loaned_items_id": [1, 2],
+    "loaned_items_name": ["Laptop", "Projector"]
   }
 ]
 ```
 
-There you can see all items and their details.
+### GET /api/userLoans
 
-Each item has the following properties:
+Returns loans for the authenticated user.
 
-- `id`: The unique identifier for the item.
-- `item_name`: The name of the item.
-- `can_borrow_role`: The role ID that is allowed to borrow the item.
-- `inSafe`: Indicates whether the item is currently in the locker (1) or not (0).
+Implements: [`getUserLoansFromDatabase`](backend/services/database.js)
+
+Response 200:
+
+- On success: `Loan[]`
+- If none found: `"No loans found for this user"` (string)
+
+Tip: Treat a non-array response as “no loans”.
+
+### DELETE /api/deleteLoan/:id
+
+Deletes a loan by numeric ID.
+
+Implements: [`deleteLoanFromDatabase`](backend/services/database.js)
+
+- 200: `{ "message": "Loan deleted successfully" }`
+- 500: `{ "message": "Failed to delete loan" }`
+
+Example:
+
+```sh
+curl -s -X DELETE http://localhost:8002/api/deleteLoan/42 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### POST /api/borrowableItems
+
+Returns items available in the given time range (excludes items with overlapping loans). Also enforces role filtering.
+
+Implements: [`getBorrowableItemsFromDatabase`](backend/services/database.js)
+
+Request body:
+
+```json
+{ "startDate": "2025-08-01T09:00:00Z", "endDate": "2025-08-02T09:00:00Z" }
+```
+
+- 200: `Item[]`
+- 400: `{ "message": "startDate and endDate are required" }`
+- 500: `{ "message": "Failed to fetch borrowable items" }`
+
+Example:
+
+```sh
+curl -s -X POST http://localhost:8002/api/borrowableItems \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"startDate":"2025-08-01T09:00:00Z","endDate":"2025-08-02T09:00:00Z"}'
+```
+
+### POST /api/createLoan
+
+Creates a loan for the authenticated user.
+
+Implements: [`createLoanInDatabase`](backend/services/database.js)
+
+Request body:
+
+```json
+{
+  "items": [1, 2, 3], // array of item IDs (required)
+  "startDate": "2025-08-01T09:00:00Z", // required
+  "endDate": "2025-08-02T09:00:00Z" // required
+}
+```
+
+Notes:
+
+- IDs are coerced to numbers; invalid entries are dropped.
+- Date range must be valid and `startDate < endDate`.
+- Overlaps with existing loans cause 409 Conflict.
+- On success, returns the generated `loanCode`.
+
+Responses:
+
+- 201:
+
+```json
+{
+  "message": "Loan created successfully",
+  "loanId": 123,
+  "loanCode": 1007
+}
+```
+
+- 400: `{ "message": "Items array is required" | "No valid item IDs provided" | "Invalid date range" | ... }`
+- 409: `{ "message": "Items not available in the selected period" }`
+- 500: `{ "message": "Failed to create loan" }`
+
+Example:
+
+```sh
+curl -s -X POST http://localhost:8002/api/createLoan \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"items":[1,2],"startDate":"2025-08-01T09:00:00Z","endDate":"2025-08-02T09:00:00Z"}'
+```
+
+---
+
+## Admin API — /apiV2
+
+These endpoints are protected by a static admin key in the path. Set `ADMIN_ID` in environment. No JWT required.
+
+### GET /apiV2/items/:key
+
+Returns all items (no role filtering).
+
+Implements: [`getItemsFromDatabaseV2`](backend/services/database.js)
+
+- 200: `Item[]`
+- 403: `{ "message": "Access denied" }`
+
+Example:
+
+```sh
+curl -s http://localhost:8002/apiV2/items/$ADMIN_ID
+```
+
+### POST /apiV2/controlInSafe/:key/:itemId/:state
+
+Updates `inSafe` state (0 or 1) for an item by ID.
+
+Implements: [`changeInSafeStateV2`](backend/services/database.js)
+
+- `state`: `"0"` or `"1"`
+- 200: `{ "message": "Item state updated successfully" }`
+- 400: `{ "message": "Invalid state value" }`
+- 403: `{ "message": "Access denied" }`
+- 500: `{ "message": "Failed to update item state" }`
+
+Example:
+
+```sh
+curl -s -X POST http://localhost:8002/apiV2/controlInSafe/$ADMIN_ID/5/0
+```
+
+---
+
+## Error handling summary
+
+- 400 Bad Request: invalid payloads or missing fields
+- 401 Unauthorized: missing/invalid JWT (for `/api` routes)
+- 403 Forbidden: wrong admin key (for `/apiV2` routes)
+- 409 Conflict: loan overlaps with selected period
+- 500 Internal Server Error: unexpected server/database errors
+
+---
+
+## Running locally
+
+With Docker Compose: [docker-compose.yml](docker-compose.yml)
+
+- Backend: http://localhost:8002 (mounted from [backend](backend))
+- MySQL: root password from `.env` as `DB_PASSWORD`, port 3309 on host
+- Seed schema/data: import [backend/scheme.sql](backend/scheme.sql) into the DB
+
+Environment required by backend:
+
+- `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
+- `SECRET_KEY`
+- `ADMIN_ID`
+
+---
+
+References:
+
+- App routes: [backend/routes/api.js](backend/routes/api.js)
+  - [`loginFunc`](backend/services/database.js), [`getItemsFromDatabase`](backend/services/database.js), [`getLoansFromDatabase`](backend/services/database.js), [`getUserLoansFromDatabase`](backend/services/database.js), [`deleteLoanFromDatabase`](backend/services/database.js), [`getBorrowableItemsFromDatabase`](backend/services/database.js), [`createLoanInDatabase`](backend/services/database.js)
+- Admin routes: [backend/routes/apiV2.js](backend/routes/apiV2.js)
+- Auth: [`authenticate`](backend/services/tokenService.js),

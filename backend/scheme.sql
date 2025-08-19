@@ -1,31 +1,46 @@
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+-- All necessary tables for the borrowing system
+
+-- IMPORTANT: You need mySQL version 8.0 or newer!
+
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
 );
 
-CREATE TABLE items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    item_name VARCHAR(255) NOT NULL UNIQUE,
-    can_borrow_role VARCHAR(255) NOT NULL
+CREATE TABLE `loans` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `loan_code` int NOT NULL,
+  `start_date` timestamp NOT NULL,
+  `end_date` timestamp NOT NULL,
+  `returned_date` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `loaned_items_id` json NOT NULL DEFAULT ('[]'),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `loan_code` (`loan_code`)
 );
 
-CREATE TABLE loans (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100) NOT NULL,
-    loan_code INT(6) NOT NULL UNIQUE,
-    start_date TIMESTAMP NOT NULL,
-    end_date TIMESTAMP NOT NULL,
-    returned_date TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE `items` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `item_name` varchar(255) NOT NULL,
+  `can_borrow_role` varchar(255) NOT NULL,
+  `inSafe` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_name` (`item_name`)
 );
 
-CREATE TABLE lockers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    item VARCHAR(255) NOT NULL UNIQUE,
-    locker_number INT NOT NULL UNIQUE
+CREATE TABLE `lockers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `item` varchar(255) NOT NULL,
+  `locker_number` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item` (`item`),
+  UNIQUE KEY `locker_number` (`locker_number`)
 );
-
 
 -- Mock data
 

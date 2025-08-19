@@ -8,6 +8,7 @@ type Loan = {
   loan_code: number;
   start_date: string;
   end_date: string;
+  take_date: string | null;
   returned_date: string | null;
   created_at: string;
   loaned_items_id: number[];
@@ -90,6 +91,9 @@ const Form4: React.FC = () => {
                   Ende
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                  Abgeholt
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                   Zurückgegeben
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
@@ -117,6 +121,9 @@ const Form4: React.FC = () => {
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
                     {formatDate(loan.end_date)}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
+                    {formatDate(loan.take_date)}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-gray-900">
                     {formatDate(loan.returned_date)}

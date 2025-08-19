@@ -13,14 +13,12 @@ interface BorrowItem {
 
 const LOCAL_STORAGE_KEY = "borrowableItems";
 
-// Einfache Type-Guard/Validierung
 const isBorrowItem = (v: any): v is BorrowItem =>
   v &&
   typeof v.id === "number" &&
   (typeof v.item_name === "string" || typeof v.name === "string") &&
   (typeof v.can_borrow_role === "string" || typeof v.role === "string");
 
-// Helfer: unterschiedliche Server-Shapes normalisieren
 function normalizeBorrowable(data: any): BorrowItem[] {
   const rawArr = Array.isArray(data)
     ? data
@@ -52,7 +50,6 @@ function normalizeBorrowable(data: any): BorrowItem[] {
     .filter(Boolean) as BorrowItem[];
 }
 
-// Hook, der automatisch aus dem Local Storage liest und auf Änderungen hört
 function useBorrowableItems() {
   const [items, setItems] = React.useState<BorrowItem[]>([]);
 

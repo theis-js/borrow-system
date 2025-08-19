@@ -32,7 +32,12 @@ const Sidebar: React.FC = () => {
             key={item.item_name}
             className="bg-white/80 rounded-xl p-4 shadow hover:shadow-md transition"
           >
-            <Object title={item.item_name} description={"test"} />
+            <Object
+              title={item.item_name}
+              description={
+                item.inSafe ? "Im Schließfach" : "Nicht im Schließfach"
+              }
+            />
           </div>
         ))}
       </div>
@@ -40,8 +45,8 @@ const Sidebar: React.FC = () => {
       <div className="mt-6 text-xs text-gray-400 flex items-center gap-4">
         <span className="inline-block w-3 h-3 bg-green-400 rounded-full"></span>
         Verfügbar
-        <span className="inline-block w-3 h-3 bg-blue-400 rounded-full"></span>
-        Verliehen
+        <span className="inline-block w-3 h-3 bg-red-400 rounded-full"></span>
+        Außerhalb des Schließfachs
       </div>
     </aside>
   );

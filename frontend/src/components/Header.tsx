@@ -13,6 +13,8 @@ const Header: React.FC = () => {
       <button
         onClick={() => {
           Cookies.remove("token");
+          localStorage.removeItem("allItems");
+
           window.location.reload();
         }}
         className="text-blue-500 hover:underline"

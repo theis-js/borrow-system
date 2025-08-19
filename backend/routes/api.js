@@ -7,7 +7,10 @@ const router = express.Router();
 router.post("/login", async (req, res) => {
   const result = await loginFunc(req.body.username, req.body.password);
   if (result.success) {
-    const token = await generateToken({ username: req.body.username });
+    const token = await generateToken({
+      username: result.data.username,
+      role: result.data.role,
+    });
     res.status(200).json({ message: "Login successful", token });
   } else {
     res.status(401).json({ message: "Invalid credentials" });
@@ -15,7 +18,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/items", authenticate, async (req, res) => {
-  const result = await getItemsFromDatabase();
+  console.log(req);
+  const result = await getItemsFromDatabase(req.user.role);
   if (result.success) {
     res.status(200).json(result.data);
   } else {

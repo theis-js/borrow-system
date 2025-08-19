@@ -1,15 +1,6 @@
 import mysql from "mysql2";
 import dotenv from "dotenv";
-import dns from "dns/promises";
 dotenv.config();
-
-// Validate required envs early
-const required = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"];
-for (const k of required) {
-  if (!process.env[k]) {
-    throw new Error(`Missing required env var: ${k}`);
-  }
-}
 
 const pool = mysql
   .createPool({
@@ -17,25 +8,8 @@ const pool = mysql
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
   })
   .promise();
-
-// Optional: resolve host and test a connection at startup for clearer errors
-(async () => {
-  try {
-    await dns.lookup(process.env.DB_HOST);
-    const conn = await pool.getConnection();
-    conn.release();
-  } catch (e) {
-    console.error(
-      `Database connectivity check failed for host "${process.env.DB_HOST}":`,
-      e.code || e.message
-    );
-  }
-})();
 
 export const loginFunc = async (username, password) => {
   const [result] = await pool.query(

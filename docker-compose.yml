@@ -26,7 +26,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: borrow_system
     depends_on:
-      - mysql
+      - borrow_system-mysql
     volumes:
       - ./backend:/borrow_system-backend
     restart: unless-stopped

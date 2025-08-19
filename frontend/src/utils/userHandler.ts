@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 export const handleDeleteLoan = async (loanID: number): Promise<boolean> => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/deleteLoan/${loanID}`,
+      `https://backend.insta.the1s.de/api/deleteLoan/${loanID}`,
       {
         method: "DELETE",
         headers: {
@@ -74,7 +74,7 @@ export const rmFromRemove = (itemID: number) => {
 
 export const createLoan = async (startDate: string, endDate: string) => {
   const items = removeArr;
-  const response = await fetch("http://localhost:8002/api/createLoan", {
+  const response = await fetch("https://backend.insta.the1s.de/api/createLoan", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

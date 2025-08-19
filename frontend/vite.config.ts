@@ -1,15 +1,17 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import svgr from "vite-plugin-svgr";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [react(), svgr(), tailwindcss()],
+  plugins: [tailwindcss()],
   server: {
     host: "0.0.0.0",
-    port: 8001,
-    watch: {
-      usePolling: true,
+    allowedHosts: ["insta.the1s.de"],
+    port: 8101,
+    watch: { usePolling: true },
+    hmr: {
+      host: "insta.the1s.de",
+      port: 8101,
+      protocol: "wss",
     },
   },
 });

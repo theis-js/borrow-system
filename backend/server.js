@@ -5,7 +5,7 @@ import apiRouter from "./routes/api.js";
 import apiRouterV2 from "./routes/apiV2.js";
 env.config();
 const app = express();
-const port = 8002;
+const port = 8102;
 
 app.use(cors());
 // Increase body size limits to support large CSV JSON payloads

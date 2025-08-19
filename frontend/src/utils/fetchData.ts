@@ -9,7 +9,7 @@ export const fetchAllData = async (token: string | undefined) => {
   if (!token) return;
   // First we fetch all items that are potentially available for borrowing
   try {
-    const response = await fetch("http://localhost:8002/api/items", {
+    const response = await fetch("https://backend.insta.the1s.de/api/items", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -31,7 +31,7 @@ export const fetchAllData = async (token: string | undefined) => {
 
   // get all loans
   try {
-    const response = await fetch("http://localhost:8002/api/loans", {
+    const response = await fetch("https://backend.insta.the1s.de/api/loans", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -53,7 +53,7 @@ export const fetchAllData = async (token: string | undefined) => {
 
   // get user loans
   try {
-    const response = await fetch("http://localhost:8002/api/userLoans", {
+    const response = await fetch("https://backend.insta.the1s.de/api/userLoans", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ export const fetchAllData = async (token: string | undefined) => {
 
 export const loginUser = async (username: string, password: string) => {
   try {
-    const response = await fetch("http://localhost:8002/api/login", {
+    const response = await fetch("https://backend.insta.the1s.de/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -112,7 +112,7 @@ export const getBorrowableItems = async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8002/api/borrowableItems", {
+    const response = await fetch("https://backend.insta.the1s.de/api/borrowableItems", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${Cookies.get("token") || ""}`,

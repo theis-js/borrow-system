@@ -6,6 +6,7 @@ services:
       - "8101:8101"
     networks:
       - proxynet
+      - borrow_system-internal
     environment:
       - CHOKIDAR_USEPOLLING=true
     volumes:
@@ -20,6 +21,7 @@ services:
       - "8102:8102"
     networks:
       - proxynet
+      - borrow_system-internal
     environment:
       DB_HOST: 127.0.0.1
       DB_USER: root
@@ -42,6 +44,8 @@ services:
       - mysql-data:/var/lib/mysql
     ports:
       - "3309:3306"
+    networks:
+      - borrow_system-internal
 
 volumes:
   mysql-data:
@@ -49,3 +53,5 @@ volumes:
 networks:
   proxynet:
     external: true
+  borrow_system-internal:
+    external: false

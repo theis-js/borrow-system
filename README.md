@@ -52,65 +52,6 @@ UI flow (main screens):
 - Borrowable items + selection: [frontend/src/components/Form2.tsx](frontend/src/components/Form2.tsx)
 - User loans table: [frontend/src/components/Form4.tsx](frontend/src/components/Form4.tsx)
 
-## Quick start
-
-You can run the backend + MySQL via Docker, and run the frontend locally.
-
-### 1) Environment
-
-Root `.env` (used by docker-compose):
-
-```env
-DB_PASSWORD=yourStrongPassword
-```
-
-Backend `.env` (used by Node in the backend container or local dev):
-
-```env
-# DB (only needed for local dev; in Docker these are provided by compose)
-DB_HOST=mysql
-DB_USER=root
-DB_PASSWORD=yourStrongPassword
-DB_NAME=borrow_system
-
-# Security
-SECRET_KEY=yourVerySecretJwtKey
-ADMIN_ID=yourAdminApiKey
-```
-
-### 2) Start backend + DB (Docker)
-
-From the repo root:
-
-```sh
-docker compose up -d
-```
-
-- Backend: http://localhost:8002
-- MySQL: localhost:3309 (mapped to container 3306)
-
-Initialize schema and mock data in MySQL:
-
-```sh
-# copy schema into the mysql container
-docker cp backend/scheme.sql borrow_system-mysql:/scheme.sql
-
-# run it
-docker exec -i borrow_system-mysql sh -c 'mysql -u root -p"$MYSQL_ROOT_PASSWORD" borrow_system < /scheme.sql'
-```
-
-### 3) Run the frontend (local)
-
-```sh
-cd frontend
-npm install
-npm run dev
-```
-
-- Frontend: http://localhost:8001 (configured in [frontend/vite.config.ts](frontend/vite.config.ts))
-
-The frontend expects the backend on http://localhost:8002 (see fetches in [frontend/src/utils/fetchData.ts](frontend/src/utils/fetchData.ts) and [frontend/src/utils/userHandler.ts](frontend/src/utils/userHandler.ts)).
-
 ## Development
 
 - Scripts: see [frontend/package.json](frontend/package.json) and [backend/package.json](backend/package.json)
@@ -127,6 +68,6 @@ The frontend expects the backend on http://localhost:8002 (see fetches in [front
 
 ## API documentation
 
-Do not use this README for API details. Refer to the dedicated API docs:
+Refer to the dedicated API docs:
 
-- Web/API
+`docs/backend_API_docs/README.md`

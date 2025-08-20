@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Trash, ArrowLeftRight } from "lucide-react";
 import { handleDeleteLoan } from "../utils/userHandler";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
+import { queryClient } from "../utils/queryClient";
 
 type Loan = {
   id: number;
@@ -22,40 +25,39 @@ const formatDate = (iso: string | null) => {
   return d.toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" });
 };
 
-const readUserLoansFromStorage = (): Loan[] => {
-  const raw = localStorage.getItem("userLoans");
-  if (!raw || raw === '"No loans found for this user"') return [];
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as Loan[]) : [];
-  } catch {
-    return [];
-  }
-};
+async function fetchUserLoans(): Promise<Loan[]> {
+  const res = await fetch("http://localhost:8002/api/userLoans", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${Cookies.get("token") || ""}` },
+  });
+  if (!res.ok) throw new Error("Failed to fetch user loans");
+  const data = await res.json();
+  if (data === "No loans found for this user") return [];
+  return Array.isArray(data) ? (data as Loan[]) : [];
+}
 
 const Form4: React.FC = () => {
-  const [userLoans, setUserLoans] = useState<Loan[]>(() =>
-    readUserLoansFromStorage()
-  );
+  const { data: userLoans = [], isFetching } = useQuery({
+    queryKey: ["userLoans"],
+    queryFn: fetchUserLoans,
+  });
 
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "userLoans") {
-        setUserLoans(readUserLoansFromStorage());
-      }
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  const deleteMutation = useMutation({
+    mutationFn: (loanID: number) => handleDeleteLoan(loanID),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userLoans"] });
+    },
+  });
 
-  const onDelete = async (loanID: number) => {
-    const ok = await handleDeleteLoan(loanID);
-    if (ok) {
-      setUserLoans((prev) =>
-        prev.filter((l) => Number(l.id) !== Number(loanID))
-      );
-    }
-  };
+  const onDelete = (loanID: number) => deleteMutation.mutate(loanID);
+
+  if (isFetching) {
+    return (
+      <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-600 shadow-sm">
+        <p>Lade Ausleihen…</p>
+      </div>
+    );
+  }
 
   if (userLoans.length === 0) {
     return (

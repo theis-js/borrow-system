@@ -1,5 +1,6 @@
 import { myToast } from "./toastify";
 import Cookies from "js-cookie";
+import { queryClient } from "./queryClient";
 
 export const handleDeleteLoan = async (loanID: number): Promise<boolean> => {
   try {
@@ -92,5 +93,10 @@ export const createLoan = async (startDate: string, endDate: string) => {
   removeArr = [];
   Cookies.set("removeArr", "[]");
   myToast("Ausleihe erfolgreich erstellt!", "success");
+
+  queryClient.invalidateQueries({ queryKey: ["userLoans"] });
+  queryClient.invalidateQueries({ queryKey: ["allLoans"] });
+  queryClient.invalidateQueries({ queryKey: ["borrowableItems"] });
+
   return true;
 };

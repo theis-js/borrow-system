@@ -14,16 +14,12 @@ const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
       {/* Main */}
       <main className="flex-1 min-h-0 overflow-hidden flex flex-col items-center px-3 sm:px-5 py-4 sm:py-8">
         {/* Sidebar on mobile appears inline on top; on desktop it's a sticky column */}
-        <div className="w-full max-w-5xl md:flex md:gap-6 md:items-stretch md:min-h-0 md:h-full">
-          <div className="block md:hidden mb-3">
-            <Sidebar />
-          </div>
-
+        <div className="w-full max-w-5xl flex flex-col gap-3 md:flex-row md:gap-6 md:items-stretch min-h-0 h-full">
           <div className="hidden md:flex md:flex-col md:shrink-0 md:w-72 md:min-h-0 md:h-full">
             <Sidebar />
           </div>
 
-          <div className="flex-1 min-w-0 md:min-h-0 md:h-full flex flex-col overflow-hidden">
+          <div className="flex-1 min-w-0 min-h-0 h-full flex flex-col overflow-hidden">
             <div className="w-full">
               <Header onLogout={onLogout} />
             </div>

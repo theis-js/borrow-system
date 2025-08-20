@@ -51,15 +51,108 @@ GET https://backend.insta.the1s.de/apiV2/items/your_admin_key
 #### Example Response
 
 ```
-[
-  {
-    "id": 1,
-    "item_name": "DJI 1er Mikro",
-    "can_borrow_role": "4",
-    "inSafe": 1
-  },
-  ...
-]
+{
+  "data": [
+    {
+      "id": 1,
+      "item_name": "DJI 1er Mikro",
+      "can_borrow_role": 4,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 2,
+      "item_name": "DJI 2er Mikro 1",
+      "can_borrow_role": 4,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 3,
+      "item_name": "DJI 2er Mikro 2",
+      "can_borrow_role": 4,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 4,
+      "item_name": "Rode Richt Mikrofon",
+      "can_borrow_role": 2,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 5,
+      "item_name": "Kamera Stativ",
+      "can_borrow_role": 1,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 6,
+      "item_name": "SONY Kamera - inkl. Akkus und Objektiv",
+      "can_borrow_role": 1,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 7,
+      "item_name": "MacBook inkl. Adapter",
+      "can_borrow_role": 2,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 8,
+      "item_name": "SD Karten",
+      "can_borrow_role": 3,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 9,
+      "item_name": "Kameragimbal",
+      "can_borrow_role": 1,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 10,
+      "item_name": "ATEM MINI PRO",
+      "can_borrow_role": 1,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 11,
+      "item_name": "Handygimbal",
+      "can_borrow_role": 4,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 12,
+      "item_name": "Kameralfter",
+      "can_borrow_role": 1,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 13,
+      "item_name": "Kleine Kamera 1 - inkl. Objektiv",
+      "can_borrow_role": 2,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    },
+    {
+      "id": 14,
+      "item_name": "Kleine Kamera 2 - inkl. Objektiv",
+      "can_borrow_role": 2,
+      "inSafe": 1,
+      "entry_created_at": "2025-08-19T22:02:16.000Z"
+    }
+  ]
+}
 ```
 
 Each item has the following properties:

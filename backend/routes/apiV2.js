@@ -5,6 +5,7 @@ import {
   changeInSafeStateV2,
   setReturnDateV2,
   setTakeDateV2,
+  getLoanByCodeV2,
 } from "../services/database.js";
 
 dotenv.config();
@@ -41,6 +42,19 @@ router.post("/controlInSafe/:key/:itemId/:state", async (req, res) => {
     }
   } else {
     res.status(403).json({ message: "Access denied" });
+  }
+});
+
+router.get("/getLoanByCode/:key/:loan_code", async (req, res) => {
+  if (req.params.key === process.env.ADMIN_ID) {
+    const loan_code = req.params.loan_code;
+
+    const result = await getLoanByCodeV2(loan_code);
+    if (result.success) {
+      res.status(200).json({ data: result.data });
+    } else {
+      res.status(404).json({ message: "Loan not found" });
+    }
   }
 });
 

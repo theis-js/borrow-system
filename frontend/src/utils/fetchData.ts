@@ -4,6 +4,22 @@ import { myToast } from "./toastify";
 // Event name used to notify the app when the list of items has been updated
 export const ALL_ITEMS_UPDATED_EVENT = "allItemsUpdated";
 export const BORROWABLE_ITEMS_UPDATED_EVENT = "borrowableItemsUpdated";
+export const AUTH_LOGOUT_EVENT = "authLogout";
+
+let sendError = false;
+
+function logout() {
+  Cookies.remove("token");
+  Cookies.remove("startDate");
+  Cookies.remove("endDate");
+  localStorage.removeItem("allItems");
+  localStorage.removeItem("allLoans");
+  localStorage.removeItem("userLoans");
+  localStorage.removeItem("borrowableItems");
+  window.dispatchEvent(new Event(ALL_ITEMS_UPDATED_EVENT));
+  window.dispatchEvent(new Event(BORROWABLE_ITEMS_UPDATED_EVENT));
+  window.dispatchEvent(new Event(AUTH_LOGOUT_EVENT));
+}
 
 export const fetchAllData = async (token: string | undefined) => {
   if (!token) return;
@@ -15,6 +31,16 @@ export const fetchAllData = async (token: string | undefined) => {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    if (response.status === 500) {
+      if (!sendError) {
+        sendError = true;
+        myToast("Session expired. Please log in again.", "error");
+        logout();
+        return;
+      }
+      return;
+    }
 
     if (!response.ok) {
       myToast("Failed to fetch items", "error");
@@ -38,6 +64,16 @@ export const fetchAllData = async (token: string | undefined) => {
       },
     });
 
+    if (response.status === 500) {
+      if (!sendError) {
+        sendError = true;
+        myToast("Session expired. Please log in again.", "error");
+        logout();
+        return;
+      }
+      return;
+    }
+
     if (!response.ok) {
       myToast("Failed to fetch loans!", "error");
       return;
@@ -59,6 +95,16 @@ export const fetchAllData = async (token: string | undefined) => {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    if (response.status === 500) {
+      if (!sendError) {
+        sendError = true;
+        myToast("Session expired. Please log in again.", "error");
+        logout();
+        return;
+      }
+      return;
+    }
 
     if (!response.ok) {
       myToast("Failed to fetch user loans!", "error");
@@ -121,6 +167,16 @@ export const getBorrowableItems = async () => {
       },
       body: JSON.stringify({ startDate, endDate }),
     });
+
+    if (response.status === 500) {
+      if (!sendError) {
+        sendError = true;
+        myToast("Session expired. Please log in again.", "error");
+        logout();
+        return;
+      }
+      return;
+    }
 
     if (!response.ok) {
       myToast("Failed to fetch borrowable items", "error");

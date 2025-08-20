@@ -36,16 +36,16 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Scroll area */}
-      <div className="flex-1 min-h-0 overflow-y-auto">
-        <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 -mr-1 pr-2 md:block md:space-y-3 md:pr-1 md:pb-1">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+        <div className="flex flex-col gap-3 md:space-y-3">
           {sorted.map((item: any) => (
             <div
               key={item.item_name}
-              className={`group relative bg-white rounded-xl p-3 sm:p-4 ring-1 ring-slate-200/70 uration-200 hover:shadow-md focus-within:ring-slate-300 ${
+              className={`group relative w-full bg-white rounded-xl p-3 sm:p-4 ring-1 ring-slate-200/70 duration-200 hover:shadow-md focus-within:ring-slate-300 ${
                 item.inSafe
                   ? "border-l-4 border-emerald-400"
                   : "border-l-4 border-red-400 ring-red-200/60 bg-red-50/40"
-              } shrink-0 snap-start min-w-[240px] md:min-w-0`}
+              }`}
             >
               <div className="flex items-start gap-3">
                 <span

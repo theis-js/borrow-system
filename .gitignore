@@ -112,3 +112,5 @@ backend/public/uploads/
 config/
 secrets/
 keys/
+
+ToDo.txt

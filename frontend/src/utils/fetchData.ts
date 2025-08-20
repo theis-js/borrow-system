@@ -32,7 +32,7 @@ export const fetchAllData = async (token: string | undefined) => {
       },
     });
 
-    if (response.status === 401) {
+    if (response.status === 500) {
       if (!sendError) {
         sendError = true;
         myToast("Session expired. Please log in again.", "error");
@@ -64,7 +64,7 @@ export const fetchAllData = async (token: string | undefined) => {
       },
     });
 
-    if (response.status === 401) {
+    if (response.status === 500) {
       if (!sendError) {
         sendError = true;
         myToast("Session expired. Please log in again.", "error");
@@ -96,7 +96,7 @@ export const fetchAllData = async (token: string | undefined) => {
       },
     });
 
-    if (response.status === 401) {
+    if (response.status === 500) {
       if (!sendError) {
         sendError = true;
         myToast("Session expired. Please log in again.", "error");
@@ -168,7 +168,7 @@ export const getBorrowableItems = async () => {
       body: JSON.stringify({ startDate, endDate }),
     });
 
-    if (response.status === 401) {
+    if (response.status === 500) {
       if (!sendError) {
         sendError = true;
         myToast("Session expired. Please log in again.", "error");

@@ -11,7 +11,6 @@ import {
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
 
-// Example endpoint
 router.post("/login", async (req, res) => {
   const result = await loginFunc(req.body.username, req.body.password);
   if (result.success) {

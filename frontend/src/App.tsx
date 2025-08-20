@@ -6,7 +6,11 @@ import Form2 from "./components/Form2";
 import Form4 from "./components/Form4";
 import LoginForm from "./components/LoginForm";
 import Cookies from "js-cookie";
-import { fetchAllData, ALL_ITEMS_UPDATED_EVENT } from "./utils/fetchData";
+import {
+  fetchAllData,
+  ALL_ITEMS_UPDATED_EVENT,
+  AUTH_LOGOUT_EVENT,
+} from "./utils/fetchData";
 import { myToast } from "./utils/toastify";
 
 function App() {
@@ -18,8 +22,15 @@ function App() {
       setIsLoggedIn(true);
       fetchAllData(token);
     }
-
     localStorage.setItem("borrowableItems", JSON.stringify([]));
+  }, []);
+
+  useEffect(() => {
+    const onAuthLogout = () => {
+      setIsLoggedIn(false);
+    };
+    window.addEventListener(AUTH_LOGOUT_EVENT, onAuthLogout);
+    return () => window.removeEventListener(AUTH_LOGOUT_EVENT, onAuthLogout);
   }, []);
 
   const handleLogout = () => {

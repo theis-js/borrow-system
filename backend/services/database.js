@@ -28,6 +28,17 @@ export const getItemsFromDatabaseV2 = async () => {
   return { success: false };
 };
 
+export const getLoanByCodeV2 = async (loan_code) => {
+  const [result] = await pool.query(
+    "SELECT * FROM loans WHERE loan_code = ?;",
+    [loan_code]
+  );
+  if (result.length > 0) {
+    return { success: true, data: result[0] };
+  }
+  return { success: false };
+};
+
 export const changeInSafeStateV2 = async (itemId, state) => {
   const [result] = await pool.query(
     "UPDATE items SET inSafe = ? WHERE id = ?",

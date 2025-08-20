@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Object from "./Object";
+import { MonitorSmartphone } from "lucide-react";
 import { ALL_ITEMS_UPDATED_EVENT } from "../utils/fetchData";
 
 const Sidebar: React.FC = () => {
@@ -21,39 +22,28 @@ const Sidebar: React.FC = () => {
   const sorted = [...items].sort((a, b) => Number(a.inSafe) - Number(b.inSafe));
 
   return (
-    <aside className="w-full md:w-72 md:h-[calc(100vh-2rem)] md:sticky md:top-4 overflow-y-auto bg-white rounded-2xl p-3 sm:p-4 ring-1 ring-slate-200 shadow-sm">
-      <h2 className="text-lg sm:text-xl font-bold mb-3 text-slate-900 tracking-tight flex items-center justify-between">
-        <span className="flex items-center gap-2">
-          <svg
-            className="w-5 h-5 text-slate-700"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M16.5 7.5V4.75A2.25 2.25 0 0 0 14.25 2.5h-4.5A2.25 2.25 0 0 0 7.5 4.75V7.5m9 0h-9m9 0v11.75A2.25 2.25 0 0 1 14.25 21.5h-4.5A2.25 2.25 0 0 1 7.5 19.25V7.5m9 0h-9"
-            />
-          </svg>
-          Geräte Übersicht
+    <aside className="w-full md:w-72 md:h-[calc(100vh-2rem)] md:sticky md:top-4 overflow-y-auto rounded-2xl pt-0 px-3 pb-3 sm:pt-0 sm:px-4 sm:pb-4 bg-gradient-to-b from-white to-slate-50 ring-1 ring-slate-200/70 shadow-md">
+      <h2 className="sticky top-0 z-10 -mx-3 sm:-mx-4 px-3 sm:px-4 py-2.5 bg-white/85 backdrop-blur supports-[backdrop-filter]:backdrop-blur border-b border-slate-200/70 text-lg sm:text-xl font-bold mb-3 text-slate-900 tracking-tight flex items-center justify-between gap-2 rounded-t-2xl">
+        <span className="flex items-center gap-2 min-w-0 flex-1 truncate">
+          <MonitorSmartphone className="w-5 h-5 text-slate-700 shrink-0" />
+          <span className="truncate">Geräte</span>
         </span>
         {outCount > 0 && (
-          <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap tabular-nums text-[10px] sm:text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200/70 shadow-sm font-medium">
             {outCount} außerhalb
           </span>
         )}
       </h2>
 
       {/* Mobile: horizontal scroll, Desktop: vertical list */}
-      <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-1 -mr-1 pr-2 md:block md:space-y-3 md:pr-1">
+      <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 -mr-1 pr-2 md:block md:space-y-3 md:pr-1 md:pb-1">
         {sorted.map((item: any) => (
           <div
             key={item.item_name}
-            className={`bg-white rounded-xl p-3 sm:p-4 ring-1 ring-slate-200 hover:ring-slate-300 transition ${
-              item.inSafe ? "" : "ring-red-200"
+            className={`group relative bg-white rounded-xl p-3 sm:p-4 ring-1 ring-slate-200/70 uration-200 hover:shadow-md focus-within:ring-slate-300 ${
+              item.inSafe
+                ? "border-l-4 border-emerald-400"
+                : "border-l-4 border-red-400 ring-red-200/60 bg-red-50/40"
             } shrink-0 snap-start min-w-[240px] md:min-w-0`}
           >
             <div className="flex items-start gap-3">
@@ -62,7 +52,7 @@ const Sidebar: React.FC = () => {
                   <span className="absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75 animate-ping"></span>
                 )}
                 <span
-                  className={`inline-block w-3 h-3 rounded-full ${
+                  className={`inline-block w-3 h-3 rounded-full ring-2 ring-white ${
                     item.inSafe ? "bg-emerald-500" : "bg-red-500"
                   }`}
                   title={
@@ -84,11 +74,15 @@ const Sidebar: React.FC = () => {
         ))}
       </div>
 
-      <div className="mt-3 text-[10px] sm:text-xs text-slate-500 items-center gap-4 hidden md:flex">
-        <span className="inline-block w-3 h-3 bg-emerald-500 rounded-full"></span>
-        Verfügbar
-        <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
-        Außerhalb des Schließfachs
+      <div className="mt-4 pt-3 border-t border-slate-200/70 text-[10px] sm:text-xs text-slate-500 items-center gap-4 hidden md:flex">
+        <span className="inline-flex items-center gap-1">
+          <span className="inline-block w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white shadow-sm"></span>
+          Verfügbar
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="inline-block w-3 h-3 bg-red-500 rounded-full ring-2 ring-white shadow-sm"></span>
+          Außerhalb des Schließfachs
+        </span>
       </div>
     </aside>
   );

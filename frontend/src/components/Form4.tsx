@@ -26,7 +26,7 @@ const formatDate = (iso: string | null) => {
 };
 
 async function fetchUserLoans(): Promise<Loan[]> {
-  const res = await fetch("http://localhost:8002/api/userLoans", {
+  const res = await fetch("https://backend.insta.the1s.de/api/userLoans", {
     method: "GET",
     headers: { Authorization: `Bearer ${Cookies.get("token") || ""}` },
   });

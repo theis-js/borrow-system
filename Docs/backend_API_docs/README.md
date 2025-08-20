@@ -8,7 +8,7 @@ On this page you will learn how my API works.
 
 When you look at my backend folder and file structure, you can see that I have two files called `API`. The first file called `api.js` is for my web frontend, because this file works together with my JWT token service.
 
-But I have built a second API. You can see the second API file in the same directory, the file is called `apiV2.js`.
+**\*But I have built a second API. You can see the second API file in the same directory, the file is called `apiV2.js`.**
 
 This is the file that you can use to build an API.
 
@@ -45,7 +45,7 @@ Returns a list of all items and their details.
 #### Example Request
 
 ```
-GET /apiV2/items/your_admin_key
+GET https://backend.insta.the1s.de/apiV2/items/your_admin_key
 ```
 
 #### Example Response
@@ -69,6 +69,8 @@ Each item has the following properties:
 - `can_borrow_role`: The role ID that is allowed to borrow the item.
 - `inSafe`: Indicates whether the item is currently in the locker (1) or not (0). This variable/state can change over time.
 
+_You also get an http 200 status code._
+
 ---
 
 ### 2. Change Item Safe State
@@ -82,7 +84,7 @@ Updates the `inSafe` state of an item (whether it is in the locker).
 #### Example Request
 
 ```
-POST /apiV2/controlInSafe/your_admin_key/5/0
+POST https://backend.insta.the1s.de/apiV2/controlInSafe/your_admin_key/item_id/new_item_state
 ```
 
 #### Example Response
@@ -93,7 +95,7 @@ POST /apiV2/controlInSafe/your_admin_key/5/0
 
 _An empty object means, that the operation was successful and no further information is returned._
 
-_You also get an http 2xx status code._
+_You also get an http 200 status code._
 
 ---
 
@@ -108,7 +110,7 @@ Sets the `returned_date` of a loan to the current server time.
 #### Example Request
 
 ```
-POST /apiV2/setReturnDate/your_admin_key/123456
+POST https://backend.insta.the1s.de/apiV2/setReturnDate/your_admin_key/your_loan_code
 ```
 
 #### Example Response
@@ -119,7 +121,7 @@ POST /apiV2/setReturnDate/your_admin_key/123456
 
 _An empty object means, that the operation was successful and no further information is returned._
 
-_You also get an http 2xx status code._
+_You also get an http 200 status code._
 
 ---
 
@@ -134,7 +136,7 @@ Sets the `take_date` of a loan to the current server time.
 #### Example Request
 
 ```
-POST /apiV2/setTakeDate/your_admin_key/123456
+POST https://backend.insta.the1s.de/apiV2/setTakeDate/your_admin_key/your_loan_code
 ```
 
 #### Example Response
@@ -146,6 +148,57 @@ POST /apiV2/setTakeDate/your_admin_key/123456
 _An empty object means, that the operation was successful and no further information is returned._
 
 _You also get an http 2xx status code._
+
+---
+
+### 5. Get whole loan by loan code
+
+**POST** `/getLoanByCode/:key/:loan_code`
+
+Retrieves the details of a specific loan by its unique code.
+
+- `loan_code`: The unique code of the loan.
+
+#### Example Request
+
+```
+GET https://backend.insta.the1s.de/getLoanByCode/your_admin_key/your_loan_code
+```
+
+#### Example Response
+
+```
+{
+  "data": {
+    "id": 6,
+    "username": "theis",
+    "loan_code": 646473,
+    "start_date": "2025-08-25T13:23:00.000Z",
+    "end_date": "2025-08-26T13:23:00.000Z",
+    "take_date": null,
+    "returned_date": null,
+    "created_at": "2025-08-20T11:23:40.000Z",
+    "loaned_items_id": [
+      8,
+      9
+    ],
+    "loaned_items_name": [
+      "SD Karten",
+      "Kameragimbal"
+    ]
+  }
+}
+```
+
+_You also get an http 200 status code._
+
+If the loan id does not exist, you will receive a 404 status code and an error message.
+
+```
+{
+  "message": "Loan not found"
+}
+```
 
 ---
 

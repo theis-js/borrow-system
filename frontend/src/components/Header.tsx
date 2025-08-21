@@ -23,6 +23,16 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
         >
           Logout
         </button>
+        <a href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/src/branch/dev/Docs/HELP.md">
+          <button className="h-9 px-3 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 transition">
+            Hilfe
+          </button>
+        </a>
+        <a href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system">
+          <button className="h-9 px-3 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 transition">
+            Source Code
+          </button>
+        </a>
       </div>
     </header>
   );

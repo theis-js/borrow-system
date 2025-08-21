@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "./Footer";
 import { useState } from "react";
 import { loginUser } from "../utils/fetchData";
 import { myToast } from "../utils/toastify";
@@ -66,6 +67,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
           </button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 };

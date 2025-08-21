@@ -70,7 +70,9 @@ const Sidebar: React.FC = () => {
                 <Object
                   title={item.item_name}
                   description={
-                    item.inSafe ? "Im Schließfach" : "Nicht im Schließfach"
+                    item.inSafe
+                      ? "Aktuell im Schließfach"
+                      : "Aktuell nicht im Schließfach"
                   }
                 />
               </div>
@@ -81,7 +83,7 @@ const Sidebar: React.FC = () => {
         <div className="mt-4 pt-3 border-t border-slate-200/70 text-[10px] sm:text-xs text-slate-500 items-center gap-4 hidden md:flex">
           <span className="inline-flex items-center gap-1">
             <span className="inline-block w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white shadow-sm"></span>
-            Verfügbar
+            Im Schließfach
           </span>
           <span className="inline-flex items-center gap-1">
             <span className="inline-block w-3 h-3 bg-red-500 rounded-full ring-2 ring-white shadow-sm"></span>

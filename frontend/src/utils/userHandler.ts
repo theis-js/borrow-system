@@ -75,14 +75,17 @@ export const rmFromRemove = (itemID: number) => {
 
 export const createLoan = async (startDate: string, endDate: string) => {
   const items = removeArr;
-  const response = await fetch("https://backend.insta.the1s.de/api/createLoan", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${Cookies.get("token") || ""}`,
-    },
-    body: JSON.stringify({ items, startDate, endDate }),
-  });
+  const response = await fetch(
+    "https://backend.insta.the1s.de/api/createLoan",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token") || ""}`,
+      },
+      body: JSON.stringify({ items, startDate, endDate }),
+    }
+  );
 
   if (!response.ok) {
     myToast("Fehler beim Erstellen der Ausleihe", "error");
@@ -103,7 +106,7 @@ export const createLoan = async (startDate: string, endDate: string) => {
 
 export const onReturn = async (loanID: number) => {
   const response = await fetch(
-    `http://localhost:8002/api/returnLoan/${loanID}`,
+    `https://backend.insta.the1s.de/returnLoan/${loanID}`,
     {
       method: "POST",
       headers: {
@@ -122,12 +125,15 @@ export const onReturn = async (loanID: number) => {
 };
 
 export const onTake = async (loanID: number) => {
-  const response = await fetch(`http://localhost:8002/api/takeLoan/${loanID}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${Cookies.get("token") || ""}`,
-    },
-  });
+  const response = await fetch(
+    `https://backend.insta.the1s.de/takeLoan/${loanID}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token") || ""}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     myToast("Fehler beim Ausleihen der Ausleihe", "error");

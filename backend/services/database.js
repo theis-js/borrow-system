@@ -294,3 +294,29 @@ export const createLoanInDatabase = async (
     conn.release();
   }
 };
+
+// These functions are only temporary, and will be deleted when the full bin is set up.
+
+export const onTake = async (loanId) => {
+  const [result] = await pool.query(
+    "UPDATE loans SET take_date = NOW() WHERE id = ?",
+    [loanId]
+  );
+
+  if (result.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};
+
+export const onReturn = async (loanId) => {
+  const [result] = await pool.query(
+    "UPDATE loans SET returned_date = NOW() WHERE id = ?",
+    [loanId]
+  );
+
+  if (result.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};

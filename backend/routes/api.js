@@ -7,6 +7,8 @@ import {
   deleteLoanFromDatabase,
   getBorrowableItemsFromDatabase,
   createLoanInDatabase,
+  onTake,
+  onReturn,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -82,6 +84,26 @@ router.post("/borrowableItems", authenticate, async (req, res) => {
     return res
       .status(500)
       .json({ message: "Failed to fetch borrowable items" });
+  }
+});
+
+router.post("/takeLoan/:id", authenticate, async (req, res) => {
+  const loanId = req.params.id;
+  const result = await onTake(loanId);
+  if (result.success) {
+    res.status(200).json({ message: "Loan taken successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to take loan" });
+  }
+});
+
+router.post("/returnLoan/:id", authenticate, async (req, res) => {
+  const loanId = req.params.id;
+  const result = await onReturn(loanId);
+  if (result.success) {
+    res.status(200).json({ message: "Loan returned successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to return loan" });
   }
 });
 

@@ -4,6 +4,7 @@ import { handleDeleteLoan } from "../utils/userHandler";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { queryClient } from "../utils/queryClient";
+import { onTake, onReturn } from "../utils/userHandler";
 
 type Loan = {
   id: number;
@@ -44,6 +45,20 @@ const Form4: React.FC = () => {
 
   const deleteMutation = useMutation({
     mutationFn: (loanID: number) => handleDeleteLoan(loanID),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userLoans"] });
+    },
+  });
+
+  const takeMutation = useMutation({
+    mutationFn: (loanID: number) => onTake(loanID),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userLoans"] });
+    },
+  });
+
+  const returnMutation = useMutation({
+    mutationFn: (loanID: number) => onReturn(loanID),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userLoans"] });
     },
@@ -99,11 +114,32 @@ const Form4: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-slate-500">Abgeholt:</span>{" "}
-                    {formatDate(loan.take_date)}
+                    {loan.take_date ? (
+                      formatDate(loan.take_date)
+                    ) : (
+                      <button
+                        className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-50"
+                        onClick={() => takeMutation.mutate(loan.id)}
+                        disabled={takeMutation.isPending}
+                      >
+                        {takeMutation.isPending ? "..." : "Abholen"}
+                      </button>
+                    )}
                   </div>
                   <div>
                     <span className="text-slate-500">Zurück:</span>{" "}
-                    {formatDate(loan.returned_date)}
+                    {loan.returned_date ? (
+                      formatDate(loan.returned_date)
+                    ) : (
+                      <button
+                        className="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 disabled:opacity-50"
+                        onClick={() => returnMutation.mutate(loan.id)}
+                        disabled={returnMutation.isPending || !loan.take_date}
+                        title={!loan.take_date ? "Erst abholen" : ""}
+                      >
+                        {returnMutation.isPending ? "..." : "Zurückgeben"}
+                      </button>
+                    )}
                   </div>
                 </div>
                 <div className="mt-2 text-xs text-slate-700">
@@ -170,10 +206,31 @@ const Form4: React.FC = () => {
                     {formatDate(loan.end_date)}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
-                    {formatDate(loan.take_date)}
+                    {loan.take_date ? (
+                      formatDate(loan.take_date)
+                    ) : (
+                      <button
+                        className="inline-flex items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-50"
+                        onClick={() => takeMutation.mutate(loan.id)}
+                        disabled={takeMutation.isPending}
+                      >
+                        {takeMutation.isPending ? "..." : "Abholen"}
+                      </button>
+                    )}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
-                    {formatDate(loan.returned_date)}
+                    {loan.returned_date ? (
+                      formatDate(loan.returned_date)
+                    ) : (
+                      <button
+                        className="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 disabled:opacity-50"
+                        onClick={() => returnMutation.mutate(loan.id)}
+                        disabled={returnMutation.isPending || !loan.take_date}
+                        title={!loan.take_date ? "Erst abholen" : ""}
+                      >
+                        {returnMutation.isPending ? "..." : "Zurückgeben"}
+                      </button>
+                    )}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap font-mono tabular-nums text-slate-900">
                     {formatDate(loan.created_at)}
@@ -182,7 +239,7 @@ const Form4: React.FC = () => {
                     <div className="text-slate-900">
                       {Array.isArray(loan.loaned_items_name)
                         ? loan.loaned_items_name.join(", ")
-                        : "-"}
+                        : ""}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">

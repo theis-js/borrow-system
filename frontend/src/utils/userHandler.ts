@@ -100,3 +100,40 @@ export const createLoan = async (startDate: string, endDate: string) => {
 
   return true;
 };
+
+export const onReturn = async (loanID: number) => {
+  const response = await fetch(
+    `http://localhost:8002/api/returnLoan/${loanID}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token") || ""}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    myToast("Fehler beim Zurückgeben der Ausleihe", "error");
+    return false;
+  }
+
+  myToast("Ausleihe erfolgreich zurückgegeben!", "success");
+  return true;
+};
+
+export const onTake = async (loanID: number) => {
+  const response = await fetch(`http://localhost:8002/api/takeLoan/${loanID}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${Cookies.get("token") || ""}`,
+    },
+  });
+
+  if (!response.ok) {
+    myToast("Fehler beim Ausleihen der Ausleihe", "error");
+    return false;
+  }
+
+  myToast("Ausleihe erfolgreich ausgeliehen!", "success");
+  return true;
+};

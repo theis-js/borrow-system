@@ -6,6 +6,7 @@ import UserTable from "../components/UserTable";
 import ItemTable from "../components/ItemTable";
 import LockerTable from "../components/LockerTable";
 import LoanTable from "../components/LoanTable";
+import { MoveLeft } from "lucide-react";
 
 type DashboardProps = {
   onLogout?: () => void;
@@ -46,7 +47,23 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           </Flex>
         </Flex>
         <Box as="main" flex="1" p={6}>
-          {activeView === "" && <Text>Bitte wählen Sie eine Ansicht aus.</Text>}
+          {activeView === "" && (
+            <Flex
+              align="center"
+              gap={3}
+              p={4}
+              border="1px dashed"
+              borderColor="gray.300"
+              borderRadius="md"
+              bg="gray.50"
+              color="gray.700"
+              fontSize="lg"
+              fontWeight="semibold"
+            >
+              <MoveLeft size={20} />
+              Bitte wählen Sie eine Ansicht aus.
+            </Flex>
+          )}
           {activeView === "User" && <UserTable />}
           {activeView === "Ausleihen" && <LoanTable />}
           {activeView === "Gegenstände" && <ItemTable />}

@@ -328,3 +328,33 @@ export const loginAdmin = async (username, password) => {
   if (result.length > 0) return { success: true, data: result[0] };
   return { success: false };
 };
+
+export const getAllUsers = async () => {
+  const [result] = await pool.query("SELECT * FROM users");
+  if (result.length > 0) return { success: true, data: result };
+  return { success: false };
+};
+
+export const deleteUserID = async (userId) => {
+  const [result] = await pool.query("DELETE FROM users WHERE id = ?", [userId]);
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const handleEdit = async (userId, username, role, password) => {
+  const [result] = await pool.query(
+    "UPDATE users SET username = ?, role = ?, password = ? WHERE id = ?",
+    [username, role, password, userId]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const createUser = async (username, role, password) => {
+  const [result] = await pool.query(
+    "INSERT INTO users (username, role, password) VALUES (?, ?, ?)",
+    [username, role, password]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};

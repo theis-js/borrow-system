@@ -13,7 +13,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   useEffect(() => {
     if (Cookies.get("token")) {
-      setIsLoggedIn(true);
+      const verifyToken = async () => {
+        const response = await fetch("http://localhost:8002/api/verifyToken", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        });
+        if (response.ok) {
+          setIsLoggedIn(true);
+        } else {
+          Cookies.remove("token");
+          setIsLoggedIn(false);
+          window.location.reload();
+        }
+      };
+      verifyToken();
     }
   }, []);
 

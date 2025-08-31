@@ -10,6 +10,10 @@ import {
   onTake,
   loginAdmin,
   onReturn,
+  getAllUsers,
+  deleteUserID,
+  handleEdit,
+  createUser,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -167,8 +171,6 @@ router.post("/createLoan", authenticate, async (req, res) => {
   }
 });
 
-
-
 // Admin panel functions
 
 router.post("/loginAdmin", async (req, res) => {
@@ -194,6 +196,46 @@ router.post("/loginAdmin", async (req, res) => {
   }
 
   return res.status(401).json({ message: "Invalid credentials" });
+});
+
+router.get("/allUsers", authenticate, async (req, res) => {
+  const result = await getAllUsers();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch users" });
+});
+
+router.delete("/deleteUser/:id", authenticate, async (req, res) => {
+  const userId = req.params.id;
+  const result = await deleteUserID(userId);
+  if (result.success) {
+    return res.status(200).json({ message: "User deleted successfully" });
+  }
+  return res.status(500).json({ message: "Failed to delete user" });
+});
+
+router.get("/verifyToken", authenticate, async (req, res) => {
+  res.status(200).json({ message: "Token is valid" });
+});
+
+router.put("/editUser/:id", authenticate, async (req, res) => {
+  const userId = req.params.id;
+  const { username, role, password } = req.body || {};
+  const result = await handleEdit(userId, username, role, password);
+  if (result.success) {
+    return res.status(200).json({ message: "User edited successfully" });
+  }
+  return res.status(500).json({ message: "Failed to edit user" });
+});
+
+router.post("/createUser", authenticate, async (req, res) => {
+  const { username, role, password } = req.body || {};
+  const result = await createUser(username, role, password);
+  if (result.success) {
+    return res.status(201).json({ message: "User created successfully" });
+  }
+  return res.status(500).json({ message: "Failed to create user" });
 });
 
 export default router;

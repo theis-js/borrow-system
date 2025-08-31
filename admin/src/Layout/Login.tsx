@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { loginFunc } from "@/utils/loginUser";
-import MyAlert from "@/components/myChakra/MyAlert";
+import MyAlert from "../components/myChakra/MyAlert";
 import { Button, Card, Field, Input, Stack } from "@chakra-ui/react";
 
 const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
@@ -50,7 +50,7 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
         </Stack>
       </Card.Body>
       <Card.Footer justifyContent="flex-end">
-        {isError && <MyAlert title={errorMsg} description={errorDsc} />}
+        {isError && <MyAlert status="error" title={errorMsg} description={errorDsc} />}
         <Button onClick={() => handleLogin()} variant="solid">
           Login
         </Button>

@@ -319,3 +319,12 @@ export const onReturn = async (loanId) => {
   }
   return { success: false };
 };
+
+export const loginAdmin = async (username, password) => {
+  const [result] = await pool.query(
+    "SELECT * FROM admins WHERE username = ? AND password = ?",
+    [username, password]
+  );
+  if (result.length > 0) return { success: true, data: result[0] };
+  return { success: false };
+};

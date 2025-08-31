@@ -8,6 +8,7 @@ import {
   getBorrowableItemsFromDatabase,
   createLoanInDatabase,
   onTake,
+  loginAdmin,
   onReturn,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
@@ -164,6 +165,35 @@ router.post("/createLoan", authenticate, async (req, res) => {
     console.error("createLoan error:", err);
     return res.status(500).json({ message: "Failed to create loan" });
   }
+});
+
+
+
+// Admin panel functions
+
+router.post("/loginAdmin", async (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
+
+  const result = await loginAdmin(username, password);
+  if (result.success) {
+    const token = await generateToken({
+      username: result.data.username,
+      role: result.data.role,
+    });
+
+    return res.status(200).json({
+      message: "Login successful",
+      first_name: result.data.first_name,
+      token,
+    });
+  }
+
+  return res.status(401).json({ message: "Invalid credentials" });
 });
 
 export default router;

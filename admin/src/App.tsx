@@ -1,9 +1,12 @@
 import "./App.css";
+import Layout from "./Layout/Layout";
 
 function App() {
   return (
     <>
-      <p>Admin panel</p>
+      <Layout>
+        <p></p>
+      </Layout>
     </>
   );
 }

@@ -14,17 +14,17 @@ services:
       - /app/node_modules
     restart: unless-stopped
 
-  #  admin-frontend:
-  #    container_name: admin-frontend
-  #    build: ./admin
-  #    ports:
-  #      - "8003:8003"
-  #    environment:
-  #      - CHOKIDAR_USEPOLLING=true
-  #    volumes:
-  #      - ./admin:/app
-  #      - /app/node_modules
-  #    restart: unless-stopped
+  admin-frontend:
+    container_name: admin-frontend
+    build: ./admin
+    ports:
+      - "8003:8003"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./admin:/app
+      - /app/node_modules
+    restart: unless-stopped
 
   borrow_system-backend:
     container_name: borrow_system-backend

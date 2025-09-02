@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 
 export const fetchUserData = async () => {
-  const response = await fetch("http://localhost:8002/api/allUsers", {
+  const response = await fetch("https://backend.insta.the1s.de/api/allUsers", {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },

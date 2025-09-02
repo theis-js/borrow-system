@@ -13,7 +13,7 @@ export const loginFunc = async (
   password: string
 ): Promise<LoginResult> => {
   try {
-    const response = await fetch("http://localhost:8002/api/loginAdmin", {
+    const response = await fetch("https://backend.insta.the1s.de/api/loginAdmin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

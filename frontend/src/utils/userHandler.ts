@@ -103,7 +103,7 @@ export const createLoan = async (startDate: string, endDate: string) => {
 
 export const onReturn = async (loanID: number) => {
   const response = await fetch(
-    `http://localhost:8002/api/returnLoan/${loanID}`,
+    `https://backend.insta.the1s.de/api/returnLoan/${loanID}`,
     {
       method: "POST",
       headers: {
@@ -122,7 +122,7 @@ export const onReturn = async (loanID: number) => {
 };
 
 export const onTake = async (loanID: number) => {
-  const response = await fetch(`http://localhost:8002/api/takeLoan/${loanID}`, {
+  const response = await fetch(`https://backend.insta.the1s.de/api/takeLoan/${loanID}`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${Cookies.get("token") || ""}`,

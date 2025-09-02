@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     if (Cookies.get("token")) {
       const verifyToken = async () => {
-        const response = await fetch("http://localhost:8002/api/verifyToken", {
+        const response = await fetch("https://backend.insta.the1s.de/api/verifyToken", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,

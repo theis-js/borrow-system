@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 export const handleDelete = async (userId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/deleteUser/${userId}`,
+      `https://backend.insta.the1s.de/api/deleteUser/${userId}`,
       {
         method: "DELETE",
         headers: {
@@ -29,7 +29,7 @@ export const handleEdit = async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/editUser/${userId}`,
+      `https://backend.insta.the1s.de/api/editUser/${userId}`,
       {
         method: "PUT",
         headers: {
@@ -55,7 +55,7 @@ export const createUser = async (
   password: string
 ) => {
   try {
-    const response = await fetch(`http://localhost:8002/api/createUser`, {
+    const response = await fetch(`https://backend.insta.the1s.de/api/createUser`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export const createUser = async (
 export const deleteLoan = async (loanId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/deleteLoan/${loanId}`,
+      `https://backend.insta.the1s.de/api/deleteLoan/${loanId}`,
       {
         method: "DELETE",
         headers: {
@@ -97,7 +97,7 @@ export const deleteLoan = async (loanId: number) => {
 export const deleteItem = async (itemId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/deleteItem/${itemId}`,
+      `https://backend.insta.the1s.de/api/deleteItem/${itemId}`,
       {
         method: "DELETE",
         headers: {
@@ -120,7 +120,7 @@ export const createItem = async (
   can_borrow_role: number
 ) => {
   try {
-    const response = await fetch(`http://localhost:8002/api/createItem`, {
+    const response = await fetch(`https://backend.insta.the1s.de/api/createItem`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

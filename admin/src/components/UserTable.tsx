@@ -9,6 +9,7 @@ import {
   Input,
   HStack,
   IconButton,
+  Heading,
 } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { fetchUserData } from "@/utils/fetcher";
@@ -16,6 +17,7 @@ import { Save, Trash2, RefreshCcwDot, CirclePlus } from "lucide-react";
 import { handleDelete, handleEdit } from "@/utils/userActions";
 import MyAlert from "./myChakra/MyAlert";
 import AddForm from "./AddForm";
+import { formatDateTime } from "@/utils/userFuncs";
 
 type User = {
   id: number;
@@ -134,6 +136,9 @@ const UserTable: React.FC = () => {
       </HStack>
       {/* End action toolbar */}
 
+      <Heading marginBottom={4} size="md">
+        Benutzer
+      </Heading>
       {isError && (
         <MyAlert
           status={errorStatus}
@@ -160,12 +165,24 @@ const UserTable: React.FC = () => {
         <Table.Root size="sm" striped>
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>id</Table.ColumnHeader>
-              <Table.ColumnHeader>Username</Table.ColumnHeader>
-              <Table.ColumnHeader>Password</Table.ColumnHeader>
-              <Table.ColumnHeader>Role</Table.ColumnHeader>
-              <Table.ColumnHeader>Entry Created At</Table.ColumnHeader>
-              <Table.ColumnHeader>Actions</Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>#</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Benutzername</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Passwort</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Rolle</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Eintrag erstellt am</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Aktionen</strong>
+              </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -197,7 +214,7 @@ const UserTable: React.FC = () => {
                     value={user.role}
                   />
                 </Table.Cell>
-                <Table.Cell>{user.entry_created_at}</Table.Cell>
+                <Table.Cell>{formatDateTime(user.entry_created_at)}</Table.Cell>
                 <Table.Cell>
                   <Button
                     onClick={() =>

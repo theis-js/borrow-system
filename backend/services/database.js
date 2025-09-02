@@ -358,3 +358,9 @@ export const createUser = async (username, role, password) => {
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
 };
+
+export const getAllLoans = async () => {
+  const [result] = await pool.query("SELECT * FROM loans");
+  if (result.length > 0) return { success: true, data: result };
+  return { success: false };
+};

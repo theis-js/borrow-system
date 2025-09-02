@@ -36,7 +36,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           borderColor="gray.200"
           bg="gray.900"
         >
-          <Heading size="md">Dashboard</Heading>
+          <Heading size="xl">Dashboard</Heading>
           <Flex align="center" gap={6}>
             <Text fontSize="sm" color="white">
               Willkommen {userName}, im Admin-Dashboard!

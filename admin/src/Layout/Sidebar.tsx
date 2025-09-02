@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             _hover={{ bg: "gray.700", textDecoration: "none" }}
             onClick={viewUser}
           >
-            User
+            Benutzer
           </Link>
           <Link
             px={3}

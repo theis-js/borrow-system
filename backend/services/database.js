@@ -364,3 +364,24 @@ export const getAllLoans = async () => {
   if (result.length > 0) return { success: true, data: result };
   return { success: false };
 };
+
+export const getAllItems = async () => {
+  const [result] = await pool.query("SELECT * FROM items");
+  if (result.length > 0) return { success: true, data: result };
+  return { success: false };
+};
+
+export const deleteItemID = async (itemId) => {
+  const [result] = await pool.query("DELETE FROM items WHERE id = ?", [itemId]);
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const createItem = async (item_name, can_borrow_role) => {
+  const [result] = await pool.query(
+    "INSERT INTO items (item_name, can_borrow_role) VALUES (?, ?)",
+    [item_name, can_borrow_role]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};

@@ -15,6 +15,9 @@ import {
   handleEdit,
   createUser,
   getAllLoans,
+  getAllItems,
+  deleteItemID,
+  createItem,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -245,6 +248,32 @@ router.get("/allLoans", authenticate, async (req, res) => {
     return res.status(200).json(result.data);
   }
   return res.status(500).json({ message: "Failed to fetch loans" });
+});
+
+router.get("/allItems", authenticate, async (req, res) => {
+  const result = await getAllItems();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch items" });
+});
+
+router.delete("/deleteItem/:id", authenticate, async (req, res) => {
+  const itemId = req.params.id;
+  const result = await deleteItemID(itemId);
+  if (result.success) {
+    return res.status(200).json({ message: "Item deleted successfully" });
+  }
+  return res.status(500).json({ message: "Failed to delete item" });
+});
+
+router.post("/createItem", authenticate, async (req, res) => {
+  const { item_name, can_borrow_role } = req.body || {};
+  const result = await createItem(item_name, can_borrow_role);
+  if (result.success) {
+    return res.status(201).json({ message: "Item created successfully" });
+  }
+  return res.status(500).json({ message: "Failed to create item" });
 });
 
 export default router;

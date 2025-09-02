@@ -4,7 +4,6 @@ import { Box, Heading, Text, Flex, Button } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 import UserTable from "../components/UserTable";
 import ItemTable from "../components/ItemTable";
-import LockerTable from "../components/LockerTable";
 import LoanTable from "../components/LoanTable";
 import { MoveLeft } from "lucide-react";
 
@@ -67,7 +66,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           {activeView === "User" && <UserTable />}
           {activeView === "Ausleihen" && <LoanTable />}
           {activeView === "Gegenstände" && <ItemTable />}
-          {activeView === "Schließfächer" && <LockerTable />}
         </Box>
       </Box>
     </Flex>

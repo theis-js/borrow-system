@@ -1,18 +1,21 @@
 import React from "react";
 import {
   Table,
-  Code,
-  VStack,
   Spinner,
   Text,
-  Heading,
+  VStack,
   Button,
+  HStack,
+  IconButton,
+  Heading,
+  Code,
 } from "@chakra-ui/react";
+import { Tooltip } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import MyAlert from "./myChakra/MyAlert";
 import { formatDateTime } from "@/utils/userFuncs";
-import { Trash2 } from "lucide-react";
+import { Trash2, RefreshCcwDot } from "lucide-react";
 import { deleteLoan } from "@/utils/userActions";
 
 const LoanTable: React.FC = () => {
@@ -22,6 +25,7 @@ const LoanTable: React.FC = () => {
   const [errorDsc, setErrorDsc] = useState("");
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const setError = (
     status: "error" | "success",
@@ -70,13 +74,39 @@ const LoanTable: React.FC = () => {
         setItems(data);
       }
     });
-  }, []);
+  }, [reload]);
 
   return (
     <>
       <Heading marginBottom={4} size="md">
         Ausleihen
       </Heading>
+
+      {/* Action toolbar */}
+      <HStack
+        mb={4}
+        gap={3}
+        justify="flex-start"
+        align="center"
+        flexWrap="wrap"
+      >
+        <Tooltip content="Ausleihen neu laden" openDelay={300}>
+          <IconButton
+            aria-label="Refresh loans"
+            size="sm"
+            variant="outline"
+            rounded="md"
+            shadow="sm"
+            _hover={{ shadow: "md", transform: "translateY(-2px)" }}
+            _active={{ transform: "translateY(0)" }}
+            onClick={() => setReload(!reload)}
+          >
+            <RefreshCcwDot size={18} />
+          </IconButton>
+        </Tooltip>
+      </HStack>
+      {/* End action toolbar */}
+
       {isError && (
         <MyAlert
           status={errorStatus}

@@ -93,3 +93,47 @@ export const deleteLoan = async (loanId: number) => {
     return { success: false };
   }
 };
+
+export const deleteItem = async (itemId: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8002/api/deleteItem/${itemId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to delete item");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    return { success: false };
+  }
+};
+
+export const createItem = async (
+  item_name: string,
+  can_borrow_role: number
+) => {
+  try {
+    const response = await fetch(`http://localhost:8002/api/createItem`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ item_name, can_borrow_role }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to create item");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating item:", error);
+    return { success: false };
+  }
+};

@@ -59,15 +59,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           >
             Gegenstände
           </Link>
-          <Link
-            px={3}
-            py={2}
-            rounded="md"
-            _hover={{ bg: "gray.700", textDecoration: "none" }}
-            onClick={viewSchliessfaecher}
-          >
-            Schließfächer
-          </Link>
         </VStack>
 
         <Box mt="auto" pt={8} fontSize="xs" color="gray.500">

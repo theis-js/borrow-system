@@ -11,7 +11,6 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({
   viewAusleihen,
   viewGegenstaende,
-  viewSchliessfaecher,
   viewUser,
 }) => {
   return (

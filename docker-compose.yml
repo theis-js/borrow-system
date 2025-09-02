@@ -17,6 +17,9 @@ services:
   admin-frontend:
     container_name: admin-frontend
     build: ./admin
+    networks:
+      - proxynet
+      - borrow_system-internal
     ports:
       - "8103:8103"
     environment:

@@ -23,39 +23,43 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   };
 
   return (
-    <Card.Root maxW="sm">
-      <Card.Header>
-        <Card.Title>Login</Card.Title>
-        <Card.Description>
-          Bitte unten Ihre Admin Zugangsdaten eingeben.
-        </Card.Description>
-      </Card.Header>
-      <Card.Body>
-        <Stack gap="4" w="full">
-          <Field.Root>
-            <Field.Label>username</Field.Label>
-            <Input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Field.Root>
-          <Field.Root>
-            <Field.Label>password</Field.Label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Field.Root>
-        </Stack>
-      </Card.Body>
-      <Card.Footer justifyContent="flex-end">
-        {isError && <MyAlert status="error" title={errorMsg} description={errorDsc} />}
-        <Button onClick={() => handleLogin()} variant="solid">
-          Login
-        </Button>
-      </Card.Footer>
-    </Card.Root>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <Card.Root maxW="sm">
+        <Card.Header>
+          <Card.Title>Login</Card.Title>
+          <Card.Description>
+            Bitte unten Ihre Admin Zugangsdaten eingeben.
+          </Card.Description>
+        </Card.Header>
+        <Card.Body>
+          <Stack gap="4" w="full">
+            <Field.Root>
+              <Field.Label>username</Field.Label>
+              <Input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Field.Root>
+            <Field.Root>
+              <Field.Label>password</Field.Label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Field.Root>
+          </Stack>
+        </Card.Body>
+        <Card.Footer justifyContent="flex-end">
+          {isError && (
+            <MyAlert status="error" title={errorMsg} description={errorDsc} />
+          )}
+          <Button onClick={() => handleLogin()} variant="solid">
+            Login
+          </Button>
+        </Card.Footer>
+      </Card.Root>
+    </div>
   );
 };
 

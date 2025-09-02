@@ -8,9 +8,13 @@ export default defineConfig({
   plugins: [react(), svgr(), tailwindcss(), tsconfigPaths()],
   server: {
     host: "0.0.0.0",
-    port: 8003,
-    watch: {
-      usePolling: true,
+    allowedHosts: ["admin.insta.the1s.de"],
+    port: 8103,
+    watch: { usePolling: true },
+    hmr: {
+      host: "admin.insta.the1s.de",
+      port: 8103,
+      protocol: "wss",
     },
   },
 });

@@ -7,6 +7,17 @@ import {
   deleteLoanFromDatabase,
   getBorrowableItemsFromDatabase,
   createLoanInDatabase,
+  onTake,
+  loginAdmin,
+  onReturn,
+  getAllUsers,
+  deleteUserID,
+  handleEdit,
+  createUser,
+  getAllLoans,
+  getAllItems,
+  deleteItemID,
+  createItem,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -85,6 +96,26 @@ router.post("/borrowableItems", authenticate, async (req, res) => {
   }
 });
 
+router.post("/takeLoan/:id", authenticate, async (req, res) => {
+  const loanId = req.params.id;
+  const result = await onTake(loanId);
+  if (result.success) {
+    res.status(200).json({ message: "Loan taken successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to take loan" });
+  }
+});
+
+router.post("/returnLoan/:id", authenticate, async (req, res) => {
+  const loanId = req.params.id;
+  const result = await onReturn(loanId);
+  if (result.success) {
+    res.status(200).json({ message: "Loan returned successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to return loan" });
+  }
+});
+
 router.post("/createLoan", authenticate, async (req, res) => {
   try {
     const { items, startDate, endDate } = req.body || {};
@@ -142,6 +173,107 @@ router.post("/createLoan", authenticate, async (req, res) => {
     console.error("createLoan error:", err);
     return res.status(500).json({ message: "Failed to create loan" });
   }
+});
+
+// Admin panel functions
+
+router.post("/loginAdmin", async (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
+
+  const result = await loginAdmin(username, password);
+  if (result.success) {
+    const token = await generateToken({
+      username: result.data.username,
+      role: result.data.role,
+    });
+
+    return res.status(200).json({
+      message: "Login successful",
+      first_name: result.data.first_name,
+      token,
+    });
+  }
+
+  return res.status(401).json({ message: "Invalid credentials" });
+});
+
+router.get("/allUsers", authenticate, async (req, res) => {
+  const result = await getAllUsers();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch users" });
+});
+
+router.delete("/deleteUser/:id", authenticate, async (req, res) => {
+  const userId = req.params.id;
+  const result = await deleteUserID(userId);
+  if (result.success) {
+    return res.status(200).json({ message: "User deleted successfully" });
+  }
+  return res.status(500).json({ message: "Failed to delete user" });
+});
+
+router.get("/verifyToken", authenticate, async (req, res) => {
+  res.status(200).json({ message: "Token is valid" });
+});
+
+router.put("/editUser/:id", authenticate, async (req, res) => {
+  const userId = req.params.id;
+  const { username, role, password } = req.body || {};
+  const result = await handleEdit(userId, username, role, password);
+  if (result.success) {
+    return res.status(200).json({ message: "User edited successfully" });
+  }
+  return res.status(500).json({ message: "Failed to edit user" });
+});
+
+router.post("/createUser", authenticate, async (req, res) => {
+  const { username, role, password } = req.body || {};
+  const result = await createUser(username, role, password);
+  if (result.success) {
+    return res.status(201).json({ message: "User created successfully" });
+  }
+  return res.status(500).json({ message: "Failed to create user" });
+});
+
+router.get("/allLoans", authenticate, async (req, res) => {
+  const result = await getAllLoans();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch loans" });
+});
+
+router.get("/allItems", authenticate, async (req, res) => {
+  const result = await getAllItems();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch items" });
+});
+
+router.delete("/deleteItem/:id", authenticate, async (req, res) => {
+  const itemId = req.params.id;
+  const result = await deleteItemID(itemId);
+  if (result.success) {
+    return res.status(200).json({ message: "Item deleted successfully" });
+  }
+  return res.status(500).json({ message: "Failed to delete item" });
+});
+
+router.post("/createItem", authenticate, async (req, res) => {
+  const { item_name, can_borrow_role } = req.body || {};
+  const result = await createItem(item_name, can_borrow_role);
+  if (result.success) {
+    return res.status(201).json({ message: "Item created successfully" });
+  }
+  return res.status(500).json({ message: "Failed to create item" });
 });
 
 export default router;

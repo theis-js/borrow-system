@@ -294,3 +294,95 @@ export const createLoanInDatabase = async (
     conn.release();
   }
 };
+
+// These functions are only temporary, and will be deleted when the full bin is set up.
+
+export const onTake = async (loanId) => {
+  const [result] = await pool.query(
+    "UPDATE loans SET take_date = NOW() WHERE id = ?",
+    [loanId]
+  );
+
+  if (result.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};
+
+export const onReturn = async (loanId) => {
+  const [result] = await pool.query(
+    "UPDATE loans SET returned_date = NOW() WHERE id = ?",
+    [loanId]
+  );
+
+  if (result.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};
+
+export const loginAdmin = async (username, password) => {
+  const [result] = await pool.query(
+    "SELECT * FROM admins WHERE username = ? AND password = ?",
+    [username, password]
+  );
+  if (result.length > 0) return { success: true, data: result[0] };
+  return { success: false };
+};
+
+export const getAllUsers = async () => {
+  const [result] = await pool.query("SELECT * FROM users");
+  if (result.length > 0) return { success: true, data: result };
+  return { success: false };
+};
+
+export const deleteUserID = async (userId) => {
+  const [result] = await pool.query("DELETE FROM users WHERE id = ?", [userId]);
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const handleEdit = async (userId, username, role, password) => {
+  const [result] = await pool.query(
+    "UPDATE users SET username = ?, role = ?, password = ? WHERE id = ?",
+    [username, role, password, userId]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const createUser = async (username, role, password) => {
+  const [result] = await pool.query(
+    "INSERT INTO users (username, role, password) VALUES (?, ?, ?)",
+    [username, role, password]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const getAllLoans = async () => {
+  const [result] = await pool.query("SELECT * FROM loans");
+  if (result.length > 0) return { success: true, data: result };
+  return { success: false };
+};
+
+export const getAllItems = async () => {
+  const [result] = await pool.query("SELECT * FROM items");
+  if (result.length > 0) return { success: true, data: result };
+  return { success: false };
+};
+
+export const deleteItemID = async (itemId) => {
+  const [result] = await pool.query("DELETE FROM items WHERE id = ?", [itemId]);
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const createItem = async (item_name, can_borrow_role) => {
+  const [result] = await pool.query(
+    "INSERT INTO items (item_name, can_borrow_role) VALUES (?, ?)",
+    [item_name, can_borrow_role]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};

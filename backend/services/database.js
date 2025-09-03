@@ -327,7 +327,9 @@ export const loginAdmin = async (username, password) => {
 };
 
 export const getAllUsers = async () => {
-  const [result] = await pool.query("SELECT * FROM users");
+  const [result] = await pool.query(
+    "SELECT id, username, role, entry_created_at FROM users"
+  );
   if (result.length > 0) return { success: true, data: result };
   return { success: false };
 };
@@ -378,6 +380,15 @@ export const createItem = async (item_name, can_borrow_role) => {
   const [result] = await pool.query(
     "INSERT INTO items (item_name, can_borrow_role) VALUES (?, ?)",
     [item_name, can_borrow_role]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const changeUserPassword = async (username, newPassword) => {
+  const [result] = await pool.query(
+    "UPDATE users SET password = ? WHERE username = ?",
+    [newPassword, username]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

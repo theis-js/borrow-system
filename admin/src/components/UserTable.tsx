@@ -18,6 +18,7 @@ import { handleDelete, handleEdit } from "@/utils/userActions";
 import MyAlert from "./myChakra/MyAlert";
 import AddForm from "./AddForm";
 import { formatDateTime } from "@/utils/userFuncs";
+import ChangePWform from "./ChangePWform";
 
 type User = {
   id: number;
@@ -36,6 +37,8 @@ const UserTable: React.FC = () => {
   const [errorDsc, setErrorDsc] = useState("");
   const [reload, setReload] = useState(false);
   const [addForm, setAddForm] = useState(false);
+  const [changePWform, setChangePWform] = useState(false);
+  const [changeUsr, setChangeUsr] = useState("");
 
   const setError = (
     status: "error" | "success",
@@ -55,6 +58,11 @@ const UserTable: React.FC = () => {
         user.id === userId ? { ...user, [field]: value } : user
       )
     );
+  };
+
+  const handlePasswordChange = (username: string) => {
+    setChangeUsr(username);
+    setChangePWform(true);
   };
 
   useEffect(() => {
@@ -139,6 +147,16 @@ const UserTable: React.FC = () => {
       <Heading marginBottom={4} size="md">
         Benutzer
       </Heading>
+      {changePWform && (
+        <ChangePWform
+          onClose={() => {
+            setChangePWform(false);
+            setReload(!reload);
+          }}
+          alert={setError}
+          username={changeUsr}
+        />
+      )}
       {isError && (
         <MyAlert
           status={errorStatus}
@@ -172,7 +190,7 @@ const UserTable: React.FC = () => {
                 <strong>Benutzername</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Passwort</strong>
+                <strong>Passwort ändern</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
                 <strong>Rolle</strong>
@@ -198,12 +216,9 @@ const UserTable: React.FC = () => {
                   />
                 </Table.Cell>
                 <Table.Cell>
-                  <Input
-                    onChange={(e) =>
-                      handleInputChange(user.id, "password", e.target.value)
-                    }
-                    value={user.password}
-                  />
+                  <Button onClick={() => handlePasswordChange(user.username)}>
+                    Passwort ändern
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Input

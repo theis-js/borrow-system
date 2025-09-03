@@ -18,6 +18,7 @@ import {
   getAllItems,
   deleteItemID,
   createItem,
+  changeUserPassword,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -274,6 +275,19 @@ router.post("/createItem", authenticate, async (req, res) => {
     return res.status(201).json({ message: "Item created successfully" });
   }
   return res.status(500).json({ message: "Failed to create item" });
+});
+
+router.post("/changePWadmin", authenticate, async (req, res) => {
+  const newPassword = req.body.newPassword;
+  if (!newPassword) {
+    return res.status(400).json({ message: "New password is required" });
+  }
+
+  const result = await changeUserPassword(req.body.username, newPassword);
+  if (result.success) {
+    return res.status(200).json({ message: "Password changed successfully" });
+  }
+  return res.status(500).json({ message: "Failed to change password" });
 });
 
 export default router;

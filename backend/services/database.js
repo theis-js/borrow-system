@@ -294,24 +294,44 @@ export const createLoanInDatabase = async (
 // These functions are only temporary, and will be deleted when the full bin is set up.
 
 export const onTake = async (loanId) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE id = ?",
+    [loanId]
+  );
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET inSafe = 0 WHERE id IN (?)",
+    [items.map((item) => item.loaned_items_id)]
+  );
+
   const [result] = await pool.query(
     "UPDATE loans SET take_date = NOW() WHERE id = ?",
     [loanId]
   );
 
-  if (result.affectedRows > 0) {
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
   return { success: false };
 };
 
 export const onReturn = async (loanId) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE id = ?",
+    [loanId]
+  );
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET inSafe = 1 WHERE id IN (?)",
+    [items.map((item) => item.loaned_items_id)]
+  );
+
   const [result] = await pool.query(
     "UPDATE loans SET returned_date = NOW() WHERE id = ?",
     [loanId]
   );
 
-  if (result.affectedRows > 0) {
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
   return { success: false };

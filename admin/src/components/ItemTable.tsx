@@ -24,6 +24,7 @@ import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import { deleteItem } from "@/utils/userActions";
 import AddItemForm from "./AddItemForm";
+import { formatDateTime } from "@/utils/userFuncs";
 
 type Items = {
   id: number;
@@ -232,7 +233,7 @@ const ItemTable: React.FC = () => {
                   </Tag.Root>
                 )}
               </Table.Cell>
-              <Table.Cell>{item.entry_created_at}</Table.Cell>
+              <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
               <Table.Cell>
                 <Button
                   onClick={() =>

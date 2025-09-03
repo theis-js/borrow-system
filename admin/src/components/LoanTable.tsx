@@ -78,10 +78,6 @@ const LoanTable: React.FC = () => {
 
   return (
     <>
-      <Heading marginBottom={4} size="md">
-        Ausleihen
-      </Heading>
-
       {/* Action toolbar */}
       <HStack
         mb={4}
@@ -106,6 +102,10 @@ const LoanTable: React.FC = () => {
         </Tooltip>
       </HStack>
       {/* End action toolbar */}
+
+      <Heading marginBottom={4} size="md">
+        Ausleihen
+      </Heading>
 
       {isError && (
         <MyAlert

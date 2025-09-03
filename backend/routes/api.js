@@ -19,6 +19,7 @@ import {
   deleteItemID,
   createItem,
   changeUserPassword,
+  changeUserPasswordFRONTEND,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -173,6 +174,21 @@ router.post("/createLoan", authenticate, async (req, res) => {
   } catch (err) {
     console.error("createLoan error:", err);
     return res.status(500).json({ message: "Failed to create loan" });
+  }
+});
+
+router.post("/changePassword", authenticate, async (req, res) => {
+  const { oldPassword, newPassword } = req.body || {};
+  const username = req.user.username;
+  const result = await changeUserPasswordFRONTEND(
+    username,
+    oldPassword,
+    newPassword
+  );
+  if (result.success) {
+    res.status(200).json({ message: "Password changed successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to change password" });
   }
 });
 

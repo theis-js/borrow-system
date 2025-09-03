@@ -1,10 +1,27 @@
 import React from "react";
+import { changePW } from "../utils/userHandler";
+import { myToast } from "../utils/toastify";
 
 type HeaderProps = {
   onLogout: () => void;
 };
 
 const Header: React.FC<HeaderProps> = ({ onLogout }) => {
+  const passwordForm = () => {
+    const oldPW = window.prompt("Altes Passwort");
+    const newPW = window.prompt("Neues Passwort");
+    const repeatNewPW = window.prompt("Neues Passwort wiederholen");
+    if (oldPW && newPW && repeatNewPW) {
+      if (newPW === repeatNewPW) {
+        changePW(oldPW, newPW);
+      } else {
+        myToast("Die neuen Passwörter stimmen nicht überein.", "error");
+      }
+    } else {
+      myToast("Bitte alle Felder ausfüllen.", "error");
+    }
+  };
+
   return (
     <header className="mb-4 sm:mb-6">
       <div className="flex items-start justify-between gap-3">
@@ -33,6 +50,13 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
             Source Code
           </button>
         </a>
+        <button
+          type="button"
+          onClick={passwordForm}
+          className="h-9 px-3 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 transition"
+        >
+          Passwort ändern
+        </button>
       </div>
     </header>
   );

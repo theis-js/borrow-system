@@ -413,3 +413,16 @@ export const changeUserPassword = async (username, newPassword) => {
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
 };
+
+export const changeUserPasswordFRONTEND = async (
+  username,
+  oldPassword,
+  newPassword
+) => {
+  const [result] = await pool.query(
+    "UPDATE users SET password = ? WHERE username = ? AND password = ?",
+    [newPassword, username, oldPassword]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};

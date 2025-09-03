@@ -137,3 +137,22 @@ export const onTake = async (loanID: number) => {
   myToast("Ausleihe erfolgreich ausgeliehen!", "success");
   return true;
 };
+
+export const changePW = async (oldPassword: string, newPassword: string) => {
+  const response = await fetch("http://localhost:8002/api/changePassword", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("token") || ""}`,
+    },
+    body: JSON.stringify({ oldPassword, newPassword }),
+  });
+
+  if (!response.ok) {
+    myToast("Fehler beim Ändern des Passworts", "error");
+    return false;
+  }
+
+  myToast("Passwort erfolgreich geändert!", "success");
+  return true;
+};

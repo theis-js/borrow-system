@@ -87,11 +87,8 @@ export const getItemsFromDatabase = async (role) => {
 };
 
 export const getLoansFromDatabase = async () => {
-  const [result] = await pool.query("SELECT * FROM loans;");
-  if (result.length > 0) {
-    return { success: true, data: result };
-  }
-  return { success: false };
+  const [rows] = await pool.query("SELECT * FROM loans;");
+  return { success: true, data: rows.length > 0 ? rows : null };
 };
 
 export const getUserLoansFromDatabase = async (username) => {

@@ -300,9 +300,15 @@ export const onTake = async (loanId) => {
     [loanId]
   );
 
+  if (items.length === 0) return { success: false };
+
+  const itemIds = Array.isArray(items[0].loaned_items_id)
+    ? items[0].loaned_items_id
+    : JSON.parse(items[0].loaned_items_id || "[]");
+
   const [setItemStates] = await pool.query(
     "UPDATE items SET inSafe = 0 WHERE id IN (?)",
-    [items.map((item) => item.loaned_items_id)]
+    [itemIds]
   );
 
   const [result] = await pool.query(
@@ -322,9 +328,15 @@ export const onReturn = async (loanId) => {
     [loanId]
   );
 
+  if (items.length === 0) return { success: false };
+
+  const itemIds = Array.isArray(items[0].loaned_items_id)
+    ? items[0].loaned_items_id
+    : JSON.parse(items[0].loaned_items_id || "[]");
+
   const [setItemStates] = await pool.query(
     "UPDATE items SET inSafe = 1 WHERE id IN (?)",
-    [items.map((item) => item.loaned_items_id)]
+    [itemIds]
   );
 
   const [result] = await pool.query(

@@ -18,6 +18,8 @@ import {
   getAllItems,
   deleteItemID,
   createItem,
+  changeUserPassword,
+  changeUserPasswordFRONTEND,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -175,6 +177,21 @@ router.post("/createLoan", authenticate, async (req, res) => {
   }
 });
 
+router.post("/changePassword", authenticate, async (req, res) => {
+  const { oldPassword, newPassword } = req.body || {};
+  const username = req.user.username;
+  const result = await changeUserPasswordFRONTEND(
+    username,
+    oldPassword,
+    newPassword
+  );
+  if (result.success) {
+    res.status(200).json({ message: "Password changed successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to change password" });
+  }
+});
+
 // Admin panel functions
 
 router.post("/loginAdmin", async (req, res) => {
@@ -223,10 +240,10 @@ router.get("/verifyToken", authenticate, async (req, res) => {
   res.status(200).json({ message: "Token is valid" });
 });
 
-router.put("/editUser/:id", authenticate, async (req, res) => {
+router.post("/editUser/:id", authenticate, async (req, res) => {
   const userId = req.params.id;
-  const { username, role, password } = req.body || {};
-  const result = await handleEdit(userId, username, role, password);
+  const { username, role } = req.body || {};
+  const result = await handleEdit(userId, username, role);
   if (result.success) {
     return res.status(200).json({ message: "User edited successfully" });
   }
@@ -274,6 +291,19 @@ router.post("/createItem", authenticate, async (req, res) => {
     return res.status(201).json({ message: "Item created successfully" });
   }
   return res.status(500).json({ message: "Failed to create item" });
+});
+
+router.post("/changePWadmin", authenticate, async (req, res) => {
+  const newPassword = req.body.newPassword;
+  if (!newPassword) {
+    return res.status(400).json({ message: "New password is required" });
+  }
+
+  const result = await changeUserPassword(req.body.username, newPassword);
+  if (result.success) {
+    return res.status(200).json({ message: "Password changed successfully" });
+  }
+  return res.status(500).json({ message: "Failed to change password" });
 });
 
 export default router;

@@ -88,11 +88,8 @@ export const getItemsFromDatabase = async (role) => {
 };
 
 export const getLoansFromDatabase = async () => {
-  const [result] = await pool.query("SELECT * FROM loans;");
-  if (result.length > 0) {
-    return { success: true, data: result };
-  }
-  return { success: false };
+  const [rows] = await pool.query("SELECT * FROM loans;");
+  return { success: true, data: rows.length > 0 ? rows : null };
 };
 
 export const getUserLoansFromDatabase = async (username) => {
@@ -298,24 +295,44 @@ export const createLoanInDatabase = async (
 // These functions are only temporary, and will be deleted when the full bin is set up.
 
 export const onTake = async (loanId) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE id = ?",
+    [loanId]
+  );
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET inSafe = 0 WHERE id IN (?)",
+    [items.map((item) => item.loaned_items_id)]
+  );
+
   const [result] = await pool.query(
     "UPDATE loans SET take_date = NOW() WHERE id = ?",
     [loanId]
   );
 
-  if (result.affectedRows > 0) {
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
   return { success: false };
 };
 
 export const onReturn = async (loanId) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE id = ?",
+    [loanId]
+  );
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET inSafe = 1 WHERE id IN (?)",
+    [items.map((item) => item.loaned_items_id)]
+  );
+
   const [result] = await pool.query(
     "UPDATE loans SET returned_date = NOW() WHERE id = ?",
     [loanId]
   );
 
-  if (result.affectedRows > 0) {
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
   return { success: false };
@@ -331,7 +348,9 @@ export const loginAdmin = async (username, password) => {
 };
 
 export const getAllUsers = async () => {
-  const [result] = await pool.query("SELECT * FROM users");
+  const [result] = await pool.query(
+    "SELECT id, username, role, entry_created_at FROM users"
+  );
   if (result.length > 0) return { success: true, data: result };
   return { success: false };
 };
@@ -342,10 +361,10 @@ export const deleteUserID = async (userId) => {
   return { success: false };
 };
 
-export const handleEdit = async (userId, username, role, password) => {
+export const handleEdit = async (userId, username, role) => {
   const [result] = await pool.query(
-    "UPDATE users SET username = ?, role = ?, password = ? WHERE id = ?",
-    [username, role, password, userId]
+    "UPDATE users SET username = ?, role = ? WHERE id = ?",
+    [username, role, userId]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
@@ -382,6 +401,28 @@ export const createItem = async (item_name, can_borrow_role) => {
   const [result] = await pool.query(
     "INSERT INTO items (item_name, can_borrow_role) VALUES (?, ?)",
     [item_name, can_borrow_role]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const changeUserPassword = async (username, newPassword) => {
+  const [result] = await pool.query(
+    "UPDATE users SET password = ? WHERE username = ?",
+    [newPassword, username]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const changeUserPasswordFRONTEND = async (
+  username,
+  oldPassword,
+  newPassword
+) => {
+  const [result] = await pool.query(
+    "UPDATE users SET password = ? WHERE username = ? AND password = ?",
+    [newPassword, username, oldPassword]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

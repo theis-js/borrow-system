@@ -24,19 +24,18 @@ export const handleDelete = async (userId: number) => {
 export const handleEdit = async (
   userId: number,
   username: string,
-  role: string,
-  password: string
+  role: string
 ) => {
   try {
     const response = await fetch(
       `https://backend.insta.the1s.de/api/editUser/${userId}`,
       {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ username, role, password }),
+        body: JSON.stringify({ username, role }),
       }
     );
     if (!response.ok) {
@@ -69,6 +68,26 @@ export const createUser = async (
     return { success: true };
   } catch (error) {
     console.error("Error creating user:", error);
+    return { success: false };
+  }
+};
+
+export const changePW = async (newPassword: string, username: string) => {
+  try {
+    const response = await fetch(`http://localhost:8002/api/changePWadmin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ newPassword, username }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to change password");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error changing password:", error);
     return { success: false };
   }
 };

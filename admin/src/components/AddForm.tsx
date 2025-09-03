@@ -65,6 +65,13 @@ const AddForm: React.FC<AddFormProps> = ({ onClose, alert }) => {
                   "Der Nutzer wurde erfolgreich erstellt."
                 );
                 onClose();
+              } else {
+                alert(
+                  "error",
+                  "Fehler beim Erstellen des Nutzers",
+                  "Es gab einen Fehler beim Erstellen des Nutzers. Vielleicht gibt es bereits einen Nutzer mit diesem Benutzernamen."
+                );
+                onClose();
               }
             }}
           >

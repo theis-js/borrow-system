@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Card, Field, Input, Stack } from "@chakra-ui/react";
+import { Button, Card, Field, Input, Stack, Alert } from "@chakra-ui/react";
 import { changePW } from "@/utils/userActions";
+import { useState } from "react";
 
 type ChangePWformProps = {
   onClose: () => void;
@@ -17,6 +18,14 @@ const ChangePWform: React.FC<ChangePWformProps> = ({
   alert,
   username,
 }) => {
+  const [showSubAlert, setShowSubAlert] = useState(false);
+  const [subAlertMessage, setSubAlertMessage] = useState("");
+
+  const subAlert = (message: string) => {
+    setSubAlertMessage(message);
+    setShowSubAlert(true);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <Card.Root maxW="sm">
@@ -64,7 +73,10 @@ const ChangePWform: React.FC<ChangePWformProps> = ({
                   ) as HTMLInputElement
                 )?.value.trim() || "";
 
-              if (!newPassword || newPassword !== confirmNewPassword) return;
+              if (!newPassword || newPassword !== confirmNewPassword) {
+                subAlert("Passwörter stimmen nicht überein!");
+                return;
+              }
 
               const res = await changePW(newPassword, username);
               if (res.success) {
@@ -86,6 +98,14 @@ const ChangePWform: React.FC<ChangePWformProps> = ({
           >
             Ändern
           </Button>
+          {showSubAlert && (
+            <Alert.Root status="error">
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>{subAlertMessage}</Alert.Title>
+              </Alert.Content>
+            </Alert.Root>
+          )}
         </Card.Footer>
       </Card.Root>
     </div>

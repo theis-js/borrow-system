@@ -21,9 +21,10 @@ type Loan = {
 
 const formatDate = (iso: string | null) => {
   if (!iso) return "-";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" });
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!m) return iso;
+  const [, y, M, d, h, min] = m;
+  return `${d}.${M}.${y} ${h}:${min}`;
 };
 
 async function fetchUserLoans(): Promise<Loan[]> {

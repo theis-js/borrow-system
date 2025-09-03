@@ -340,10 +340,10 @@ export const deleteUserID = async (userId) => {
   return { success: false };
 };
 
-export const handleEdit = async (userId, username, role, password) => {
+export const handleEdit = async (userId, username, role) => {
   const [result] = await pool.query(
-    "UPDATE users SET username = ?, role = ?, password = ? WHERE id = ?",
-    [username, role, password, userId]
+    "UPDATE users SET username = ?, role = ? WHERE id = ?",
+    [username, role, userId]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

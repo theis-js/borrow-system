@@ -224,10 +224,10 @@ router.get("/verifyToken", authenticate, async (req, res) => {
   res.status(200).json({ message: "Token is valid" });
 });
 
-router.put("/editUser/:id", authenticate, async (req, res) => {
+router.post("/editUser/:id", authenticate, async (req, res) => {
   const userId = req.params.id;
-  const { username, role, password } = req.body || {};
-  const result = await handleEdit(userId, username, role, password);
+  const { username, role } = req.body || {};
+  const result = await handleEdit(userId, username, role);
   if (result.success) {
     return res.status(200).json({ message: "User edited successfully" });
   }

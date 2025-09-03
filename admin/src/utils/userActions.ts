@@ -24,19 +24,18 @@ export const handleDelete = async (userId: number) => {
 export const handleEdit = async (
   userId: number,
   username: string,
-  role: string,
-  password: string
+  role: string
 ) => {
   try {
     const response = await fetch(
       `http://localhost:8002/api/editUser/${userId}`,
       {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ username, role, password }),
+        body: JSON.stringify({ username, role }),
       }
     );
     if (!response.ok) {

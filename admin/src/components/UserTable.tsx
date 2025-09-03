@@ -237,7 +237,6 @@ const UserTable: React.FC = () => {
                         user.id,
                         user.username,
                         user.role,
-                        user.password
                       ).then((response) => {
                         if (response.success) {
                           setError(

@@ -156,3 +156,16 @@ export const createItem = async (
     return { success: false };
   }
 };
+
+export const handleEditItems = async (
+  itemId: number,
+  item_name: string,
+  can_borrow_role: string
+) => {
+  try {
+      // write the logic for editing an item
+  } catch (error) {
+    console.error("Error editing item:", error);
+    return { success: false };
+  }
+};

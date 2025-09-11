@@ -10,6 +10,7 @@ import {
   Heading,
   Icon,
   Tag,
+  Input,
 } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import MyAlert from "./myChakra/MyAlert";
@@ -19,10 +20,11 @@ import {
   CirclePlus,
   CheckCircle2,
   XCircle,
+  Save,
 } from "lucide-react";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import { deleteItem } from "@/utils/userActions";
+import { deleteItem, handleEditItems } from "@/utils/userActions";
 import AddItemForm from "./AddItemForm";
 import { formatDateTime } from "@/utils/userFuncs";
 
@@ -43,6 +45,18 @@ const ItemTable: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [addForm, setAddForm] = useState(false);
+
+  const handleItemNameChange = (id: number, value: string) => {
+    setItems((prev) =>
+      prev.map((it) => (it.id === id ? { ...it, item_name: value } : it))
+    );
+  };
+
+  const handleCanBorrowRoleChange = (id: number, value: string) => {
+    setItems((prev) =>
+      prev.map((it) => (it.id === id ? { ...it, can_borrow_role: value } : it))
+    );
+  };
 
   const setError = (
     status: "error" | "success",
@@ -180,8 +194,22 @@ const ItemTable: React.FC = () => {
           {items.map((item) => (
             <Table.Row key={item.id}>
               <Table.Cell>{item.id}</Table.Cell>
-              <Table.Cell>{item.item_name}</Table.Cell>
-              <Table.Cell>{item.can_borrow_role}</Table.Cell>
+              <Table.Cell>
+                <Input
+                  onChange={(e) =>
+                    handleItemNameChange(item.id, e.target.value)
+                  }
+                  value={item.item_name}
+                />
+              </Table.Cell>
+              <Table.Cell>
+                <Input
+                  onChange={(e) =>
+                    handleCanBorrowRoleChange(item.id, e.target.value)
+                  }
+                  value={item.can_borrow_role}
+                />
+              </Table.Cell>
               <Table.Cell>
                 {item.inSafe ? (
                   <Tag.Root
@@ -235,6 +263,27 @@ const ItemTable: React.FC = () => {
               </Table.Cell>
               <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
               <Table.Cell>
+                <Button
+                  onClick={() =>
+                    handleEditItems(
+                      item.id,
+                      item.item_name,
+                      item.can_borrow_role
+                    ).then((response) => {
+                      if (response.success) {
+                        setError(
+                          "success",
+                          "User edited",
+                          "The user has been successfully edited."
+                        );
+                      }
+                    })
+                  }
+                  colorPalette="teal"
+                  size="sm"
+                >
+                  <Save />
+                </Button>
                 <Button
                   onClick={() =>
                     deleteItem(item.id).then((response) => {

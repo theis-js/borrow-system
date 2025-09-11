@@ -438,3 +438,12 @@ export const changeUserPasswordFRONTEND = async (
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
 };
+
+export const updateItemByID = async (itemId, item_name, can_borrow_role) => {
+  const [result] = await pool.query(
+    "UPDATE items SET item_name = ?, can_borrow_role = ? WHERE id = ?",
+    [item_name, can_borrow_role, itemId]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};

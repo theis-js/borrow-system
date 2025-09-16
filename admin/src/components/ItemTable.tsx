@@ -24,7 +24,11 @@ import {
 } from "lucide-react";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import { deleteItem, handleEditItems } from "@/utils/userActions";
+import {
+  deleteItem,
+  handleEditItems,
+  changeSafeState,
+} from "@/utils/userActions";
 import AddItemForm from "./AddItemForm";
 import { formatDateTime } from "@/utils/userFuncs";
 
@@ -211,55 +215,62 @@ const ItemTable: React.FC = () => {
                 />
               </Table.Cell>
               <Table.Cell>
-                {item.inSafe ? (
-                  <Tag.Root
-                    size="md"
-                    bg="green.500"
-                    color="white"
-                    px={4}
-                    py={1.5}
-                    rounded="full"
-                    display="inline-flex"
-                    alignItems="center"
-                    gap={2}
-                    shadow="sm"
-                    _hover={{ shadow: "md" }}
-                  >
-                    <Icon as={CheckCircle2} boxSize={4} />
-                    <Text
-                      as="span"
-                      fontSize="xs"
-                      letterSpacing="wide"
-                      textTransform="uppercase"
+                <Button
+                  onClick={() =>
+                    changeSafeState(item.id).then(() => setReload(!reload))
+                  }
+                  size="sm"
+                >
+                  {item.inSafe ? (
+                    <Tag.Root
+                      size="md"
+                      bg="green.500"
+                      color="white"
+                      px={4}
+                      py={1.5}
+                      rounded="full"
+                      display="inline-flex"
+                      alignItems="center"
+                      gap={2}
+                      shadow="sm"
+                      _hover={{ shadow: "md" }}
                     >
-                      Yes
-                    </Text>
-                  </Tag.Root>
-                ) : (
-                  <Tag.Root
-                    size="md"
-                    bg="red.500"
-                    color="white"
-                    px={4}
-                    py={1.5}
-                    rounded="full"
-                    display="inline-flex"
-                    alignItems="center"
-                    gap={2}
-                    shadow="sm"
-                    _hover={{ shadow: "md" }}
-                  >
-                    <Icon as={XCircle} boxSize={4} />
-                    <Text
-                      as="span"
-                      fontSize="xs"
-                      letterSpacing="wide"
-                      textTransform="uppercase"
+                      <Icon as={CheckCircle2} boxSize={4} />
+                      <Text
+                        as="span"
+                        fontSize="xs"
+                        letterSpacing="wide"
+                        textTransform="uppercase"
+                      >
+                        Yes
+                      </Text>
+                    </Tag.Root>
+                  ) : (
+                    <Tag.Root
+                      size="md"
+                      bg="red.500"
+                      color="white"
+                      px={4}
+                      py={1.5}
+                      rounded="full"
+                      display="inline-flex"
+                      alignItems="center"
+                      gap={2}
+                      shadow="sm"
+                      _hover={{ shadow: "md" }}
                     >
-                      No
-                    </Text>
-                  </Tag.Root>
-                )}
+                      <Icon as={XCircle} boxSize={4} />
+                      <Text
+                        as="span"
+                        fontSize="xs"
+                        letterSpacing="wide"
+                        textTransform="uppercase"
+                      >
+                        No
+                      </Text>
+                    </Tag.Root>
+                  )}
+                </Button>
               </Table.Cell>
               <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
               <Table.Cell>

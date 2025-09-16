@@ -319,9 +319,9 @@ router.post("/updateItemByID", authenticate, async (req, res) => {
   return res.status(500).json({ message: "Failed to update item" });
 });
 
-router.post("/setSafeState", authenticate, async (req, res) => {
-  const { itemId, state } = req.body || {};
-  const result = await changeInSafeStateV2(itemId, state);
+router.put("/changeSafeState/:itemId", authenticate, async (req, res) => {
+  const itemId = req.params.itemId;
+  const result = await changeInSafeStateV2(itemId);
   if (result.success) {
     return res
       .status(200)

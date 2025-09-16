@@ -196,9 +196,8 @@ export const handleEditItems = async (
 export const changeSafeState = async (itemId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/changeSafeState/${itemId}`,
+      `https://backend.insta.the1s.de/api/changeSafeState/${itemId}`,
       {
-        method: "PUT",
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
         },

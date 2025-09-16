@@ -273,8 +273,13 @@ const ItemTable: React.FC = () => {
                       if (response.success) {
                         setError(
                           "success",
-                          "User edited",
-                          "The user has been successfully edited."
+                          "Gegenstand erfolgreich bearbeitet!",
+                          "Gegenstand " +
+                            '"' +
+                            item.item_name +
+                            '" mit ID ' +
+                            item.id +
+                            " bearbeitet."
                         );
                       }
                     })

@@ -309,9 +309,10 @@ router.post("/changePWadmin", authenticate, async (req, res) => {
 });
 
 router.post("/updateItemByID", authenticate, async (req, res) => {
-  const itemId = req.body.id;
-  const { item_name, can_borrow_role } = req.body || {};
-  const result = await updateItemByID(itemId, item_name, can_borrow_role);
+  const role = req.body.can_borrow_role;
+  const itemId = req.body.itemId;
+  const item_name = req.body.item_name;
+  const result = await updateItemByID(itemId, item_name, role);
   if (result.success) {
     return res.status(200).json({ message: "Item updated successfully" });
   }

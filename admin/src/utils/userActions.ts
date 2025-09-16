@@ -163,7 +163,18 @@ export const handleEditItems = async (
   can_borrow_role: string
 ) => {
   try {
-      // write the logic for editing an item
+    const response = await fetch("http://localhost:8002/api/updateItemByID", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ itemId, item_name, can_borrow_role }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to edit item");
+    }
+    return { success: true };
   } catch (error) {
     console.error("Error editing item:", error);
     return { success: false };

@@ -39,10 +39,10 @@ export const getLoanByCodeV2 = async (loan_code) => {
   return { success: false };
 };
 
-export const changeInSafeStateV2 = async (itemId, state) => {
+export const changeInSafeStateV2 = async (itemId) => {
   const [result] = await pool.query(
-    "UPDATE items SET inSafe = ? WHERE id = ?",
-    [state, itemId]
+    "UPDATE items SET inSafe = NOT inSafe WHERE id = ?",
+    [itemId]
   );
   if (result.affectedRows > 0) {
     return { success: true };

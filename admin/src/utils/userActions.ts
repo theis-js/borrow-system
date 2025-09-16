@@ -180,3 +180,24 @@ export const handleEditItems = async (
     return { success: false };
   }
 };
+
+export const changeSafeState = async (itemId: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8002/api/changeSafeState/${itemId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to change safe state");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error changing safe state:", error);
+    return { success: false };
+  }
+};

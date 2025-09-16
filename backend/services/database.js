@@ -230,7 +230,7 @@ export const createLoanInDatabase = async (
     // Generate unique loan_code (retry a few times)
     let loanCode = null;
     for (let i = 0; i < 6; i++) {
-      const candidate = Math.floor(1000 + Math.random() * 900000); // 4-6 digits
+      const candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
       const [exists] = await conn.query(
         "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
         [candidate]
@@ -435,6 +435,15 @@ export const changeUserPasswordFRONTEND = async (
   const [result] = await pool.query(
     "UPDATE users SET password = ? WHERE username = ? AND password = ?",
     [newPassword, username, oldPassword]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const updateItemByID = async (itemId, item_name, can_borrow_role) => {
+  const [result] = await pool.query(
+    "UPDATE items SET item_name = ?, can_borrow_role = ? WHERE id = ?",
+    [item_name, can_borrow_role, itemId]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

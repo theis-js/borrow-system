@@ -20,6 +20,8 @@ import {
   createItem,
   changeUserPassword,
   changeUserPasswordFRONTEND,
+  changeInSafeStateV2,
+  updateItemByID,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -304,6 +306,28 @@ router.post("/changePWadmin", authenticate, async (req, res) => {
     return res.status(200).json({ message: "Password changed successfully" });
   }
   return res.status(500).json({ message: "Failed to change password" });
+});
+
+router.post("/updateItemByID", authenticate, async (req, res) => {
+  const role = req.body.can_borrow_role;
+  const itemId = req.body.itemId;
+  const item_name = req.body.item_name;
+  const result = await updateItemByID(itemId, item_name, role);
+  if (result.success) {
+    return res.status(200).json({ message: "Item updated successfully" });
+  }
+  return res.status(500).json({ message: "Failed to update item" });
+});
+
+router.post("/setSafeState", authenticate, async (req, res) => {
+  const { itemId, state } = req.body || {};
+  const result = await changeInSafeStateV2(itemId, state);
+  if (result.success) {
+    return res
+      .status(200)
+      .json({ message: "Item safe state updated successfully" });
+  }
+  return res.status(500).json({ message: "Failed to update item safe state" });
 });
 
 export default router;

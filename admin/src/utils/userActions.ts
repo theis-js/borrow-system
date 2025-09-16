@@ -198,6 +198,7 @@ export const changeSafeState = async (itemId: number) => {
     const response = await fetch(
       `https://backend.insta.the1s.de/api/changeSafeState/${itemId}`,
       {
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
         },

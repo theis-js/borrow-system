@@ -9,7 +9,6 @@ import {
   IconButton,
   Heading,
   Icon,
-  Tag,
   Input,
 } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -219,57 +218,35 @@ const ItemTable: React.FC = () => {
                   onClick={() =>
                     changeSafeState(item.id).then(() => setReload(!reload))
                   }
-                  size="sm"
+                  size="xs"
+                  rounded="full"
+                  px={3}
+                  py={1}
+                  gap={2}
+                  variant="ghost"
+                  color={item.inSafe ? "green.600" : "red.600"}
+                  borderWidth="1px"
+                  borderColor={item.inSafe ? "green.300" : "red.300"}
+                  _hover={{
+                    bg: item.inSafe ? "green.50" : "red.50",
+                    borderColor: item.inSafe ? "green.400" : "red.400",
+                    transform: "translateY(-1px)",
+                    shadow: "sm",
+                  }}
+                  _active={{ transform: "translateY(0)" }}
+                  leftIcon={
+                    <Icon
+                      as={item.inSafe ? CheckCircle2 : XCircle}
+                      boxSize={3.5}
+                    />
+                  }
+                  aria-label={
+                    item.inSafe ? "Mark as not in safe" : "Mark as in safe"
+                  }
                 >
-                  {item.inSafe ? (
-                    <Tag.Root
-                      size="md"
-                      bg="green.500"
-                      color="white"
-                      px={4}
-                      py={1.5}
-                      rounded="full"
-                      display="inline-flex"
-                      alignItems="center"
-                      gap={2}
-                      shadow="sm"
-                      _hover={{ shadow: "md" }}
-                    >
-                      <Icon as={CheckCircle2} boxSize={4} />
-                      <Text
-                        as="span"
-                        fontSize="xs"
-                        letterSpacing="wide"
-                        textTransform="uppercase"
-                      >
-                        Yes
-                      </Text>
-                    </Tag.Root>
-                  ) : (
-                    <Tag.Root
-                      size="md"
-                      bg="red.500"
-                      color="white"
-                      px={4}
-                      py={1.5}
-                      rounded="full"
-                      display="inline-flex"
-                      alignItems="center"
-                      gap={2}
-                      shadow="sm"
-                      _hover={{ shadow: "md" }}
-                    >
-                      <Icon as={XCircle} boxSize={4} />
-                      <Text
-                        as="span"
-                        fontSize="xs"
-                        letterSpacing="wide"
-                        textTransform="uppercase"
-                      >
-                        No
-                      </Text>
-                    </Tag.Root>
-                  )}
+                  <Text as="span" fontSize="xs" fontWeight="semibold">
+                    {item.inSafe ? "Yes" : "No"}
+                  </Text>
                 </Button>
               </Table.Cell>
               <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>

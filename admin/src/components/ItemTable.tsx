@@ -234,16 +234,15 @@ const ItemTable: React.FC = () => {
                     shadow: "sm",
                   }}
                   _active={{ transform: "translateY(0)" }}
-                  leftIcon={
-                    <Icon
-                      as={item.inSafe ? CheckCircle2 : XCircle}
-                      boxSize={3.5}
-                    />
-                  }
                   aria-label={
                     item.inSafe ? "Mark as not in safe" : "Mark as in safe"
                   }
                 >
+                  <Icon
+                    as={item.inSafe ? CheckCircle2 : XCircle}
+                    boxSize={3.5}
+                    mr={2}
+                  />
                   <Text as="span" fontSize="xs" fontWeight="semibold">
                     {item.inSafe ? "Yes" : "No"}
                   </Text>

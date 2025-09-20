@@ -6,6 +6,7 @@ import {
   setReturnDateV2,
   setTakeDateV2,
   getLoanByCodeV2,
+  getAllLoansV2,
 } from "../services/database.js";
 
 dotenv.config();
@@ -88,6 +89,14 @@ router.post("/setTakeDate/:key/:loan_code", async (req, res) => {
   } else {
     res.status(403).json({ message: "Access denied" });
   }
+});
+
+router.get("/allLoans", async (req, res) => {
+  const result = await getAllLoansV2();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch loans" });
 });
 
 export default router;

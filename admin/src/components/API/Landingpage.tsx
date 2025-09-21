@@ -48,7 +48,9 @@ const Landingpage: React.FC = () => {
     const fetchLoans = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch("http://localhost:8002/apiV2/allLoans");
+        const res = await fetch(
+          "https://backend.insta.the1s.de/apiV2/allLoans"
+        );
         const data = await res.json();
         if (Array.isArray(data)) {
           setLoans(data);

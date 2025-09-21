@@ -46,6 +46,7 @@ router.post("/controlInSafe/:key/:itemId/:state", async (req, res) => {
   }
 });
 
+// Route for API to get a loan by its code
 router.get("/getLoanByCode/:key/:loan_code", async (req, res) => {
   if (req.params.key === process.env.ADMIN_ID) {
     const loan_code = req.params.loan_code;
@@ -59,7 +60,7 @@ router.get("/getLoanByCode/:key/:loan_code", async (req, res) => {
   }
 });
 
-// Route for API to set the return date
+// Route for API to set the return date by the loan code
 router.post("/setReturnDate/:key/:loan_code", async (req, res) => {
   if (req.params.key === process.env.ADMIN_ID) {
     const loanCode = req.params.loan_code;
@@ -75,7 +76,7 @@ router.post("/setReturnDate/:key/:loan_code", async (req, res) => {
   }
 });
 
-// Route for API to set the take away date
+// Route for API to set the take away date by the loan code
 router.post("/setTakeDate/:key/:loan_code", async (req, res) => {
   if (req.params.key === process.env.ADMIN_ID) {
     const loanCode = req.params.loan_code;
@@ -91,6 +92,7 @@ router.post("/setTakeDate/:key/:loan_code", async (req, res) => {
   }
 });
 
+// Route for API to get ALL loans from the database without sensitive info
 router.get("/allLoans", async (req, res) => {
   const result = await getAllLoansV2();
   if (result.success) {

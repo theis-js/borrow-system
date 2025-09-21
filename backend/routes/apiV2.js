@@ -6,6 +6,7 @@ import {
   setReturnDateV2,
   setTakeDateV2,
   getLoanByCodeV2,
+  getAllLoansV2,
 } from "../services/database.js";
 
 dotenv.config();
@@ -45,6 +46,7 @@ router.post("/controlInSafe/:key/:itemId/:state", async (req, res) => {
   }
 });
 
+// Route for API to get a loan by its code
 router.get("/getLoanByCode/:key/:loan_code", async (req, res) => {
   if (req.params.key === process.env.ADMIN_ID) {
     const loan_code = req.params.loan_code;
@@ -58,7 +60,7 @@ router.get("/getLoanByCode/:key/:loan_code", async (req, res) => {
   }
 });
 
-// Route for API to set the return date
+// Route for API to set the return date by the loan code
 router.post("/setReturnDate/:key/:loan_code", async (req, res) => {
   if (req.params.key === process.env.ADMIN_ID) {
     const loanCode = req.params.loan_code;
@@ -74,7 +76,7 @@ router.post("/setReturnDate/:key/:loan_code", async (req, res) => {
   }
 });
 
-// Route for API to set the take away date
+// Route for API to set the take away date by the loan code
 router.post("/setTakeDate/:key/:loan_code", async (req, res) => {
   if (req.params.key === process.env.ADMIN_ID) {
     const loanCode = req.params.loan_code;
@@ -88,6 +90,15 @@ router.post("/setTakeDate/:key/:loan_code", async (req, res) => {
   } else {
     res.status(403).json({ message: "Access denied" });
   }
+});
+
+// Route for API to get ALL loans from the database without sensitive info
+router.get("/allLoans", async (req, res) => {
+  const result = await getAllLoansV2();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch loans" });
 });
 
 export default router;

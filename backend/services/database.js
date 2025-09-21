@@ -448,3 +448,13 @@ export const updateItemByID = async (itemId, item_name, can_borrow_role) => {
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
 };
+
+export const getAllLoansV2 = async () => {
+  const [rows] = await pool.query(
+    "SELECT id, username, start_date, end_date, loaned_items_name, returned_date, take_date FROM loans"
+  );
+  if (rows.length > 0) {
+    return { success: true, data: rows };
+  }
+  return { success: false };
+};

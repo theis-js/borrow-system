@@ -101,4 +101,14 @@ router.get("/allLoans", async (req, res) => {
   return res.status(500).json({ message: "Failed to fetch loans" });
 });
 
+// Route for API to get ALL items form the database without key
+router.get("/allItems", async (req, res) => {
+  const result = await getItemsFromDatabaseV2();
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json({ message: "Failed to fetch items" });
+  }
+});
+
 export default router;

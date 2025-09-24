@@ -6,10 +6,11 @@ import {
   Table,
   Heading,
   HStack,
-  IconButton,
+  Card,
+  SimpleGrid,
+  Button,
 } from "@chakra-ui/react";
-import { Tooltip } from "@/components/ui/tooltip";
-import { RefreshCcwDot } from "lucide-react";
+import { Lock, LockOpen } from "lucide-react";
 import MyAlert from "../myChakra/MyAlert";
 import { formatDateTime } from "@/utils/userFuncs";
 
@@ -23,14 +24,22 @@ type Loan = {
   loaned_items_name: string[] | string;
 };
 
+type Device = {
+  id: number;
+  item_name: string;
+  can_borrow_role: string;
+  inSafe: number;
+  entry_created_at: string;
+};
+
 const Landingpage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loans, setLoans] = useState<Loan[]>([]);
+  const [devices, setDevices] = useState<Device[]>([]);
   const [isError, setIsError] = useState(false);
   const [errorStatus, setErrorStatus] = useState<"error" | "success">("error");
   const [errorMessage, setErrorMessage] = useState("");
   const [errorDsc, setErrorDsc] = useState("");
-  const [reload, setReload] = useState(false);
 
   const setError = (
     status: "error" | "success",
@@ -45,20 +54,30 @@ const Landingpage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchLoans = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(
-          "https://backend.insta.the1s.de/apiV2/allLoans"
-        );
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          setLoans(data);
+        const loanRes = await fetch("http://localhost:8002/apiV2/allLoans");
+        const loanData = await loanRes.json();
+        if (Array.isArray(loanData)) {
+          setLoans(loanData);
         } else {
           setError(
             "error",
             "Fehler beim Laden",
-            "Unerwartetes Datenformat erhalten."
+            "Unerwartetes Datenformat erhalten. (Ausleihen)"
+          );
+        }
+
+        const deviceRes = await fetch("http://localhost:8002/apiV2/allItems");
+        const deviceData = await deviceRes.json();
+        if (Array.isArray(deviceData)) {
+          setDevices(deviceData);
+        } else {
+          setError(
+            "error",
+            "Fehler beim Laden",
+            "Unerwartetes Datenformat erhalten. (Geräte)"
           );
         }
       } catch (e) {
@@ -71,39 +90,14 @@ const Landingpage: React.FC = () => {
         setIsLoading(false);
       }
     };
-    fetchLoans();
-  }, [reload]);
+    fetchData();
+  }, []);
 
   return (
     <>
       <Heading as="h1" size="lg" mb={2}>
         Matthias-Claudius-Schule Technik
       </Heading>
-
-      {/* Action toolbar */}
-      <HStack
-        mb={4}
-        gap={3}
-        justify="flex-start"
-        align="center"
-        flexWrap="wrap"
-      >
-        <Tooltip content="Ausleihen neu laden" openDelay={300}>
-          <IconButton
-            aria-label="Refresh loans"
-            size="sm"
-            variant="outline"
-            rounded="md"
-            shadow="sm"
-            _hover={{ shadow: "md", transform: "translateY(-2px)" }}
-            _active={{ transform: "translateY(0)" }}
-            onClick={() => setReload(!reload)}
-          >
-            <RefreshCcwDot size={18} />
-          </IconButton>
-        </Tooltip>
-      </HStack>
-      {/* End action toolbar */}
 
       <Heading as="h2" size="md" mb={4}>
         Alle Ausleihen
@@ -176,6 +170,62 @@ const Landingpage: React.FC = () => {
           Keine Ausleihen vorhanden.
         </Text>
       )}
+
+      <Heading as="h2" size="md" mb={4}>
+        Alle Geräte
+      </Heading>
+
+      {/* Responsive Grid mit gleich hohen Karten */}
+      <SimpleGrid minChildWidth="200px" gap={2} alignItems="stretch">
+        {devices.map((device) => (
+          <Card.Root
+            key={device.id}
+            size="sm"
+            bg={device.inSafe ? "green" : "red"}
+            h="full"
+            minH="100px"
+          >
+            <Card.Header>
+              {device.inSafe ? <LockOpen size={16} /> : <Lock size={16} />}
+              <Heading size="md">{device.item_name}</Heading>
+            </Card.Header>
+            <Card.Body color="fg.muted">
+              <Text>Ausleihrolle: {device.can_borrow_role}</Text>
+            </Card.Body>
+          </Card.Root>
+        ))}
+      </SimpleGrid>
+      <HStack mt={3} gap={3} align="center" role="group" aria-label="Legende">
+        <Text fontWeight="medium" color="fg.muted">
+          Legende:
+        </Text>
+        <Button
+          size="sm"
+          variant="subtle"
+          colorPalette="green"
+          pointerEvents="none"
+          cursor="default"
+          borderRadius="full"
+        >
+          <HStack gap={2}>
+            <Lock size={16} />
+            <Text>Im Schließfach</Text>
+          </HStack>
+        </Button>
+        <Button
+          size="sm"
+          variant="subtle"
+          colorPalette="red"
+          pointerEvents="none"
+          cursor="default"
+          borderRadius="full"
+        >
+          <HStack gap={2}>
+            <LockOpen size={16} />
+            <Text>Nicht im Schließfach</Text>
+          </HStack>
+        </Button>
+      </HStack>
     </>
   );
 };

@@ -57,7 +57,9 @@ const Landingpage: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const loanRes = await fetch("http://localhost:8002/apiV2/allLoans");
+        const loanRes = await fetch(
+          "https://backend.insta.the1s.de/apiV2/allLoans"
+        );
         const loanData = await loanRes.json();
         if (Array.isArray(loanData)) {
           setLoans(loanData);
@@ -69,7 +71,9 @@ const Landingpage: React.FC = () => {
           );
         }
 
-        const deviceRes = await fetch("http://localhost:8002/apiV2/allItems");
+        const deviceRes = await fetch(
+          "https://backend.insta.the1s.de/apiV2/allItems"
+        );
         const deviceData = await deviceRes.json();
         if (Array.isArray(deviceData)) {
           setDevices(deviceData);

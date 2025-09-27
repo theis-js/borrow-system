@@ -216,7 +216,7 @@ export const changeSafeState = async (itemId: number) => {
 
 export const createAPIentry = async (apiKey: string, user: string) => {
   try {
-    const response = await fetch(`http://localhost:8002/api/createAPIentry`, {
+    const response = await fetch(`https://backend.insta.the1s.de/api/createAPIentry`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -237,7 +237,7 @@ export const createAPIentry = async (apiKey: string, user: string) => {
 export const deleteAPKey = async (apiKeyId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/deleteAPKey/${apiKeyId}`,
+      `https://backend.insta.the1s.de/api/deleteAPKey/${apiKeyId}`,
       {
         method: "DELETE",
         headers: {

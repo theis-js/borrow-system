@@ -51,7 +51,7 @@ const APIKeyTable: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:8002/api/apiKeys", {
+        const response = await fetch("https://backend.insta.the1s.de/api/apiKeys", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,

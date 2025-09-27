@@ -6,12 +6,14 @@ type SidebarProps = {
   viewGegenstaende: () => void;
   viewSchliessfaecher: () => void;
   viewUser: () => void;
+  viewAPI: () => void;
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
   viewAusleihen,
   viewGegenstaende,
   viewUser,
+  viewAPI,
 }) => {
   return (
     <Box
@@ -57,6 +59,15 @@ const Sidebar: React.FC<SidebarProps> = ({
             onClick={viewGegenstaende}
           >
             Gegenstände
+          </Link>
+          <Link
+            px={3}
+            py={2}
+            rounded="md"
+            _hover={{ bg: "gray.700", textDecoration: "none" }}
+            onClick={viewAPI}
+          >
+            API Keys
           </Link>
         </VStack>
 

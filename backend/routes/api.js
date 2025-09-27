@@ -22,6 +22,9 @@ import {
   changeUserPasswordFRONTEND,
   changeInSafeStateV2,
   updateItemByID,
+  getAllApiKeys,
+  createAPIentry,
+  deleteAPKey,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -328,6 +331,68 @@ router.put("/changeSafeState/:itemId", authenticate, async (req, res) => {
       .json({ message: "Item safe state updated successfully" });
   }
   return res.status(500).json({ message: "Failed to update item safe state" });
+});
+
+router.get("/apiKeys", authenticate, async (req, res) => {
+  const result = await getAllApiKeys();
+  if (result.success) {
+    return res.status(200).json(result.data);
+  }
+  return res.status(500).json({ message: "Failed to fetch API keys" });
+});
+
+router.delete("/deleteAPKey/:id", authenticate, async (req, res) => {
+  const apiKeyId = req.params.id;
+  const result = await deleteAPKey(apiKeyId);
+  if (result.success) {
+    return res.status(200).json({ message: "API key deleted successfully" });
+  }
+  return res.status(500).json({ message: "Failed to delete API key" });
+});
+
+router.post("/createAPIentry", authenticate, async (req, res) => {
+  const apiKey = req.body.apiKey;
+  const user = req.body.user;
+  if (!apiKey || !user) {
+    return res.status(400).json({ message: "API key and user are required" });
+  }
+
+  // Ensure apiKey is a number
+  const apiKeyNum = Number(apiKey);
+  if (!Number.isFinite(apiKeyNum)) {
+    return res.status(400).json({ message: "API key must be a number" });
+  }
+
+  const result = await createAPIentry(apiKeyNum, user);
+  if (result.success) {
+    return res.status(201).json({ message: "API key created successfully" });
+  }
+  if (result.code === "DUPLICATE") {
+    return res.status(409).json({ message: "API key already exists" });
+  }
+  return res.status(500).json({ message: "Failed to create API key" });
+});
+
+router.get("/apiKeys/validate/:key", async (req, res) => {
+  try {
+    const rawKey = req.params.key;
+    const result = await getAllApiKeys();
+    if (!result.success || !Array.isArray(result.data)) {
+      return res.status(500).json({ valid: false });
+    }
+
+    const isValid = result.data.some((entry) => {
+      const val = String(
+        entry?.key ?? entry?.apiKey ?? entry?.api_key ?? entry
+      );
+      return val === String(rawKey);
+    });
+
+    return res.status(200).json({ valid: isValid });
+  } catch (err) {
+    console.error("validate api key error:", err);
+    return res.status(500).json({ valid: false });
+  }
 });
 
 export default router;

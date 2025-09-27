@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import UserTable from "../components/UserTable";
 import ItemTable from "../components/ItemTable";
 import LoanTable from "../components/LoanTable";
+import APIKeyTable from "@/components/APIKeyTable";
 import { MoveLeft } from "lucide-react";
 
 type DashboardProps = {
@@ -23,6 +24,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         viewGegenstaende={() => setActiveView("Gegenstände")}
         viewSchliessfaecher={() => setActiveView("Schließfächer")}
         viewUser={() => setActiveView("User")}
+        viewAPI={() => setActiveView("API")}
       />
       <Box flex="1" display="flex" flexDirection="column">
         <Flex
@@ -66,6 +68,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           {activeView === "User" && <UserTable />}
           {activeView === "Ausleihen" && <LoanTable />}
           {activeView === "Gegenstände" && <ItemTable />}
+          {activeView === "API" && <APIKeyTable />}
         </Box>
       </Box>
     </Flex>

@@ -58,6 +58,15 @@ CREATE TABLE `lockers` (
   UNIQUE KEY `locker_number` (`locker_number`)
 );
 
+CREATE TABLE `apiKeys` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `apiKey` int NOT NULL UNIQUE,
+  `user` VARCHAR(255) NOT NULL,
+  `entry_created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `apiKey` (`apiKey`)
+);
+
 INSERT INTO `items` (`item_name`, `can_borrow_role`, `inSafe`) VALUES
 ('DJI 1er Mikro', 4, 1),
 ('DJI 2er Mikro 1', 4, 1),

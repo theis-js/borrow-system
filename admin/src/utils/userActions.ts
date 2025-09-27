@@ -201,3 +201,44 @@ export const changeSafeState = async (itemId: number) => {
     return { success: false };
   }
 };
+
+export const createAPIentry = async (apiKey: string, user: string) => {
+  try {
+    const response = await fetch(`http://localhost:8002/api/createAPIentry`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ apiKey, user }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to create API entry");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating API entry:", error);
+    return { success: false };
+  }
+};
+
+export const deleteAPKey = async (apiKeyId: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8002/api/deleteAPKey/${apiKeyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to delete API key");
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting API key:", error);
+    return { success: false };
+  }
+};

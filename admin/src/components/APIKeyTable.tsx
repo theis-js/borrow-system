@@ -11,17 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import MyAlert from "./myChakra/MyAlert";
-import {
-  Trash2,
-  RefreshCcwDot,
-  CirclePlus,
-} from "lucide-react";
+import { Trash2, RefreshCcwDot, CirclePlus } from "lucide-react";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import {
-  deleteItem,
-} from "@/utils/userActions";
-import AddItemForm from "./AddItemForm";
+import { deleteAPKey } from "@/utils/userActions";
+import AddAPIKey from "./AddAPIKey";
 import { formatDateTime } from "@/utils/userFuncs";
 
 type Items = {
@@ -57,7 +51,7 @@ const APIKeyTable: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:8002/api/keys", {
+        const response = await fetch("http://localhost:8002/api/apiKeys", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
@@ -118,7 +112,7 @@ const APIKeyTable: React.FC = () => {
             }}
           >
             <CirclePlus size={18} style={{ marginRight: 6 }} />
-            Neuen Gegenstand hinzufügen
+            Neuen API Key hinzufügen
           </Button>
         </Tooltip>
       </HStack>
@@ -141,7 +135,7 @@ const APIKeyTable: React.FC = () => {
         </VStack>
       )}
       {addAPIForm && (
-        <AddItemForm
+        <AddAPIKey
           onClose={() => {
             setAddAPIForm(false);
             setReload(!reload);
@@ -175,14 +169,12 @@ const APIKeyTable: React.FC = () => {
             <Table.Row key={apiKey.id}>
               <Table.Cell>{apiKey.id}</Table.Cell>
               <Table.Cell>{apiKey.apiKey}</Table.Cell>
-              <Table.Cell>
-                <Table.Cell>{apiKey.user}</Table.Cell>
-              </Table.Cell>
+              <Table.Cell>{apiKey.user}</Table.Cell>
               <Table.Cell>{formatDateTime(apiKey.entry_created_at)}</Table.Cell>
               <Table.Cell>
                 <Button
                   onClick={() =>
-                    deleteItem(apiKey.id).then((response) => {
+                    deleteAPKey(apiKey.id).then((response) => {
                       if (response.success) {
                         setItems(items.filter((i) => i.id !== apiKey.id));
                         setError(

@@ -457,3 +457,36 @@ export const getAllLoansV2 = async () => {
   }
   return { success: false };
 };
+
+export const getAllApiKeys = async () => {
+  const [rows] = await pool.query("SELECT * FROM apiKeys");
+  if (rows.length > 0) {
+    return { success: true, data: rows };
+  }
+  return { success: false };
+};
+
+export const createAPIentry = async (apiKey, user) => {
+  const [result] = await pool.query(
+    "INSERT INTO apiKeys (apiKey, user) VALUES (?, ?)",
+    [apiKey, user]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const deleteAPKey = async (apiKeyId) => {
+  const [result] = await pool.query("DELETE FROM apiKeys WHERE id = ?", [
+    apiKeyId,
+  ]);
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const getAPIkey = async () => {
+  const [rows] = await pool.query("SELECT apiKey FROM apiKeys");
+  if (rows.length > 0) {
+    return { success: true, data: rows };
+  }
+  return { success: false };
+};

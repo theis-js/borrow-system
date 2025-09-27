@@ -341,17 +341,6 @@ router.get("/apiKeys", authenticate, async (req, res) => {
   return res.status(500).json({ message: "Failed to fetch API keys" });
 });
 
-router.get("/apiKeys/apiV2/:id", authenticate, async (req, res) => {
-  if (req.params.id !== process.env.ADMIN_ID) {
-    return res.status(403).json({ message: "Access denied" });
-  }
-  const result = await getAPIkey();
-  if (result.success) {
-    return res.status(200).json(result.data);
-  }
-  return res.status(500).json({ message: "Failed to fetch API keys" });
-});
-
 router.delete("/deleteAPKey/:id", authenticate, async (req, res) => {
   const apiKeyId = req.params.id;
   const result = await deleteAPKey(apiKeyId);

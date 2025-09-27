@@ -63,8 +63,7 @@ CREATE TABLE `apiKeys` (
   `apiKey` int NOT NULL UNIQUE,
   `user` VARCHAR(255) NOT NULL,
   `entry_created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `apiKey` (`apiKey`)
+  PRIMARY KEY (`id`)
 );
 
 INSERT INTO `items` (`item_name`, `can_borrow_role`, `inSafe`) VALUES

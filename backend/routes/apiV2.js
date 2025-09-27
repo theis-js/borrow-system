@@ -111,8 +111,8 @@ router.post("/setTakeDate/:key/:loan_code", apiKeyGuard, async (req, res) => {
   }
 });
 
-// Route for API to get ALL loans from the database without sensitive info
-router.get("/allLoans/:key", apiKeyGuard, async (req, res) => {
+// Route for API to get ALL loans from the database without sensitive info (only for landingpage)
+router.get("/allLoans", async (req, res) => {
   const result = await getAllLoansV2();
   if (result.success) {
     return res.status(200).json(result.data);
@@ -120,8 +120,8 @@ router.get("/allLoans/:key", apiKeyGuard, async (req, res) => {
   return res.status(500).json({ message: "Failed to fetch loans" });
 });
 
-// Route for API to get ALL items form the database
-router.get("/allItems/:key", apiKeyGuard, async (req, res) => {
+// Route for API to get ALL items from the database (only for landingpage)
+router.get("/allItems", async (req, res) => {
   const result = await getItemsFromDatabaseV2();
   if (result.success) {
     res.status(200).json(result.data);

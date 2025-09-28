@@ -39,6 +39,7 @@ const Layout: React.FC = () => {
 
   const handleLogout = () => {
     Cookies.remove("token");
+    window.location.pathname = "/";
     setIsLoggedIn(false);
   };
 

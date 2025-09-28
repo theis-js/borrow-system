@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useEffect } from "react";
 import { Box, Heading, Text, Flex, Button } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 import UserTable from "../components/UserTable";
@@ -16,6 +17,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const userName = localStorage.getItem("userName") || "Admin";
 
   const [activeView, setActiveView] = useState("");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = window.location.pathname.slice(1);
+    if (raw) {
+      setActiveView(decodeURIComponent(raw));
+    }
+  }, []);
+
+  // Sync URL when activeView changes, without reloading
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!activeView) return;
+    const desired = `/${encodeURIComponent(activeView)}`;
+    if (window.location.pathname !== desired) {
+      window.history.replaceState(null, "", desired);
+    }
+  }, [activeView]);
 
   return (
     <Flex h="100vh">

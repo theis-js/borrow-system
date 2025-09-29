@@ -152,6 +152,10 @@ POST `/apiV2/setReturnDate/:key/:loan_code`
 
 Sets the `returned_date` to the current server time.
 
+**Note:** I have updated this API route, so that everytime you return or take a loan, the state of the loaned items is automatically updated.
+
+**DO NOT UPDATE THE STATE MANUALLY! (only if the item was taken with an admin key)**
+
 Example request:
 
 ```
@@ -173,6 +177,10 @@ Status: 200 on success, 500 on failure.
 POST `/apiV2/setTakeDate/:key/:loan_code`
 
 Sets the `take_date` to the current server time.
+
+**Note:** I have updated this API route, so that everytime you return or take a loan, the state of the loaned items is automatically updated.
+
+**DO NOT UPDATE THE STATE MANUALLY! (only if the item was taken with an admin key)**
 
 Example request:
 

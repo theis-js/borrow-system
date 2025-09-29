@@ -52,22 +52,56 @@ export const changeInSafeStateV2 = async (itemId) => {
 };
 
 export const setReturnDateV2 = async (loanCode) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE loan_code = ?",
+    [loanCode]
+  );
+
+  if (items.length === 0) return { success: false };
+
+  const itemIds = Array.isArray(items[0].loaned_items_id)
+    ? items[0].loaned_items_id
+    : JSON.parse(items[0].loaned_items_id || "[]");
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET inSafe = 1 WHERE id IN (?)",
+    [itemIds]
+  );
+
   const [result] = await pool.query(
     "UPDATE loans SET returned_date = NOW() WHERE loan_code = ?",
     [loanCode]
   );
-  if (result.affectedRows > 0) {
+
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
   return { success: false };
 };
 
 export const setTakeDateV2 = async (loanCode) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE loan_code = ?",
+    [loanCode]
+  );
+
+  if (items.length === 0) return { success: false };
+
+  const itemIds = Array.isArray(items[0].loaned_items_id)
+    ? items[0].loaned_items_id
+    : JSON.parse(items[0].loaned_items_id || "[]");
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET inSafe = 0 WHERE id IN (?)",
+    [itemIds]
+  );
+
   const [result] = await pool.query(
     "UPDATE loans SET take_date = NOW() WHERE loan_code = ?",
     [loanCode]
   );
-  if (result.affectedRows > 0) {
+
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
   return { success: false };

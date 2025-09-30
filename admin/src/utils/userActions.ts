@@ -148,7 +148,11 @@ export const createItem = async (
       body: JSON.stringify({ item_name, can_borrow_role }),
     });
     if (!response.ok) {
-      throw new Error("Failed to create item");
+      return {
+        success: false,
+        message:
+          "Fehler beim Erstellen des Gegenstands. Der Name des Gegenstandes darf nicht mehrmals vergeben werden.",
+      };
     }
     return { success: true };
   } catch (error) {

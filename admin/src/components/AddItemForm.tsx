@@ -68,8 +68,10 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, alert }) => {
                 alert(
                   "error",
                   "Fehler",
-                  "Der Gegenstand konnte nicht erstellt werden."
+                  res.message ||
+                    "Der Gegenstand konnte nicht erstellt werden. (frontend bug)"
                 );
+                onClose();
               }
             }}
           >

@@ -59,6 +59,14 @@ const AddAPIKey: React.FC<AddAPIKeyProps> = ({ onClose, alert }) => {
                   "Der API Key wurde erfolgreich erstellt."
                 );
                 onClose();
+              } else {
+                alert(
+                  "error",
+                  "Fehler beim Erstellen des API Keys",
+                  res.message ||
+                    "Beim Erstellen des API Keys ist ein Fehler aufgetreten. (frontend bug)"
+                );
+                onClose();
               }
             }}
           >

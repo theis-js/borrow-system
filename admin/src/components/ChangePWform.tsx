@@ -55,57 +55,64 @@ const ChangePWform: React.FC<ChangePWformProps> = ({
             </Field.Root>
           </Stack>
         </Card.Body>
-        <Card.Footer justifyContent="flex-end" gap="2">
-          <Button variant="outline" onClick={onClose}>
-            Abbrechen
-          </Button>
-          <Button
-            variant="solid"
-            onClick={async () => {
-              const newPassword =
-                (
-                  document.getElementById("new_password") as HTMLInputElement
-                )?.value.trim() || "";
-              const confirmNewPassword =
-                (
-                  document.getElementById(
-                    "confirm_new_password"
-                  ) as HTMLInputElement
-                )?.value.trim() || "";
+        <Card.Footer gap="2">
+          <Stack w="full" gap="3">
+            <Stack direction="row" justify="flex-end" gap="2">
+              <Button variant="outline" onClick={onClose}>
+                Abbrechen
+              </Button>
+              <Button
+                variant="solid"
+                onClick={async () => {
+                  const newPassword =
+                    (
+                      document.getElementById(
+                        "new_password"
+                      ) as HTMLInputElement
+                    )?.value.trim() || "";
+                  const confirmNewPassword =
+                    (
+                      document.getElementById(
+                        "confirm_new_password"
+                      ) as HTMLInputElement
+                    )?.value.trim() || "";
 
-              if (!newPassword || newPassword !== confirmNewPassword) {
-                subAlert("Passwörter stimmen nicht überein!");
-                return;
-              }
+                  if (!newPassword || newPassword !== confirmNewPassword) {
+                    subAlert("Passwörter stimmen nicht überein!");
+                    return;
+                  }
 
-              const res = await changePW(newPassword, username);
-              if (res.success) {
-                alert(
-                  "success",
-                  "Passwort geändert",
-                  "Das Passwort wurde erfolgreich geändert."
-                );
-                onClose();
-              } else {
-                alert(
-                  "error",
-                  "Fehler",
-                  "Das Passwort konnte nicht geändert werden."
-                );
-                onClose();
-              }
-            }}
-          >
-            Ändern
-          </Button>
-          {showSubAlert && (
-            <Alert.Root status="error">
-              <Alert.Indicator />
-              <Alert.Content>
-                <Alert.Title>{subAlertMessage}</Alert.Title>
-              </Alert.Content>
-            </Alert.Root>
-          )}
+                  const res = await changePW(newPassword, username);
+                  if (res.success) {
+                    alert(
+                      "success",
+                      "Passwort geändert",
+                      "Das Passwort wurde erfolgreich geändert."
+                    );
+                    onClose();
+                  } else {
+                    alert(
+                      "error",
+                      "Fehler",
+                      "Das Passwort konnte nicht geändert werden."
+                    );
+                    onClose();
+                  }
+                }}
+              >
+                Ändern
+              </Button>
+            </Stack>
+
+            {showSubAlert && (
+              <Alert.Root status="error">
+                <Alert.Indicator />
+                <Alert.Content>
+                  <Alert.Title>{subAlertMessage}</Alert.Title>
+                </Alert.Content>
+              </Alert.Root>
+            )}
+          </Stack>
         </Card.Footer>
       </Card.Root>
     </div>

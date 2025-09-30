@@ -208,7 +208,7 @@ const Landingpage: React.FC = () => {
           borderRadius="full"
         >
           <HStack gap={2}>
-            <Lock size={16} />
+            <LockOpen size={16} />
             <Text>Im Schließfach</Text>
           </HStack>
         </Button>
@@ -221,7 +221,7 @@ const Landingpage: React.FC = () => {
           borderRadius="full"
         >
           <HStack gap={2}>
-            <LockOpen size={16} />
+            <Lock size={16} />
             <Text>Nicht im Schließfach</Text>
           </HStack>
         </Button>

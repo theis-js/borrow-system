@@ -25,9 +25,159 @@ import {
   getAllApiKeys,
   createAPIentry,
   deleteAPKey,
+  getLoanInfoWithID,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
+
+// Nice HTML + text templates for the loan email
+function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
+  const brand = process.env.MAIL_BRAND_COLOR || "#0ea5e9";
+  const itemsList =
+    Array.isArray(items) && items.length
+      ? `<ul style="margin:8px 0 0 16px; padding:0;">${items
+          .map((i) => `<li style="margin:4px 0;">${i}</li>`)
+          .join("")}</ul>`
+      : "<span>N/A</span>";
+
+  return `<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
+  </head>
+  <body style="margin:0; padding:0; background:#f6f9fc; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; color:#111827;">
+    <div style="padding:24px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px; margin:0 auto; background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
+        <tr>
+          <td style="padding:20px 24px; background:${brand}; color:#ffffff;">
+            <h1 style="margin:0; font-size:18px;">Neue Ausleihe erstellt</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 24px;">
+            <p style="margin:0 0 12px 0;">Es wurde eine neue Ausleihe angelegt. Hier sind die Details:</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+              <tr>
+                <td style="padding:8px 0; color:#6b7280; width:180px;">Benutzer</td>
+                <td style="padding:8px 0; font-weight:600;">${
+                  user || "N/A"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0; color:#6b7280; vertical-align:top;">Ausgeliehene Gegenstände</td>
+                <td style="padding:8px 0; font-weight:600;">${itemsList}</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0; color:#6b7280;">Startdatum</td>
+                <td style="padding:8px 0; font-weight:600;">${formatDateTime(
+                  startDate
+                )}</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0; color:#6b7280;">Enddatum</td>
+                <td style="padding:8px 0; font-weight:600;">${formatDateTime(
+                  endDate
+                )}</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0; color:#6b7280;">Erstellt am</td>
+                <td style="padding:8px 0; font-weight:600;">${formatDateTime(
+                  createdDate
+                )}</td>
+              </tr>
+            </table>
+            <p style="margin:16px 0 0 0; font-size:12px; color:#6b7280;">Diese E-Mail wurde automatisch vom Ausleihsystem gesendet. Bitte nicht antworten.</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>`;
+}
+
+function buildLoanEmailText({ user, items, startDate, endDate, createdDate }) {
+  const itemsText =
+    Array.isArray(items) && items.length ? items.join(", ") : "N/A";
+  return [
+    "Neue Ausleihe erstellt",
+    "",
+    `Benutzer: ${user || "N/A"}`,
+    `Gegenstände: ${itemsText}`,
+    `Start: ${formatDateTime(startDate)}`,
+    `Ende: ${formatDateTime(endDate)}`,
+    `Erstellt am: ${formatDateTime(createdDate)}`,
+  ].join("\n");
+}
+
+function sendMailLoan(user, items, startDate, endDate, createdDate) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    secure: true,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASSWORD,
+    },
+  });
+
+  (async () => {
+    const info = await transporter.sendMail({
+      from: '"Ausleihsystem" <noreply@mcs-medien.de>',
+      to: process.env.MAIL_SENDEES,
+      subject: "Eine neue Ausleihe wurde erstellt!",
+      text: buildLoanEmailText({
+        user,
+        items,
+        startDate,
+        endDate,
+        createdDate,
+      }),
+      html: buildLoanEmail({ user, items, startDate, endDate, createdDate }),
+    });
+
+    console.log("Message sent:", info.messageId);
+  })();
+  console.log("sendMailLoan called");
+}
+
+// ...existing code...
+const formatDateTime = (value) => {
+  if (value == null) return "N/A";
+
+  const toOut = (d) => {
+    if (!(d instanceof Date) || isNaN(d.getTime())) return "N/A";
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mi = String(d.getMinutes()).padStart(2, "0");
+    return `${dd}.${mm}.${yyyy} ${hh}:${mi} Uhr`;
+  };
+
+  if (value instanceof Date) return toOut(value);
+  if (typeof value === "number") return toOut(new Date(value));
+
+  const s = String(value).trim();
+
+  // Direct pattern: "YYYY-MM-DD[ T]HH:mm[:ss]"
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::\d{2})?/);
+  if (m) {
+    const [, y, M, d, h, min] = m;
+    return `${d}.${M}.${y} ${h}:${min} Uhr`;
+  }
+
+  // ISO or other parseable formats
+  const dObj = new Date(s);
+  if (!isNaN(dObj.getTime())) return toOut(dObj);
+
+  return "N/A";
+};
+// ...existing code...
 
 router.post("/login", async (req, res) => {
   const result = await loginFunc(req.body.username, req.body.password);
@@ -158,6 +308,15 @@ router.post("/createLoan", authenticate, async (req, res) => {
     );
 
     if (result.success) {
+      const mailInfo = await getLoanInfoWithID(result.data.id);
+      console.log(mailInfo);
+      sendMailLoan(
+        mailInfo.data.username,
+        mailInfo.data.loaned_items_name,
+        mailInfo.data.start_date,
+        mailInfo.data.end_date,
+        mailInfo.data.created_at
+      );
       return res.status(201).json({
         message: "Loan created successfully",
         loanId: result.data.id,

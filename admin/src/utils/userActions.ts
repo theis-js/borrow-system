@@ -157,7 +157,11 @@ export const createItem = async (
       }
     );
     if (!response.ok) {
-      throw new Error("Failed to create item");
+      return {
+        success: false,
+        message:
+          "Fehler beim Erstellen des Gegenstands. Der Name des Gegenstandes darf nicht mehrmals vergeben werden.",
+      };
     }
     return { success: true };
   } catch (error) {
@@ -225,7 +229,11 @@ export const createAPIentry = async (apiKey: string, user: string) => {
       body: JSON.stringify({ apiKey, user }),
     });
     if (!response.ok) {
-      throw new Error("Failed to create API entry");
+      return {
+        success: false,
+        message:
+          "Fehler beim Erstellen des API Keys. Achten Sie darauf, dass alle Felder ausgefüllt sind und der API Key nicht doppelt vergeben wird.",
+      };
     }
     return { success: true };
   } catch (error) {

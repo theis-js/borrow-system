@@ -183,6 +183,16 @@ export const getBorrowableItemsFromDatabase = async (
   return { success: false };
 };
 
+export const getLoanInfoWithID = async (loanId) => {
+  const [rows] = await pool.query("SELECT * FROM loans WHERE id = ?;", [
+    loanId,
+  ]);
+  if (rows.length > 0) {
+    return { success: true, data: rows[0] };
+  }
+  return { success: false };
+};
+
 export const createLoanInDatabase = async (
   username,
   startDate,

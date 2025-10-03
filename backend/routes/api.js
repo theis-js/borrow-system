@@ -91,6 +91,11 @@ function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
                 )}</td>
               </tr>
             </table>
+            <p style="margin:20px 0 0 0; font-size:14px;">
+              <a href="https://admin.insta.the1s.de/api" style="color:${brand}; text-decoration:underline;" target="_blank" rel="noopener noreferrer">
+                Zur Übersicht aller Ausleihen
+              </a>
+            </p>
             <p style="margin:16px 0 0 0; font-size:12px; color:#6b7280;">Diese E-Mail wurde automatisch vom Ausleihsystem gesendet. Bitte nicht antworten.</p>
           </td>
         </tr>
@@ -145,7 +150,6 @@ function sendMailLoan(user, items, startDate, endDate, createdDate) {
   console.log("sendMailLoan called");
 }
 
-// ...existing code...
 const formatDateTime = (value) => {
   if (value == null) return "N/A";
 
@@ -177,7 +181,6 @@ const formatDateTime = (value) => {
 
   return "N/A";
 };
-// ...existing code...
 
 router.post("/login", async (req, res) => {
   const result = await loginFunc(req.body.username, req.body.password);

@@ -18,6 +18,11 @@ import { formatDateTime } from "@/utils/userFuncs";
 import { Trash2, RefreshCcwDot } from "lucide-react";
 import { deleteLoan } from "@/utils/userActions";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 const LoanTable: React.FC = () => {
   const [items, setItems] = useState<Loan[]>([]);
   const [errorStatus, setErrorStatus] = useState<"error" | "success">("error");
@@ -55,7 +60,7 @@ const LoanTable: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("https://backend.insta.the1s.de/api/allLoans", {
+        const response = await fetch(`${API_BASE}/api/allLoans`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,

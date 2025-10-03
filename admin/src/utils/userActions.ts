@@ -1,9 +1,14 @@
 import Cookies from "js-cookie";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 export const handleDelete = async (userId: number) => {
   try {
     const response = await fetch(
-      `https://backend.insta.the1s.de/api/deleteUser/${userId}`,
+      `${API_BASE}/api/deleteUser/${userId}`,
       {
         method: "DELETE",
         headers: {
@@ -28,7 +33,7 @@ export const handleEdit = async (
 ) => {
   try {
     const response = await fetch(
-      `https://backend.insta.the1s.de/api/editUser/${userId}`,
+      `${API_BASE}/api/editUser/${userId}`,
       {
         method: "POST",
         headers: {
@@ -54,17 +59,14 @@ export const createUser = async (
   password: string
 ) => {
   try {
-    const response = await fetch(
-      `https://backend.insta.the1s.de/api/createUser`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-        body: JSON.stringify({ username, role, password }),
-      }
-    );
+    const response = await fetch(`${API_BASE}/api/createUser`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ username, role, password }),
+    });
     if (!response.ok) {
       throw new Error("Failed to create user");
     }
@@ -77,17 +79,14 @@ export const createUser = async (
 
 export const changePW = async (newPassword: string, username: string) => {
   try {
-    const response = await fetch(
-      `https://backend.insta.the1s.de/api/changePWadmin`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-        body: JSON.stringify({ newPassword, username }),
-      }
-    );
+    const response = await fetch(`${API_BASE}/api/changePWadmin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ newPassword, username }),
+    });
     if (!response.ok) {
       throw new Error("Failed to change password");
     }
@@ -101,7 +100,7 @@ export const changePW = async (newPassword: string, username: string) => {
 export const deleteLoan = async (loanId: number) => {
   try {
     const response = await fetch(
-      `https://backend.insta.the1s.de/api/deleteLoan/${loanId}`,
+      `${API_BASE}/api/deleteLoan/${loanId}`,
       {
         method: "DELETE",
         headers: {
@@ -122,7 +121,7 @@ export const deleteLoan = async (loanId: number) => {
 export const deleteItem = async (itemId: number) => {
   try {
     const response = await fetch(
-      `https://backend.insta.the1s.de/api/deleteItem/${itemId}`,
+      `${API_BASE}/api/deleteItem/${itemId}`,
       {
         method: "DELETE",
         headers: {
@@ -145,17 +144,14 @@ export const createItem = async (
   can_borrow_role: number
 ) => {
   try {
-    const response = await fetch(
-      `https://backend.insta.the1s.de/api/createItem`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-        body: JSON.stringify({ item_name, can_borrow_role }),
-      }
-    );
+    const response = await fetch(`${API_BASE}/api/createItem`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ item_name, can_borrow_role }),
+    });
     if (!response.ok) {
       return {
         success: false,
@@ -176,17 +172,14 @@ export const handleEditItems = async (
   can_borrow_role: string
 ) => {
   try {
-    const response = await fetch(
-      "https://backend.insta.the1s.de/api/updateItemByID",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-        body: JSON.stringify({ itemId, item_name, can_borrow_role }),
-      }
-    );
+    const response = await fetch(`${API_BASE}/api/updateItemByID`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({ itemId, item_name, can_borrow_role }),
+    });
     if (!response.ok) {
       throw new Error("Failed to edit item");
     }
@@ -200,7 +193,7 @@ export const handleEditItems = async (
 export const changeSafeState = async (itemId: number) => {
   try {
     const response = await fetch(
-      `https://backend.insta.the1s.de/api/changeSafeState/${itemId}`,
+      `${API_BASE}/api/changeSafeState/${itemId}`,
       {
         method: "PUT",
         headers: {
@@ -220,7 +213,7 @@ export const changeSafeState = async (itemId: number) => {
 
 export const createAPIentry = async (apiKey: string, user: string) => {
   try {
-    const response = await fetch(`https://backend.insta.the1s.de/api/createAPIentry`, {
+    const response = await fetch(`${API_BASE}/api/createAPIentry`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -245,7 +238,7 @@ export const createAPIentry = async (apiKey: string, user: string) => {
 export const deleteAPKey = async (apiKeyId: number) => {
   try {
     const response = await fetch(
-      `https://backend.insta.the1s.de/api/deleteAPKey/${apiKeyId}`,
+      `${API_BASE}/api/deleteAPKey/${apiKeyId}`,
       {
         method: "DELETE",
         headers: {

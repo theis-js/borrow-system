@@ -6,6 +6,11 @@ export const ALL_ITEMS_UPDATED_EVENT = "allItemsUpdated";
 export const BORROWABLE_ITEMS_UPDATED_EVENT = "borrowableItemsUpdated";
 export const AUTH_LOGOUT_EVENT = "authLogout";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 let sendError = false;
 
 function logout() {
@@ -25,7 +30,7 @@ export const fetchAllData = async (token: string | undefined) => {
   if (!token) return;
   // First we fetch all items that are potentially available for borrowing
   try {
-    const response = await fetch("https://backend.insta.the1s.de/api/items", {
+    const response = await fetch(`${API_BASE}/api/items`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,7 +62,7 @@ export const fetchAllData = async (token: string | undefined) => {
 
   // get all loans
   try {
-    const response = await fetch("https://backend.insta.the1s.de/api/loans", {
+    const response = await fetch(`${API_BASE}/api/loans`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -89,7 +94,7 @@ export const fetchAllData = async (token: string | undefined) => {
 
   // get user loans
   try {
-    const response = await fetch("https://backend.insta.the1s.de/api/userLoans", {
+    const response = await fetch(`${API_BASE}/api/userLoans`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -122,7 +127,7 @@ export const fetchAllData = async (token: string | undefined) => {
 
 export const loginUser = async (username: string, password: string) => {
   try {
-    const response = await fetch("https://backend.insta.the1s.de/api/login", {
+    const response = await fetch(`${API_BASE}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -158,7 +163,7 @@ export const getBorrowableItems = async () => {
   }
 
   try {
-    const response = await fetch("https://backend.insta.the1s.de/api/borrowableItems", {
+    const response = await fetch(`${API_BASE}/api/borrowableItems`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${Cookies.get("token") || ""}`,

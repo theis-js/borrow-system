@@ -33,7 +33,7 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, alert }) => {
               <Input
                 id="can_borrow_role"
                 type="number"
-                placeholder="Zahl (z.B. 2)"
+                placeholder="Zahl (1 - 4)"
               />
             </Field.Root>
           </Stack>

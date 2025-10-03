@@ -18,6 +18,11 @@ import { deleteAPKey } from "@/utils/userActions";
 import AddAPIKey from "./AddAPIKey";
 import { formatDateTime } from "@/utils/userFuncs";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 type Items = {
   id: number;
   apiKey: string;
@@ -51,7 +56,7 @@ const APIKeyTable: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("https://backend.insta.the1s.de/api/apiKeys", {
+        const response = await fetch(`${API_BASE}/api/apiKeys`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,

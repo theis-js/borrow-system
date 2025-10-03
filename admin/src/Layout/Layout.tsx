@@ -5,6 +5,11 @@ import Login from "./Login";
 import Cookies from "js-cookie";
 import Landingpage from "@/components/API/Landingpage";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 const Layout: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAPI, setShowAPI] = useState(false);
@@ -19,7 +24,7 @@ const Layout: React.FC = () => {
 
     if (Cookies.get("token")) {
       const verifyToken = async () => {
-        const response = await fetch("https://backend.insta.the1s.de/api/verifyToken", {
+        const response = await fetch(`${API_BASE}/api/verifyToken`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,

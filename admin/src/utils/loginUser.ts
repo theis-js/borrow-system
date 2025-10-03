@@ -1,5 +1,10 @@
 import Cookies from "js-cookie";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 export type LoginSuccess = { success: true };
 export type LoginFailure = {
   success: false;
@@ -13,7 +18,7 @@ export const loginFunc = async (
   password: string
 ): Promise<LoginResult> => {
   try {
-    const response = await fetch("https://backend.insta.the1s.de/api/loginAdmin", {
+    const response = await fetch(`${API_BASE}/api/loginAdmin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

@@ -31,6 +31,11 @@ import {
 import AddItemForm from "./AddItemForm";
 import { formatDateTime } from "@/utils/userFuncs";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 type Items = {
   id: number;
   item_name: string;
@@ -77,7 +82,7 @@ const ItemTable: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:8002/api/allItems", {
+        const response = await fetch(`${API_BASE}/api/allItems`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,

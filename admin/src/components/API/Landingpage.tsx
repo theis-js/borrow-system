@@ -14,6 +14,11 @@ import { Lock, LockOpen } from "lucide-react";
 import MyAlert from "../myChakra/MyAlert";
 import { formatDateTime } from "@/utils/userFuncs";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 type Loan = {
   id: number;
   username: string;
@@ -57,7 +62,7 @@ const Landingpage: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const loanRes = await fetch("http://localhost:8002/apiV2/allLoans");
+        const loanRes = await fetch(`${API_BASE}/apiV2/allLoans`);
         const loanData = await loanRes.json();
         if (Array.isArray(loanData)) {
           setLoans(loanData);
@@ -69,7 +74,7 @@ const Landingpage: React.FC = () => {
           );
         }
 
-        const deviceRes = await fetch("http://localhost:8002/apiV2/allItems");
+        const deviceRes = await fetch(`${API_BASE}/apiV2/allItems`);
         const deviceData = await deviceRes.json();
         if (Array.isArray(deviceData)) {
           setDevices(deviceData);

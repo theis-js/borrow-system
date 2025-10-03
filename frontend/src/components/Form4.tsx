@@ -19,6 +19,11 @@ type Loan = {
   loaned_items_name: string[];
 };
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 const formatDate = (iso: string | null) => {
   if (!iso) return "-";
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
@@ -28,7 +33,7 @@ const formatDate = (iso: string | null) => {
 };
 
 async function fetchUserLoans(): Promise<Loan[]> {
-  const res = await fetch("http://localhost:8002/api/userLoans", {
+  const res = await fetch(`${API_BASE}/api/userLoans`, {
     method: "GET",
     headers: { Authorization: `Bearer ${Cookies.get("token") || ""}` },
   });

@@ -2,10 +2,15 @@ import { myToast } from "./toastify";
 import Cookies from "js-cookie";
 import { queryClient } from "./queryClient";
 
+const API_BASE =
+  (import.meta as any).env?.VITE_BACKEND_URL ||
+  import.meta.env.VITE_BACKEND_URL ||
+  "http://localhost:8002";
+
 export const handleDeleteLoan = async (loanID: number): Promise<boolean> => {
   try {
     const response = await fetch(
-      `http://localhost:8002/api/deleteLoan/${loanID}`,
+      `${API_BASE}/api/deleteLoan/${loanID}`,
       {
         method: "DELETE",
         headers: {
@@ -75,7 +80,7 @@ export const rmFromRemove = (itemID: number) => {
 
 export const createLoan = async (startDate: string, endDate: string) => {
   const items = removeArr;
-  const response = await fetch("http://localhost:8002/api/createLoan", {
+  const response = await fetch(`${API_BASE}/api/createLoan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +108,7 @@ export const createLoan = async (startDate: string, endDate: string) => {
 
 export const onReturn = async (loanID: number) => {
   const response = await fetch(
-    `http://localhost:8002/api/returnLoan/${loanID}`,
+    `${API_BASE}/api/returnLoan/${loanID}`,
     {
       method: "POST",
       headers: {
@@ -122,7 +127,7 @@ export const onReturn = async (loanID: number) => {
 };
 
 export const onTake = async (loanID: number) => {
-  const response = await fetch(`http://localhost:8002/api/takeLoan/${loanID}`, {
+  const response = await fetch(`${API_BASE}/api/takeLoan/${loanID}`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${Cookies.get("token") || ""}`,
@@ -139,7 +144,7 @@ export const onTake = async (loanID: number) => {
 };
 
 export const changePW = async (oldPassword: string, newPassword: string) => {
-  const response = await fetch("http://localhost:8002/api/changePassword", {
+  const response = await fetch(`${API_BASE}/api/changePassword`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

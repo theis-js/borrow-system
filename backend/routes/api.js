@@ -196,7 +196,6 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/items", authenticate, async (req, res) => {
-  console.log(req);
   const result = await getItemsFromDatabase(req.user.role);
   if (result.success) {
     res.status(200).json(result.data);

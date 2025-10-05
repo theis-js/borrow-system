@@ -39,59 +39,78 @@ function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
   const itemsList =
     Array.isArray(items) && items.length
       ? `<ul style="margin:8px 0 0 16px; padding:0;">${items
-          .map((i) => `<li style="margin:4px 0;">${i}</li>`)
+          .map((i) => `<li style="margin:4px 0; color:#111827;">${i}</li>`)
           .join("")}</ul>`
-      : "<span>N/A</span>";
+      : "<span style='color:#111827;'>N/A</span>";
 
   return `<!doctype html>
 <html lang="de">
   <head>
     <meta charset="utf-8">
-    <meta name="color-scheme" content="light dark">
-    <meta name="supported-color-schemes" content="light dark">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+    <meta name="x-apple-disable-message-reformatting">
+    <style>
+      :root {
+        color-scheme: light;
+        supported-color-schemes: light;
+      }
+      /* Sicherheitsnetz für Clients, die Dark-Mode forcieren */
+      @media (prefers-color-scheme: dark) {
+        body, table, td, p, a, h1, h2, h3, h4, h5, h6 {
+          background: #ffffff !important;
+          color: #111827 !important;
+        }
+        .brand-header {
+          background: ${brand} !important;
+          color: #ffffff !important;
+        }
+        a { color: ${brand} !important; }
+      }
+    </style>
   </head>
-  <body style="margin:0; padding:0; background:#f6f9fc; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; color:#111827;">
-    <div style="padding:24px;">
+  <body bgcolor="#ffffff" style="margin:0; padding:0; background:#ffffff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; color:#111827; -webkit-text-size-adjust:100%;">
+    <div role="article" aria-roledescription="email" lang="de" style="padding:24px; background:#f2f4f7;">
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px; margin:0 auto; background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
         <tr>
-          <td style="padding:20px 24px; background:${brand}; color:#ffffff;">
-            <h1 style="margin:0; font-size:18px;">Neue Ausleihe erstellt</h1>
+          <td class="brand-header" style="padding:20px 24px; background:${brand}; color:#ffffff;">
+            <h1 style="margin:0; font-size:18px; line-height:1.3; font-weight:600;">Neue Ausleihe erstellt</h1>
           </td>
         </tr>
         <tr>
-          <td style="padding:20px 24px;">
-            <p style="margin:0 0 12px 0;">Es wurde eine neue Ausleihe angelegt. Hier sind die Details:</p>
+          <td style="padding:20px 24px; color:#111827;">
+            <p style="margin:0 0 12px 0; color:#111827;">Es wurde eine neue Ausleihe angelegt. Hier sind die Details:</p>
             <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
               <tr>
                 <td style="padding:8px 0; color:#6b7280; width:180px;">Benutzer</td>
-                <td style="padding:8px 0; font-weight:600;">${
+                <td style="padding:8px 0; font-weight:600; color:#111827;">${
                   user || "N/A"
                 }</td>
               </tr>
               <tr>
                 <td style="padding:8px 0; color:#6b7280; vertical-align:top;">Ausgeliehene Gegenstände</td>
-                <td style="padding:8px 0; font-weight:600;">${itemsList}</td>
+                <td style="padding:8px 0; font-weight:600; color:#111827;">${itemsList}</td>
               </tr>
               <tr>
                 <td style="padding:8px 0; color:#6b7280;">Startdatum</td>
-                <td style="padding:8px 0; font-weight:600;">${formatDateTime(
+                <td style="padding:8px 0; font-weight:600; color:#111827;">${formatDateTime(
                   startDate
                 )}</td>
               </tr>
               <tr>
                 <td style="padding:8px 0; color:#6b7280;">Enddatum</td>
-                <td style="padding:8px 0; font-weight:600;">${formatDateTime(
+                <td style="padding:8px 0; font-weight:600; color:#111827;">${formatDateTime(
                   endDate
                 )}</td>
               </tr>
               <tr>
                 <td style="padding:8px 0; color:#6b7280;">Erstellt am</td>
-                <td style="padding:8px 0; font-weight:600;">${formatDateTime(
+                <td style="padding:8px 0; font-weight:600; color:#111827;">${formatDateTime(
                   createdDate
                 )}</td>
               </tr>
             </table>
-            <p style="margin:20px 0 0 0; font-size:14px;">
+            <p style="margin:20px 0 0 0; font-size:14px; color:#111827;">
               <a href="https://admin.insta.the1s.de/api" style="color:${brand}; text-decoration:underline;" target="_blank" rel="noopener noreferrer">
                 Zur Übersicht aller Ausleihen
               </a>

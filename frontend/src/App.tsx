@@ -1,9 +1,7 @@
 import "./App.css";
 import Layout from "./layout/Layout";
 import { useEffect, useState } from "react";
-import Form1 from "./components/Form1";
-import Form2 from "./components/Form2";
-import Form4 from "./components/Form4";
+import { AddLoan } from "./components/AddLoan";
 import LoginForm from "./components/LoginForm";
 import Cookies from "js-cookie";
 import {
@@ -46,13 +44,7 @@ function App() {
 
   return isLoggedIn ? (
     <Layout onLogout={handleLogout}>
-      <div className="space-y-6">
-        <Form1 />
-        <div className="h-px bg-slate-200" />
-        <Form2 />
-        <div className="h-px bg-slate-200" />
-        <Form4 />
-      </div>
+      <AddLoan />
     </Layout>
   ) : (
     <LoginForm onLogin={() => setIsLoggedIn(true)} />

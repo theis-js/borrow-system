@@ -1,5 +1,7 @@
 import Cookies from "js-cookie";
 import { myToast } from "./toastify";
+import { useAtom } from "jotai";
+import { getBorrowableItemsAtom } from "../States/Atoms";
 
 // Event name used to notify the app when the list of items has been updated
 export const ALL_ITEMS_UPDATED_EVENT = "allItemsUpdated";
@@ -190,6 +192,7 @@ export const getBorrowableItems = async () => {
 
     const data = await response.json();
     localStorage.setItem("borrowableItems", JSON.stringify(data));
+
     window.dispatchEvent(new Event(BORROWABLE_ITEMS_UPDATED_EVENT)); // notify same-tab listeners
     console.log("Borrowable items fetched successfully");
   } catch (error) {

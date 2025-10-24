@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyAlert from "../components/myChakra/MyAlert";
 import { Button, Card, Field, Input, Stack } from "@chakra-ui/react";
 import { setIsLoggedInAtom } from "@/states/Atoms";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -13,29 +13,29 @@ const API_BASE =
 
 export const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
+  const navigate = useNavigate();
+  console.log(isLoggedIn);
 
   useEffect(() => {
     if (isLoggedIn) {
-      window.location.href = "/";
+      navigate("/", { replace: true });
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate]);
 
   const loginFnc = async (username: string, password: string) => {
     const response = await fetch(`${API_BASE}/api/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
+
     const data = await response.json();
 
     if (!response.ok) {
-      const errorData = await response.json();
       return {
         success: false,
-        message: errorData.message,
-        description: errorData.description,
+        message: data.message ?? "Login fehlgeschlagen",
+        description: data.description ?? "",
       };
     }
 
@@ -58,7 +58,12 @@ export const LoginPage = () => {
       setIsError(true);
       return;
     }
+    navigate("/", { replace: true });
   };
+
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -94,7 +99,7 @@ export const LoginPage = () => {
               <MyAlert status="error" title={errorMsg} description={errorDsc} />
             )}
             <Button type="submit" onClick={() => handleLogin()} variant="solid">
-              Login
+              Login <p>{isLoggedIn}</p>
             </Button>
           </Card.Footer>
         </Card.Root>

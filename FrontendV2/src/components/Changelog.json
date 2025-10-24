@@ -1,0 +1,50 @@
+{
+    "title": "Changelog",
+    "items": [
+        {
+            "version": "v2.1.0",
+            "date": "2025-10-24",
+            "changes": [
+                {
+                    "type": "Hinzugefügt",
+                    "text": [
+                        "Neue Changelog-Komponente mit zentriertem Layout.",
+                        "Unterstützung für mehrsprachige Einträge (Englisch und Deutsch)."
+                    ]
+                },
+                {
+                    "type": "Verbessert",
+                    "text": [
+                        "Performance-Optimierungen beim Laden der Listenansichten.",
+                        "Verbesserte Barrierefreiheit durch ARIA-Attribute."
+                    ]
+                },
+                {
+                    "type": "Behoben",
+                    "text": [
+                        "Fehler bei der Datumsauswahl im Safari-Browser.",
+                        "Anzeigeprobleme bei hohen DPI-Einstellungen."
+                    ]
+                }
+            ]
+        },
+        {
+            "version": "v2.0.3",
+            "date": "2025-10-10",
+            "changes": [
+                {
+                    "type": "Geändert",
+                    "text": [
+                        "Standard-Timeout für API-Requests auf 10s erhöht."
+                    ]
+                },
+                {
+                    "type": "Sicherheit",
+                    "text": [
+                        "Abhängigkeiten aktualisiert (kritische CVEs behoben)."
+                    ]
+                }
+            ]
+        }
+    ]
+}

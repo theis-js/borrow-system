@@ -1,13 +1,13 @@
 services:
   #  borrow_system-frontend:
   #    container_name: borrow_system-frontend
-  #    build: ./frontend
+  #    build: ./FrontendV2
   #    ports:
   #      - "8001:8001"
   #    environment:
   #      - CHOKIDAR_USEPOLLING=true
   #    volumes:
-  #      - ./frontend:/app
+  #      - ./FrontendV2:/app
   #      - /app/node_modules
   #    restart: unless-stopped
 

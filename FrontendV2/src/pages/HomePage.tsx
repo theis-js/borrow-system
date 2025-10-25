@@ -47,7 +47,12 @@ export const HomePage = () => {
                 fontSize="md"
                 className="text-slate-600 dark:text-slate-400"
               >
-                Willkommen zurück, {userData.username}!
+                Willkommen zurück,{" "}
+                {userData.username.replace(
+                  /^./,
+                  userData.username[0].toUpperCase()
+                )}
+                !
               </Text>
               <Badge variant="subtle" px={2} py={1} borderRadius="full">
                 Rolle: {userData.role}

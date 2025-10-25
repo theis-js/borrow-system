@@ -10,6 +10,7 @@ import { setIsLoggedInAtom } from "@/states/Atoms";
 import { UserContext, type User } from "./states/Context";
 import { triggerLogoutAtom } from "@/states/Atoms";
 import { MyLoansPage } from "./pages/MyLoansPage";
+import Landingpage from "./pages/Landingpage";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -53,6 +54,7 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/my-loans" element={<MyLoansPage />} />
+              <Route path="/landing" element={<Landingpage />} />
             </Route>
 
             <Route path="/login" element={<LoginPage />} />

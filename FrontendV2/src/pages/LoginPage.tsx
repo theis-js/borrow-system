@@ -5,6 +5,7 @@ import { setIsLoggedInAtom, triggerLogoutAtom } from "@/states/Atoms";
 import { useAtom } from "jotai";
 import Cookies from "js-cookie";
 import { Navigate, useNavigate } from "react-router-dom";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -79,16 +80,15 @@ export const LoginPage = () => {
           <Card.Body>
             <Stack gap="4" w="full">
               <Field.Root>
-                <Field.Label>username</Field.Label>
+                <Field.Label>Benutzername</Field.Label>
                 <Input
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </Field.Root>
               <Field.Root>
-                <Field.Label>password</Field.Label>
-                <Input
-                  type="password"
+                <Field.Label>Passwort</Field.Label>
+                <PasswordInput
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

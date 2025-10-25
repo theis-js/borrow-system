@@ -126,9 +126,10 @@ export const getLoansFromDatabase = async () => {
 };
 
 export const getUserLoansFromDatabase = async (username) => {
-  const [result] = await pool.query("SELECT * FROM loans WHERE username = ?;", [
-    username,
-  ]);
+  const [result] = await pool.query(
+    "SELECT * FROM loans WHERE username = ? AND deleted = 0;",
+    [username]
+  );
   if (result.length > 0) {
     return { success: true, data: result };
   } else if (result.length == 0) {
@@ -142,6 +143,18 @@ export const deleteLoanFromDatabase = async (loanId) => {
   const [result] = await pool.query("DELETE FROM loans WHERE id = ?;", [
     loanId,
   ]);
+  if (result.affectedRows > 0) {
+    return { success: true };
+  } else {
+    return { success: false };
+  }
+};
+
+export const SETdeleteLoanFromDatabase = async (loanId) => {
+  const [result] = await pool.query(
+    "UPDATE loans SET deleted = 1 WHERE id = ?;",
+    [loanId]
+  );
   if (result.affectedRows > 0) {
     return { success: true };
   } else {

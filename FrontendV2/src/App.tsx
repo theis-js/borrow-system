@@ -9,6 +9,7 @@ import { useAtom } from "jotai";
 import { setIsLoggedInAtom } from "@/states/Atoms";
 import { UserContext, type User } from "./states/Context";
 import { triggerLogoutAtom } from "@/states/Atoms";
+import { MyLoansPage } from "./pages/MyLoansPage";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -51,6 +52,7 @@ function App() {
           <Routes>
             <Route element={<ProtectedRoutes />}>
               <Route path="/" element={<HomePage />} />
+              <Route path="/my-loans" element={<MyLoansPage />} />
             </Route>
 
             <Route path="/login" element={<LoginPage />} />

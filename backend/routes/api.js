@@ -26,6 +26,7 @@ import {
   createAPIentry,
   deleteAPKey,
   getLoanInfoWithID,
+  SETdeleteLoanFromDatabase,
 } from "../services/database.js";
 import { authenticate, generateToken } from "../services/tokenService.js";
 const router = express.Router();
@@ -254,6 +255,16 @@ router.get("/userLoans", authenticate, async (req, res) => {
 router.delete("/deleteLoan/:id", authenticate, async (req, res) => {
   const loanId = req.params.id;
   const result = await deleteLoanFromDatabase(loanId);
+  if (result.success) {
+    res.status(200).json({ message: "Loan deleted successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to delete loan" });
+  }
+});
+
+router.delete("/SETdeleteLoan/:id", authenticate, async (req, res) => {
+  const loanId = req.params.id;
+  const result = await SETdeleteLoanFromDatabase(loanId);
   if (result.success) {
     res.status(200).json({ message: "Loan deleted successfully" });
   } else {

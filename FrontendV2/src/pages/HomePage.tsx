@@ -19,6 +19,7 @@ import { getBorrowableItems } from "@/utils/Fetcher";
 import { useState } from "react";
 import MyAlert from "@/components/myChakra/MyAlert";
 import { borrowAbleItemsAtom } from "@/states/Atoms";
+import { createLoan } from "@/utils/Fetcher";
 
 export interface User {
   username: string;
@@ -33,11 +34,21 @@ export const HomePage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [isLoadingA, setIsLoadingA] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   // Error handling states
-  const [isError, setIsError] = useState(false);
-  const [errorTitle, setErrorTitle] = useState("");
-  const [errorDescription, setErrorDescription] = useState("");
+  const [isMsg, setIsMsg] = useState(false);
+  const [msgStatus, setMsgStatus] = useState<"error" | "success">("error");
+  const [msgTitle, setMsgTitle] = useState("");
+  const [msgDescription, setMsgDescription] = useState("");
+
+  const handleCheckboxChange = (itemId: number) => {
+    setSelectedItems((prevSelected) =>
+      prevSelected.includes(itemId)
+        ? prevSelected.filter((id) => id !== itemId)
+        : [...prevSelected, itemId]
+    );
+  };
 
   return (
     <Container maxW="7xl" className="px-6 sm:px-8 pt-10">
@@ -91,11 +102,11 @@ export const HomePage = () => {
           </Button>
         </Flex>
       </Stack>
-      {isError && (
+      {isMsg && (
         <MyAlert
-          status="error"
-          title={errorTitle}
-          description={errorDescription}
+          status={msgStatus}
+          title={msgTitle}
+          description={msgDescription}
         />
       )}
       <Stack as="main">
@@ -123,23 +134,26 @@ export const HomePage = () => {
           onClick={async () => {
             setIsLoadingA(true);
             if (!startDate || !endDate) {
-              setErrorTitle("Fehlende Eingaben");
-              setErrorDescription("Bitte Start- und Enddatum angeben.");
-              setIsError(true);
+              setMsgStatus("error");
+              setMsgTitle("Fehlende Eingaben");
+              setMsgDescription("Bitte Start- und Enddatum angeben.");
+              setIsMsg(true);
               setIsLoadingA(false);
               return;
             }
             await getBorrowableItems(startDate, endDate).then((response) => {
               setIsLoadingA(false);
               if (response && response.status === "error") {
-                setErrorTitle(response.title || "Fehler");
-                setErrorDescription(
+                setMsgStatus("error");
+                setMsgTitle(response.title || "Fehler");
+                setMsgDescription(
                   response.description || "Unbekannter Frontend Fehler"
                 );
-                setIsError(true);
+                setIsMsg(true);
                 return;
               }
               setBorrowableItems(response.data);
+              setIsMsg(false);
               console.log(borrowableItems);
             });
           }}
@@ -166,7 +180,12 @@ export const HomePage = () => {
                 {borrowableItems.map((item) => (
                   <Table.Row key={item.id}>
                     <Table.Cell>
-                      <input type="checkbox" name={item.id} id={item.id} />
+                      <input
+                        onChange={() => handleCheckboxChange(item.id)}
+                        type="checkbox"
+                        name={item.id}
+                        id={item.id}
+                      />
                     </Table.Cell>
                     <Table.Cell>{item.item_name}</Table.Cell>
                   </Table.Row>
@@ -174,6 +193,29 @@ export const HomePage = () => {
               </Table.Body>
             </Table.Root>
           </Table.ScrollArea>
+        )}
+        {selectedItems.length >= 1 && (
+          <Button
+            onClick={() =>
+              createLoan(selectedItems, startDate, endDate).then((response) => {
+                if (response.status === "error") {
+                  setMsgStatus("error");
+                  setMsgTitle(response.title || "Fehler");
+                  setMsgDescription(
+                    response.description || "Unbekannter Frontend Fehler"
+                  );
+                  setIsMsg(true);
+                  return;
+                }
+                setMsgStatus("success");
+                setMsgTitle("Erfolg");
+                setMsgDescription("Gegenstände erfolgreich ausgeliehen.");
+                setIsMsg(true);
+              })
+            }
+          >
+            Gegenstände ausleihen
+          </Button>
         )}
       </Stack>
     </Container>

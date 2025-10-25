@@ -47,3 +47,36 @@ export const getBorrowableItems = async (
     };
   }
 };
+
+export const createLoan = async (
+  itemIds: number[],
+  startDate: string,
+  endDate: string
+) => {
+  const response = await fetch(`${API_BASE}/api/createLoan`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("token") || ""}`,
+    },
+    body: JSON.stringify({ items: itemIds, startDate, endDate }),
+  });
+
+  if (!response.ok) {
+    return {
+      data: null,
+      status: "error",
+      title: "Server error",
+      description:
+        "Ein Fehler ist auf dem Server aufgetreten. Manchmal hilft es, die Seite neu zu laden.",
+    };
+  }
+
+  const data = await response.json();
+  return {
+    data: data,
+    status: "success",
+    title: null,
+    description: null,
+  };
+};

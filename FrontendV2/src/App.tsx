@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { useAtom } from "jotai";
 import { setIsLoggedInAtom } from "@/states/Atoms";
 import { UserContext, type User } from "./states/Context";
+import { triggerLogoutAtom } from "@/states/Atoms";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -16,8 +17,9 @@ const API_BASE =
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
-
   const [, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
+  const [, setTriggerLogout] = useAtom(triggerLogoutAtom);
+
   useEffect(() => {
     if (Cookies.get("token")) {
       const verifyToken = async () => {
@@ -28,6 +30,7 @@ function App() {
           },
         });
         if (response.ok) {
+          setTriggerLogout(false);
           const data = await response.json();
           setUser({ username: data.user.username, role: data.user.role });
           setIsLoggedIn(true);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import MyAlert from "../components/myChakra/MyAlert";
 import { Button, Card, Field, Input, Stack } from "@chakra-ui/react";
-import { setIsLoggedInAtom } from "@/states/Atoms";
+import { setIsLoggedInAtom, triggerLogoutAtom } from "@/states/Atoms";
 import { useAtom } from "jotai";
 import Cookies from "js-cookie";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ const API_BASE =
 
 export const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
+  const [triggerLogout, setTriggerLogout] = useAtom(triggerLogoutAtom);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export const LoginPage = () => {
       setIsError(true);
       return;
     }
+    setTriggerLogout(false);
     navigate("/", { replace: true });
   };
 
@@ -98,8 +100,17 @@ export const LoginPage = () => {
               <MyAlert status="error" title={errorMsg} description={errorDsc} />
             )}
             <Button type="submit" onClick={() => handleLogin()} variant="solid">
-              Login <p>{isLoggedIn}</p>
+              Login
             </Button>
+          </Card.Footer>
+          <Card.Footer justifyContent="flex-end">
+            {triggerLogout && (
+              <MyAlert
+                status="success"
+                title={"Logout erfolgreich!"}
+                description={"Sie wurden erfolgreich abgemeldet."}
+              />
+            )}
           </Card.Footer>
         </Card.Root>
       </form>

@@ -2,7 +2,18 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import MyAlert from "@/components/myChakra/MyAlert";
-import { Container, VStack, Spinner, Text, Table } from "@chakra-ui/react";
+import {
+  Container,
+  VStack,
+  Spinner,
+  Text,
+  Table,
+  Button,
+  CloseButton,
+  Dialog,
+  Portal,
+  Code,
+} from "@chakra-ui/react";
 import { Header } from "@/components/Header";
 import { Trash2 } from "lucide-react";
 
@@ -16,6 +27,8 @@ export const MyLoansPage = () => {
 
   const [loans, setLoans] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [delLoanCode, setDelLoanCode] = useState<number | null>(null);
 
   // Error handling states
   const [isMsg, setIsMsg] = useState(false);
@@ -123,11 +136,26 @@ export const MyLoansPage = () => {
           </VStack>
         )}
         {loans && (
-          <Table.Root size="sm" variant="outline">
+          <Table.Root
+            size="sm"
+            variant="outline"
+            style={{ tableLayout: "fixed", width: "100%" }}
+          >
             <Table.ColumnGroup>
-              <Table.Column htmlWidth="50%" />
-              <Table.Column htmlWidth="40%" />
-              <Table.Column />
+              {/* Ausleihcode */}
+              <Table.Column style={{ width: "14%" }} />
+              {/* Startdatum */}
+              <Table.Column style={{ width: "14%" }} />
+              {/* Enddatum */}
+              <Table.Column style={{ width: "14%" }} />
+              {/* Geräte (flexibler) */}
+              <Table.Column style={{ width: "28%" }} />
+              {/* Ausleihdatum */}
+              <Table.Column style={{ width: "14%" }} />
+              {/* Rückgabedatum */}
+              <Table.Column style={{ width: "14%" }} />
+              {/* Aktionen */}
+              <Table.Column style={{ width: "8%" }} />
             </Table.ColumnGroup>
             <Table.Header>
               <Table.Row>
@@ -143,16 +171,68 @@ export const MyLoansPage = () => {
             <Table.Body>
               {loans.map((loan) => (
                 <Table.Row key={loan.id}>
-                  <Table.Cell>{loan.loan_code}</Table.Cell>
+                  <Table.Cell>
+                    <Text title={loan.loan_code}>
+                      <Code variant="solid">{`${loan.loan_code}`}</Code>
+                    </Text>
+                  </Table.Cell>
                   <Table.Cell>{formatDate(loan.start_date)}</Table.Cell>
                   <Table.Cell>{formatDate(loan.end_date)}</Table.Cell>
-                  <Table.Cell>{loan.loaned_items_name}</Table.Cell>
+                  <Table.Cell>
+                    <Text title={loan.loaned_items_name}>
+                      {loan.loaned_items_name}
+                    </Text>
+                  </Table.Cell>
                   <Table.Cell>{formatDate(loan.take_date)}</Table.Cell>
                   <Table.Cell>{formatDate(loan.returned_date)}</Table.Cell>
                   <Table.Cell>
-                    <button onClick={() => deleteLoan(loan.id)}>
-                      <Trash2 />
-                    </button>
+                    <Dialog.Root role="alertdialog">
+                      <Dialog.Trigger asChild>
+                        <Button
+                          onClick={() => setDelLoanCode(loan.loan_code)}
+                          aria-label="Ausleihe löschen"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Trash2 />
+                        </Button>
+                      </Dialog.Trigger>
+                      <Portal>
+                        <Dialog.Backdrop />
+                        <Dialog.Positioner>
+                          <Dialog.Content>
+                            <Dialog.Header>
+                              <Dialog.Title>Sicher?</Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body>
+                              <Text>
+                                Möchtest du die Ausleihe mit dem{" "}
+                                <strong><Code>{delLoanCode}</Code></strong> Code wirklich
+                                löschen?
+                                <br />
+                                Für den Admin bleibt sie weiterhin sichtbar.
+                              </Text>
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                              <Dialog.ActionTrigger asChild>
+                                <Button variant="outline">Abbrechen</Button>
+                              </Dialog.ActionTrigger>
+                              <Button
+                                colorPalette="red"
+                                onClick={() => deleteLoan(loan.id)}
+                              >
+                                <strong>Löschen</strong>
+                              </Button>
+                            </Dialog.Footer>
+                            <Dialog.CloseTrigger asChild>
+                              <CloseButton size="sm" />
+                            </Dialog.CloseTrigger>
+                          </Dialog.Content>
+                        </Dialog.Positioner>
+                      </Portal>
+                    </Dialog.Root>
                   </Table.Cell>
                 </Table.Row>
               ))}

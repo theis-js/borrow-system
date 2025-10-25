@@ -34,6 +34,7 @@ CREATE TABLE `loans` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `loaned_items_id` json NOT NULL DEFAULT ('[]'),
   `loaned_items_name` json NOT NULL DEFAULT ('[]'),
+  `deleted` bool NOT NULL DEFAULT false,
   PRIMARY KEY (`id`),
   UNIQUE KEY `loan_code` (`loan_code`)
 );

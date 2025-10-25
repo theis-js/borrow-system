@@ -8,6 +8,10 @@ import {
   CloseButton,
   Dialog,
   Portal,
+  HStack,
+  IconButton,
+  Menu,
+  Box,
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import Cookies from "js-cookie";
@@ -21,6 +25,7 @@ import {
   LifeBuoy,
   LogOut,
   CalendarPlus,
+  MoreVertical,
 } from "lucide-react";
 import { useUserContext } from "@/states/Context";
 import { useState } from "react";
@@ -33,7 +38,6 @@ const API_BASE =
 
 export const Header = () => {
   const navigate = useNavigate();
-
   const userData = useUserContext();
 
   // Error handling states
@@ -48,6 +52,9 @@ export const Header = () => {
 
   const [, setTriggerLogout] = useAtom(triggerLogoutAtom);
   const [, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
+
+  // Dialog control
+  const [isPwOpen, setPwOpen] = useState(false);
 
   const changePassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -79,82 +86,262 @@ export const Header = () => {
     setMsgDescription("Ihr Passwort wurde erfolgreich geändert");
     setMsgStatus("success");
     setIsMsg(true);
+
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
+
+  const username = userData?.username
+    ? userData.username[0].toUpperCase() + userData.username.slice(1)
+    : "User";
+
+  const logout = () => {
+    Cookies.remove("token");
+    setIsLoggedIn(false);
+    setTriggerLogout(true);
   };
 
   return (
-    <Stack as="header" gap={3} className="mb-16">
+    <Stack
+      as="header"
+      gap={3}
+      className="mb-6"
+      position="relative"
+      pr={{ base: 10, md: 0 }} // Platz für den Mobile-Button rechts
+    >
+      {/* Mobile: Drei-Punkte-Button, vertikal zentriert im Header */}
+      <Box
+        display={{ base: "block", md: "none" }}
+        position="absolute"
+        top="50%"
+        right="0"
+        transform="translateY(-50%)"
+        zIndex={2}
+      >
+        <Menu.Root>
+          <Menu.Trigger asChild>
+            <IconButton
+              aria-label="Aktionen"
+              variant="solid"
+              colorScheme="teal"
+              size="md"
+              borderRadius="full"
+              boxShadow="md"
+            >
+              <MoreVertical size={20} />
+            </IconButton>
+          </Menu.Trigger>
+          <Menu.Positioner>
+            <Menu.Content>
+              <Menu.Item
+                value="create-loan"
+                onSelect={() => navigate("/", { replace: true })}
+                children={
+                  <HStack gap={3}>
+                    <CalendarPlus size={16} />
+                    <Text as="span">Ausleihe erstellen</Text>
+                  </HStack>
+                }
+              />
+              <Menu.Item
+                value="my-loans"
+                onSelect={() => navigate("/my-loans", { replace: true })}
+                children={
+                  <HStack gap={3}>
+                    <CircleUserRound size={16} />
+                    <Text as="span">Meine Ausleihen</Text>
+                  </HStack>
+                }
+              />
+              <Menu.Item
+                value="change-password"
+                onSelect={() => setPwOpen(true)}
+                children={
+                  <HStack gap={3}>
+                    <RotateCcwKey size={16} />
+                    <Text as="span">Passwort ändern</Text>
+                  </HStack>
+                }
+              />
+              <Menu.Item
+                value="help"
+                onSelect={() =>
+                  window.open(
+                    "https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki",
+                    "_blank",
+                    "noopener,noreferrer"
+                  )
+                }
+                children={
+                  <HStack gap={3}>
+                    <LifeBuoy size={16} />
+                    <Text as="span">Hilfe</Text>
+                  </HStack>
+                }
+              />
+              <Menu.Item
+                value="source-code"
+                onSelect={() =>
+                  window.open(
+                    "https://git.the1s.de/Matthias-Claudius-Schule/borrow-system",
+                    "_blank",
+                    "noopener,noreferrer"
+                  )
+                }
+                children={
+                  <HStack gap={3}>
+                    <Code size={16} />
+                    <Text as="span">Source Code</Text>
+                  </HStack>
+                }
+              />
+              <Menu.Separator />
+              <Menu.Item
+                value="logout"
+                onSelect={logout}
+                children={
+                  <HStack gap={3} color="red.500">
+                    <LogOut size={16} />
+                    <Text as="span">Logout</Text>
+                  </HStack>
+                }
+              />
+            </Menu.Content>
+          </Menu.Positioner>
+        </Menu.Root>
+      </Box>
+
       <Flex
         direction={{ base: "column", md: "row" }}
         align={{ base: "stretch", md: "center" }}
         justify="space-between"
         gap={4}
       >
-        <Stack gap={2}>
-          <Heading
-            size="2xl"
-            className="tracking-tight text-slate-900 dark:text-slate-100"
-          >
-            Home
-          </Heading>
-          <Stack
-            direction={{ base: "column", sm: "row" }}
-            gap={2}
-            alignItems="start"
-          >
+        {/* Left: Title + user info */}
+        <Stack gap={1}>
+          {/* Titelzeile ohne Mobile-Menu (wurde nach oben verlegt) */}
+          <Flex align="center" justify="space-between" gap={2}>
+            <Heading
+              size="2xl"
+              className="tracking-tight text-slate-900 dark:text-slate-100"
+            >
+              Home
+            </Heading>
+          </Flex>
+
+          <HStack gap={3} align="center" flexWrap="wrap">
             <Text fontSize="md" className="text-slate-600 dark:text-slate-400">
-              Willkommen zurück,{" "}
-              {userData.username.replace(
-                /^./,
-                userData.username[0].toUpperCase()
-              )}
-              !
+              Willkommen zurück, {username}!
             </Text>
             <Badge variant="subtle" px={2} py={1} borderRadius="full">
-              Rolle: {userData.role}
+              Rolle: {userData?.role ?? "—"}
             </Badge>
-          </Stack>
+          </HStack>
         </Stack>
 
-        <Button onClick={() => navigate("/", { replace: true })}>
-          <CalendarPlus /> Ausleihe erstellen
-        </Button>
-        <Button onClick={() => navigate("/my-loans", { replace: true })}>
-          <CircleUserRound /> Meine Ausleihen
-        </Button>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <Button>
-              <RotateCcwKey /> Passwort ändern
+        {/* Right: Actions */}
+        {/* Desktop actions */}
+        <HStack
+          gap={2}
+          align="center"
+          justify="flex-end"
+          flexWrap="wrap"
+          display={{ base: "none", md: "flex" }}
+        >
+          <Button
+            colorScheme="teal"
+            onClick={() => navigate("/", { replace: true })}
+          >
+            <HStack gap={2}>
+              <CalendarPlus size={18} />
+              <Text as="span">Ausleihe erstellen</Text>
+            </HStack>
+          </Button>
+
+          <Button onClick={() => navigate("/my-loans", { replace: true })}>
+            <HStack gap={2}>
+              <CircleUserRound size={18} />
+              <Text as="span">Meine Ausleihen</Text>
+            </HStack>
+          </Button>
+
+          <Button variant="ghost" onClick={() => setPwOpen(true)}>
+            <HStack gap={2}>
+              <RotateCcwKey size={18} />
+              <Text as="span">Passwort ändern</Text>
+            </HStack>
+          </Button>
+
+          <a
+            href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki"
+            target="_blank"
+          >
+            <Button variant="ghost">
+              <HStack gap={2}>
+                <LifeBuoy size={18} />
+                <Text as="span">Hilfe</Text>
+              </HStack>
             </Button>
-          </Dialog.Trigger>
-          <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
-                <Dialog.Header>
-                  <Dialog.Title>Passwort ändern</Dialog.Title>
-                </Dialog.Header>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    changePassword();
-                  }}
-                >
-                  <Dialog.Body>
+          </a>
+
+          <a
+            href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system"
+            target="_blank"
+          >
+            <Button variant="ghost">
+              <HStack gap={2}>
+                <Code size={18} />
+                <Text as="span">Source Code</Text>
+              </HStack>
+            </Button>
+          </a>
+
+          <Button onClick={logout} variant="outline" colorScheme="red">
+            <HStack gap={2}>
+              <LogOut size={18} />
+              <Text as="span">Logout</Text>
+            </HStack>
+          </Button>
+        </HStack>
+      </Flex>
+
+      {/* Passwort-Dialog (kontrolliert) */}
+      <Dialog.Root open={isPwOpen} onOpenChange={(e: any) => setPwOpen(e.open)}>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content maxW="md">
+              <Dialog.Header>
+                <Dialog.Title>Passwort ändern</Dialog.Title>
+              </Dialog.Header>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  changePassword();
+                }}
+              >
+                <Dialog.Body>
+                  <Stack gap={3}>
                     <PasswordInput
+                      value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       placeholder="Altes Passwort"
                     />
                     <PasswordInput
+                      value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Neues Passwort"
                     />
                     <PasswordInput
+                      value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Neues Passwort wiederholen"
                     />
-                  </Dialog.Body>
-                  <Dialog.Footer>
+                  </Stack>
+                </Dialog.Body>
+                <Dialog.Footer>
+                  <Stack w="100%" gap={3}>
                     {isMsg && (
                       <MyAlert
                         status={msgStatus}
@@ -162,49 +349,24 @@ export const Header = () => {
                         description={msgDescription}
                       />
                     )}
-                    <Dialog.ActionTrigger asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </Dialog.ActionTrigger>
-                    <Button type="submit">Save</Button>
-                  </Dialog.Footer>
-                </form>
-                <Dialog.CloseTrigger asChild>
-                  <CloseButton size="sm" />
-                </Dialog.CloseTrigger>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Portal>
-        </Dialog.Root>
-        <a
-          href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki"
-          target="_blank"
-        >
-          <Button>
-            <LifeBuoy /> Hilfe
-          </Button>
-        </a>
-
-        <a
-          href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system"
-          target="_blank"
-        >
-          <Button>
-            <Code /> Source Code
-          </Button>
-        </a>
-        <Button
-          onClick={() => {
-            Cookies.remove("token");
-            setIsLoggedIn(false);
-            setTriggerLogout(true);
-          }}
-          variant="solid"
-          size="sm"
-          className="self-start md:self-auto"
-        >
-          <LogOut /> Logout
-        </Button>
-      </Flex>
+                    <HStack justify="flex-end" gap={2}>
+                      <Dialog.ActionTrigger asChild>
+                        <Button variant="outline">Abbrechen</Button>
+                      </Dialog.ActionTrigger>
+                      <Button type="submit" colorScheme="teal">
+                        Speichern
+                      </Button>
+                    </HStack>
+                  </Stack>
+                </Dialog.Footer>
+              </form>
+              <Dialog.CloseTrigger asChild>
+                <CloseButton size="sm" />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </Stack>
   );
 };

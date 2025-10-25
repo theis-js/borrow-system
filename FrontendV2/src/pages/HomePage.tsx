@@ -110,7 +110,7 @@ export const HomePage = () => {
           </VStack>
         )}
         {borrowableItems.length > 0 && (
-          <Table.ScrollArea borderWidth="1px" rounded="md" height="160px">
+          <Table.ScrollArea borderWidth="1px" rounded="md">
             <Table.Root size="sm" stickyHeader>
               <Table.Header>
                 <Table.Row bg="bg.subtle">

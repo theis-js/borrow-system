@@ -3,10 +3,11 @@ import { LoginPage } from "@/pages/LoginPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePage } from "@/pages/HomePage";
 import { ProtectedRoutes } from "./utils/ProtectedRoutes";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useAtom } from "jotai";
 import { setIsLoggedInAtom } from "@/states/Atoms";
+import { UserContext, type User } from "./states/Context";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -14,6 +15,8 @@ const API_BASE =
   "http://localhost:8002";
 
 function App() {
+  const [user, setUser] = useState<User | undefined>(undefined);
+
   const [, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
   useEffect(() => {
     if (Cookies.get("token")) {
@@ -25,6 +28,8 @@ function App() {
           },
         });
         if (response.ok) {
+          const data = await response.json();
+          setUser({ username: data.user.username, role: data.user.role });
           setIsLoggedIn(true);
         } else {
           Cookies.remove("token");
@@ -38,15 +43,17 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/" element={<HomePage />} />
-          </Route>
+      <UserContext.Provider value={user}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
 
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-      </BrowserRouter>
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </BrowserRouter>
+      </UserContext.Provider>
     </>
   );
 }

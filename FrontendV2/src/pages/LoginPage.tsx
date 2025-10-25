@@ -14,7 +14,6 @@ const API_BASE =
 export const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
   const navigate = useNavigate();
-  console.log(isLoggedIn);
 
   useEffect(() => {
     if (isLoggedIn) {

@@ -1,13 +1,18 @@
-import { setIsLoggedInAtom } from "@/states/Atoms";
-import { useAtom } from "jotai";
+import { useUserContext } from "@/states/Context";
+
+export interface User {
+  username: string;
+  role: number;
+}
 
 export const HomePage = () => {
-  const [isLoggedIn] = useAtom(setIsLoggedInAtom);
-  console.log(isLoggedIn);
+  const userData = useUserContext();
 
   return (
     <div>
       <h1>Home Page</h1>
+      <p>Welcome, {userData.username}!</p>
+      <p>Your role is: {userData.role}</p>
     </div>
   );
 };

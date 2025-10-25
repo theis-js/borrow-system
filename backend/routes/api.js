@@ -432,7 +432,7 @@ router.delete("/deleteUser/:id", authenticate, async (req, res) => {
 });
 
 router.get("/verifyToken", authenticate, async (req, res) => {
-  res.status(200).json({ message: "Token is valid" });
+  res.status(200).json({ message: "Token is valid", user: req.user });
 });
 
 router.post("/editUser/:id", authenticate, async (req, res) => {

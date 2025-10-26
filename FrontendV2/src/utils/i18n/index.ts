@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import Cookies from "js-cookie";
 
 import enLang from "./locales/en/en.json";
 import deLang from "./locales/de/de.json";
@@ -21,7 +22,7 @@ i18n
   .init({
     resources,
     fallbackLng: "en", // use en if detected lng is not available
-    lng: "de", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
+    lng: Cookies.get("language") || "en", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // if you're using a language detector, do not define the lng option
 

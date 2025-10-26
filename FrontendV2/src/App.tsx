@@ -12,6 +12,8 @@ import { triggerLogoutAtom } from "@/states/Atoms";
 import { MyLoansPage } from "./pages/MyLoansPage";
 import Landingpage from "./pages/Landingpage";
 import { changeLanguage } from "i18next";
+import { Box, Flex } from "@chakra-ui/react";
+import { Footer } from "./components/Footer";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -63,21 +65,24 @@ function App() {
   }, []);
 
   return (
-    <>
-      <UserContext.Provider value={user}>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/my-loans" element={<MyLoansPage />} />
-              <Route path="/landing" element={<Landingpage />} />
-            </Route>
+    <Flex direction="column" minH="100vh">
+      <Box as="main" flex="1">
+        <UserContext.Provider value={user}>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<ProtectedRoutes />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/my-loans" element={<MyLoansPage />} />
+                <Route path="/landing" element={<Landingpage />} />
+              </Route>
 
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </BrowserRouter>
-      </UserContext.Provider>
-    </>
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </BrowserRouter>
+        </UserContext.Provider>
+      </Box>
+      <Footer />
+    </Flex>
   );
 }
 

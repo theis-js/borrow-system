@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { Navigate, useNavigate } from "react-router-dom";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useTranslation } from "react-i18next";
+import { Footer } from "@/components/Footer";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -115,6 +116,7 @@ export const LoginPage = () => {
           </Card.Footer>
         </Card.Root>
       </form>
+      <Footer />
     </div>
   );
 };

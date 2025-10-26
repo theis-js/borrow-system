@@ -179,6 +179,7 @@ export const getBorrowableItemsFromDatabase = async (
       FROM loans l
       JOIN JSON_TABLE(l.loaned_items_id, '$[*]' COLUMNS (item_id INT PATH '$')) jt
       WHERE jt.item_id = i.id
+        AND l.deleted = 0
         AND l.start_date < ?
         AND COALESCE(l.returned_date, l.end_date) > ?
     );
@@ -269,6 +270,7 @@ export const createLoanInDatabase = async (
       JOIN JSON_TABLE(l.loaned_items_id, '$[*]' COLUMNS (item_id INT PATH '$')) jt
         ON TRUE
       WHERE jt.item_id IN (?)
+        AND l.deleted = 0
         AND l.start_date < ?
         AND COALESCE(l.returned_date, l.end_date) > ?
       `,

@@ -30,6 +30,8 @@ import {
 import { useUserContext } from "@/states/Context";
 import { useState } from "react";
 import MyAlert from "./myChakra/MyAlert";
+import { useTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -39,6 +41,7 @@ const API_BASE =
 export const Header = () => {
   const navigate = useNavigate();
   const userData = useUserContext();
+  const { t } = useTranslation();
 
   // Error handling states
   const [isMsg, setIsMsg] = useState(false);
@@ -232,7 +235,8 @@ export const Header = () => {
 
           <HStack gap={3} align="center" flexWrap="wrap">
             <Text fontSize="md" className="text-slate-600 dark:text-slate-400">
-              Willkommen zurück, {username}!
+              {t("greeting")}
+              <strong>{username}</strong>!
             </Text>
             <Badge variant="subtle" px={2} py={1} borderRadius="full">
               Rolle: {userData?.role ?? "—"}

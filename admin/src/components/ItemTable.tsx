@@ -149,7 +149,7 @@ const ItemTable: React.FC = () => {
       </HStack>
       {/* End action toolbar */}
 
-      <Heading marginBottom={4} size="md">
+      <Heading marginBottom={4} size="2xl">
         Gegenstände
       </Heading>
       {isError && (

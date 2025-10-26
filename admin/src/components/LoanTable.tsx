@@ -54,6 +54,7 @@ const LoanTable: React.FC = () => {
     returned_date: string;
     created_at: string;
     loaned_items_name: string[];
+    deleted: boolean;
   };
 
   useEffect(() => {
@@ -108,9 +109,13 @@ const LoanTable: React.FC = () => {
       </HStack>
       {/* End action toolbar */}
 
-      <Heading marginBottom={4} size="md">
+      <Heading marginBottom={4} size="2xl">
         Ausleihen
       </Heading>
+      <Text>
+        Die Ausleihen die rot sind, wurden gelöscht und sind nur für den Admin
+        sichtbar.
+      </Text>
 
       {isError && (
         <MyAlert
@@ -163,7 +168,7 @@ const LoanTable: React.FC = () => {
           </Table.Header>
           <Table.Body>
             {items.map((item) => (
-              <Table.Row key={item.id}>
+              <Table.Row color={item.deleted ? "red" : "white"} key={item.id}>
                 <Table.Cell>{item.id}</Table.Cell>
                 <Table.Cell>{item.username}</Table.Cell>
                 <Table.Cell>

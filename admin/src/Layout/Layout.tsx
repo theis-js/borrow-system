@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
 import Cookies from "js-cookie";
-import Landingpage from "@/components/API/Landingpage";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -12,16 +11,8 @@ const API_BASE =
 
 const Layout: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showAPI, setShowAPI] = useState(false);
 
   useEffect(() => {
-    const path = window.location.pathname.replace(/\/+$/, ""); // remove trailing slash
-    if (path === "/api") {
-      setShowAPI(true);
-      console.log("signal");
-      return;
-    }
-
     if (Cookies.get("token")) {
       const verifyToken = async () => {
         const response = await fetch(`${API_BASE}/api/verifyToken`, {
@@ -47,14 +38,6 @@ const Layout: React.FC = () => {
     window.location.pathname = "/";
     setIsLoggedIn(false);
   };
-
-  if (showAPI) {
-    return (
-      <main>
-        <Landingpage />
-      </main>
-    );
-  }
 
   return (
     <main>

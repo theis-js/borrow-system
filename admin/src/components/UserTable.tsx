@@ -144,7 +144,7 @@ const UserTable: React.FC = () => {
       </HStack>
       {/* End action toolbar */}
 
-      <Heading marginBottom={4} size="md">
+      <Heading marginBottom={4} size="2xl">
         Benutzer
       </Heading>
       {changePWform && (

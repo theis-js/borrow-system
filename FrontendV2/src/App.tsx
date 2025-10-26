@@ -11,6 +11,7 @@ import { UserContext, type User } from "./states/Context";
 import { triggerLogoutAtom } from "@/states/Atoms";
 import { MyLoansPage } from "./pages/MyLoansPage";
 import Landingpage from "./pages/Landingpage";
+import { changeLanguage } from "i18next";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -43,6 +44,21 @@ function App() {
         }
       };
       verifyToken();
+    }
+
+    // set initial language
+    if (!Cookies.get("language")) {
+      const getBrowserLanguage = () => {
+        const lang = navigator.languages?.[0] || navigator.language || "en";
+        return lang.split("-")[0].toLowerCase();
+      };
+
+      changeLanguage(getBrowserLanguage());
+      Cookies.set("language", getBrowserLanguage());
+    }
+
+    if (Cookies.get("language")) {
+      changeLanguage(Cookies.get("language") || "en");
     }
   }, []);
 

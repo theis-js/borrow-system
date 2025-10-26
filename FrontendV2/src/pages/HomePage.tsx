@@ -46,7 +46,7 @@ export const HomePage = () => {
   };
 
   return (
-    <Container maxW="7xl" className="px-6 sm:px-8 pt-10">
+    <Container className="px-6 sm:px-8 pt-10">
       <Header />
       {isMsg && (
         <MyAlert
@@ -92,9 +92,7 @@ export const HomePage = () => {
               if (response && response.status === "error") {
                 setMsgStatus("error");
                 setMsgTitle(response.title || t("error"));
-                setMsgDescription(
-                  response.description || t("unknown-error")
-                );
+                setMsgDescription(response.description || t("unknown-error"));
                 setIsMsg(true);
                 return;
               }
@@ -147,15 +145,13 @@ export const HomePage = () => {
                 if (response.status === "error") {
                   setMsgStatus("error");
                   setMsgTitle(response.title || t("error"));
-                  setMsgDescription(
-                    response.description || t("unknown-error")
-                  );
+                  setMsgDescription(response.description || t("unknown-error"));
                   setIsMsg(true);
                   return;
                 }
                 setMsgStatus("success");
                 setMsgTitle(t("success"));
-                setMsgDescription(t("loan-success")) ;
+                setMsgDescription(t("loan-success"));
                 setIsMsg(true);
               })
             }

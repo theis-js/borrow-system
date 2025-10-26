@@ -117,7 +117,7 @@ export const MyLoansPage = () => {
 
   return (
     <>
-      <Container maxW="7xl" className="px-6 sm:px-8 pt-10">
+      <Container className="px-6 sm:px-8 pt-10">
         <Header />
         {isMsg && (
           <MyAlert

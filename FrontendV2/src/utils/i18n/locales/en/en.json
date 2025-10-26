@@ -58,5 +58,6 @@
     "sure-delete-loan-0": "Do you really want to delete the loan with the ",
     "sure-delete-loan-1": " loan code?",
     "sure-delete-loan-2": "It will remain visible to the admin.",
-    "delete": "Delete"
+    "delete": "Delete",
+    "change-language": "Change language"
 }

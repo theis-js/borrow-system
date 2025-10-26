@@ -26,6 +26,7 @@ import {
   LogOut,
   CalendarPlus,
   MoreVertical,
+  Flag,
 } from "lucide-react";
 import { useUserContext } from "@/states/Context";
 import { useState } from "react";
@@ -167,6 +168,21 @@ export const Header = () => {
                 }
               />
               <Menu.Item
+                value="change-language"
+                onSelect={() => {
+                  const currentLang = Cookies.get("language") || "en";
+                  const newLang = currentLang === "en" ? "de" : "en";
+                  Cookies.set("language", newLang);
+                  window.location.reload();
+                }}
+                children={
+                  <HStack gap={3}>
+                    <LifeBuoy size={16} />
+                    <Text as="span">{t("change-language")}</Text>
+                  </HStack>
+                }
+              />
+              <Menu.Item
                 value="help"
                 onSelect={() =>
                   window.open(
@@ -273,6 +289,21 @@ export const Header = () => {
             <HStack gap={2}>
               <RotateCcwKey size={18} />
               <Text as="span">{t("change-password")}</Text>
+            </HStack>
+          </Button>
+
+          <Button
+            variant="ghost"
+            onClick={() => {
+              const currentLang = Cookies.get("language") || "en";
+              const newLang = currentLang === "en" ? "de" : "en";
+              Cookies.set("language", newLang);
+              window.location.reload();
+            }}
+          >
+            <HStack gap={2}>
+              <Flag size={18} />
+              <Text as="span">{t("change-language")}</Text>
             </HStack>
           </Button>
 

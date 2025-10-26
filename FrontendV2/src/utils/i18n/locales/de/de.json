@@ -58,5 +58,6 @@
     "sure-delete-loan-0": "Möchten Sie die Ausleihe mit dem ",
     "sure-delete-loan-1": " Ausleihcode wirklich löschen?",
     "sure-delete-loan-2": "Für den Admin bleibt sie weiterhin sichtbar.",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "change-language": "Sprache ändern"
 }

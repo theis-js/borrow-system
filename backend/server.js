@@ -6,6 +6,7 @@ import apiRouterV2 from "./routes/apiV2.js";
 env.config();
 const app = express();
 const port = 8002;
+import serverInfo from "./info.json" assert { type: "json" }
 
 app.use(cors());
 // Increase body size limits to support large CSV JSON payloads
@@ -18,6 +19,10 @@ app.use("/apiV2", apiRouterV2);
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
+});
+
+app.get("/server-info", async (req, res) => {
+  res.status(200).json(serverInfo);
 });
 
 app.listen(port, () => {

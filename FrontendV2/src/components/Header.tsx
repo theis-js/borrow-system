@@ -103,6 +103,7 @@ export const Header = () => {
     Cookies.remove("token");
     setIsLoggedIn(false);
     setTriggerLogout(true);
+    navigate("/login", { replace: true });
   };
 
   return (

@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import Cookies from "js-cookie";
 import { Navigate, useNavigate } from "react-router-dom";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useTranslation } from "react-i18next";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -13,6 +14,8 @@ const API_BASE =
   "http://localhost:8002";
 
 export const LoginPage = () => {
+  const { t } = useTranslation();
+
   const [isLoggedIn, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
   const [triggerLogout, setTriggerLogout] = useAtom(triggerLogoutAtom);
   const navigate = useNavigate();
@@ -35,7 +38,7 @@ export const LoginPage = () => {
     if (!response.ok) {
       return {
         success: false,
-        message: data.message ?? "Login fehlgeschlagen",
+        message: data.message ?? t("login-failed"),
         description: data.description ?? "",
       };
     }
@@ -72,22 +75,20 @@ export const LoginPage = () => {
       <form onSubmit={(e) => e.preventDefault()}>
         <Card.Root maxW="sm">
           <Card.Header>
-            <Card.Title>Login</Card.Title>
-            <Card.Description>
-              Bitte unten Ihre Zugangsdaten eingeben.
-            </Card.Description>
+            <Card.Title>{t("login")}</Card.Title>
+            <Card.Description>{t("enter-credentials")}</Card.Description>
           </Card.Header>
           <Card.Body>
             <Stack gap="4" w="full">
               <Field.Root>
-                <Field.Label>Benutzername</Field.Label>
+                <Field.Label>{t("username")}</Field.Label>
                 <Input
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </Field.Root>
               <Field.Root>
-                <Field.Label>Passwort</Field.Label>
+                <Field.Label>{t("password")}</Field.Label>
                 <PasswordInput
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -107,8 +108,8 @@ export const LoginPage = () => {
             {triggerLogout && (
               <MyAlert
                 status="success"
-                title={"Logout erfolgreich!"}
-                description={"Sie wurden erfolgreich abgemeldet."}
+                title={t("logout-success")}
+                description={t("logout-success-desc")}
               />
             )}
           </Card.Footer>

@@ -31,7 +31,6 @@ import { useUserContext } from "@/states/Context";
 import { useState } from "react";
 import MyAlert from "./myChakra/MyAlert";
 import { useTranslation } from "react-i18next";
-import { Trans } from "react-i18next";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -61,8 +60,8 @@ export const Header = () => {
 
   const changePassword = async () => {
     if (newPassword !== confirmPassword) {
-      setMsgTitle("Passwortänderung fehlgeschlagen");
-      setMsgDescription("Passwörter stimmen nicht überein");
+      setMsgTitle(t("err_pw_change"));
+      setMsgDescription(t("pw_mismatch"));
       setMsgStatus("error");
       setIsMsg(true);
       return;
@@ -78,15 +77,15 @@ export const Header = () => {
     });
 
     if (!response.ok) {
-      setMsgTitle("Passwortänderung fehlgeschlagen");
-      setMsgDescription("Bitte überprüfen Sie Ihre Eingaben");
+      setMsgTitle(t("err_pw_change"));
+      setMsgDescription(t("pw_mismatch"));
       setMsgStatus("error");
       setIsMsg(true);
       return;
     }
 
-    setMsgTitle("Passwort erfolgreich geändert");
-    setMsgDescription("Ihr Passwort wurde erfolgreich geändert");
+    setMsgTitle(t("pw_success"));
+    setMsgDescription(t("pw_success_desc"));
     setMsgStatus("success");
     setIsMsg(true);
 
@@ -143,7 +142,7 @@ export const Header = () => {
                 children={
                   <HStack gap={3}>
                     <CalendarPlus size={16} />
-                    <Text as="span">Ausleihe erstellen</Text>
+                    <Text as="span">{t("create-loan")}</Text>
                   </HStack>
                 }
               />
@@ -153,7 +152,7 @@ export const Header = () => {
                 children={
                   <HStack gap={3}>
                     <CircleUserRound size={16} />
-                    <Text as="span">Meine Ausleihen</Text>
+                    <Text as="span">{t("my-loans")}</Text>
                   </HStack>
                 }
               />
@@ -163,7 +162,7 @@ export const Header = () => {
                 children={
                   <HStack gap={3}>
                     <RotateCcwKey size={16} />
-                    <Text as="span">Passwort ändern</Text>
+                    <Text as="span">{t("change-password")}</Text>
                   </HStack>
                 }
               />
@@ -179,7 +178,7 @@ export const Header = () => {
                 children={
                   <HStack gap={3}>
                     <LifeBuoy size={16} />
-                    <Text as="span">Hilfe</Text>
+                    <Text as="span">{t("help")}</Text>
                   </HStack>
                 }
               />
@@ -195,7 +194,7 @@ export const Header = () => {
                 children={
                   <HStack gap={3}>
                     <Code size={16} />
-                    <Text as="span">Source Code</Text>
+                    <Text as="span">{t("source-code")}</Text>
                   </HStack>
                 }
               />
@@ -206,7 +205,7 @@ export const Header = () => {
                 children={
                   <HStack gap={3} color="red.500">
                     <LogOut size={16} />
-                    <Text as="span">Logout</Text>
+                    <Text as="span">{t("logout")}</Text>
                   </HStack>
                 }
               />
@@ -259,21 +258,21 @@ export const Header = () => {
           >
             <HStack gap={2}>
               <CalendarPlus size={18} />
-              <Text as="span">Ausleihe erstellen</Text>
+              <Text as="span">{t("create-loan")}</Text>
             </HStack>
           </Button>
 
           <Button onClick={() => navigate("/my-loans", { replace: true })}>
             <HStack gap={2}>
               <CircleUserRound size={18} />
-              <Text as="span">Meine Ausleihen</Text>
+              <Text as="span">{t("my-loans")}</Text>
             </HStack>
           </Button>
 
           <Button variant="ghost" onClick={() => setPwOpen(true)}>
             <HStack gap={2}>
               <RotateCcwKey size={18} />
-              <Text as="span">Passwort ändern</Text>
+              <Text as="span">{t("change-password")}</Text>
             </HStack>
           </Button>
 
@@ -284,7 +283,7 @@ export const Header = () => {
             <Button variant="ghost">
               <HStack gap={2}>
                 <LifeBuoy size={18} />
-                <Text as="span">Hilfe</Text>
+                <Text as="span">{t("help")}</Text>
               </HStack>
             </Button>
           </a>
@@ -296,7 +295,7 @@ export const Header = () => {
             <Button variant="ghost">
               <HStack gap={2}>
                 <Code size={18} />
-                <Text as="span">Source Code</Text>
+                <Text as="span">{t("source-code")}</Text>
               </HStack>
             </Button>
           </a>
@@ -304,7 +303,7 @@ export const Header = () => {
           <Button onClick={logout} variant="outline" colorScheme="red">
             <HStack gap={2}>
               <LogOut size={18} />
-              <Text as="span">Logout</Text>
+              <Text as="span">{t("logout")}</Text>
             </HStack>
           </Button>
         </HStack>
@@ -317,7 +316,7 @@ export const Header = () => {
           <Dialog.Positioner>
             <Dialog.Content maxW="md">
               <Dialog.Header>
-                <Dialog.Title>Passwort ändern</Dialog.Title>
+                <Dialog.Title>{t("change-password")}</Dialog.Title>
               </Dialog.Header>
               <form
                 onSubmit={(e) => {
@@ -330,17 +329,17 @@ export const Header = () => {
                     <PasswordInput
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
-                      placeholder="Altes Passwort"
+                      placeholder={t("old-password")}
                     />
                     <PasswordInput
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Neues Passwort"
+                      placeholder={t("new-password")}
                     />
                     <PasswordInput
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Neues Passwort wiederholen"
+                      placeholder={t("confirm-password")}
                     />
                   </Stack>
                 </Dialog.Body>
@@ -355,10 +354,10 @@ export const Header = () => {
                     )}
                     <HStack justify="flex-end" gap={2}>
                       <Dialog.ActionTrigger asChild>
-                        <Button variant="outline">Abbrechen</Button>
+                        <Button variant="outline">{t("cancel")}</Button>
                       </Dialog.ActionTrigger>
                       <Button type="submit" colorScheme="teal">
-                        Speichern
+                        {t("save")}
                       </Button>
                     </HStack>
                   </Stack>

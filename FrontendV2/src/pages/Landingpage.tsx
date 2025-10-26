@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Lock, LockOpen } from "lucide-react";
 import MyAlert from "@/components/myChakra/MyAlert";
+import { useTranslation } from "react-i18next";
 
 export const formatDateTime = (value: string | null | undefined) => {
   if (!value) return "N/A";
@@ -45,6 +46,8 @@ type Device = {
 };
 
 const Landingpage: React.FC = () => {
+  const { t } = useTranslation();
+
   const [isLoading, setIsLoading] = useState(false);
   const [loans, setLoans] = useState<Loan[]>([]);
   const [devices, setDevices] = useState<Device[]>([]);
@@ -76,8 +79,8 @@ const Landingpage: React.FC = () => {
         } else {
           setError(
             "error",
-            "Fehler beim Laden",
-            "Unerwartetes Datenformat erhalten. (Ausleihen)"
+            t("error-by-loading"),
+            t("unexpected-date-format_loan")
           );
         }
 
@@ -88,16 +91,12 @@ const Landingpage: React.FC = () => {
         } else {
           setError(
             "error",
-            "Fehler beim Laden",
-            "Unerwartetes Datenformat erhalten. (Geräte)"
+            t("error-by-loading"),
+            t("unexpected-date-format_device")
           );
         }
       } catch (e) {
-        setError(
-          "error",
-          "Fehler beim Laden",
-          "Die Ausleihen konnten nicht geladen werden."
-        );
+        setError("error", t("error-by-loading"), t("error-fetching-loans"));
       } finally {
         setIsLoading(false);
       }
@@ -112,7 +111,7 @@ const Landingpage: React.FC = () => {
       </Heading>
 
       <Heading as="h2" size="md" mb={4}>
-        Alle Ausleihen
+        {t("all-loans")}
       </Heading>
 
       {isError && (
@@ -126,7 +125,7 @@ const Landingpage: React.FC = () => {
       {isLoading && (
         <VStack colorPalette="teal">
           <Spinner color="colorPalette.600" />
-          <Text color="colorPalette.600">Loading...</Text>
+          <Text color="colorPalette.600">{t("loading")}</Text>
         </VStack>
       )}
 
@@ -138,22 +137,22 @@ const Landingpage: React.FC = () => {
                 <strong>#</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Benutzername</strong>
+                <strong>{t("username")}</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Startdatum</strong>
+                <strong>{t("start-date")}</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Enddatum</strong>
+                <strong>{t("end-date")}</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Ausgeliehene Artikel</strong>
+                <strong>{t("rented-items")}</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Rückgabedatum</strong>
+                <strong>{t("return-date")}</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Ausleihdatum</strong>
+                <strong>{t("take-date")}</strong>
               </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
@@ -179,12 +178,12 @@ const Landingpage: React.FC = () => {
 
       {!isLoading && loans.length === 0 && !isError && (
         <Text color="gray.500" mt={2}>
-          Keine Ausleihen vorhanden.
+          {t("no-loans-found")}
         </Text>
       )}
 
       <Heading as="h2" size="md" mb={4}>
-        Alle Geräte
+        {t("all-devices")}
       </Heading>
 
       {/* Responsive Grid mit gleich hohen Karten */}
@@ -202,14 +201,16 @@ const Landingpage: React.FC = () => {
               <Heading size="md">{device.item_name}</Heading>
             </Card.Header>
             <Card.Body color="fg.muted">
-              <Text>Ausleihrolle: {device.can_borrow_role}</Text>
+              <Text>
+                {t("rent-role")}: {device.can_borrow_role}
+              </Text>
             </Card.Body>
           </Card.Root>
         ))}
       </SimpleGrid>
       <HStack mt={3} gap={3} align="center" role="group" aria-label="Legende">
         <Text fontWeight="medium" color="fg.muted">
-          Legende:
+          {t("legend")}:
         </Text>
         <Button
           size="sm"
@@ -221,7 +222,7 @@ const Landingpage: React.FC = () => {
         >
           <HStack gap={2}>
             <LockOpen size={16} />
-            <Text>Im Schließfach</Text>
+            <Text>{t("in-locker")}</Text>
           </HStack>
         </Button>
         <Button
@@ -234,7 +235,7 @@ const Landingpage: React.FC = () => {
         >
           <HStack gap={2}>
             <Lock size={16} />
-            <Text>Nicht im Schließfach</Text>
+            <Text>{t("not-in-locker")}</Text>
           </HStack>
         </Button>
       </HStack>

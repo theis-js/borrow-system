@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Header } from "@/components/Header";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const API_BASE =
   (import.meta as any).env?.VITE_BACKEND_URL ||
@@ -23,6 +24,7 @@ const API_BASE =
   "http://localhost:8002";
 
 export const MyLoansPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [loans, setLoans] = useState<any[]>([]);
@@ -54,21 +56,18 @@ export const MyLoansPage = () => {
 
         if (!res.ok) {
           setMsgStatus("error");
-          setMsgTitle("Fehler");
-          setMsgDescription(
-            "Beim Laden der Ausleihen ist ein Fehler aufgetreten."
-          );
+          setMsgTitle(t("error"));
+          setMsgDescription(t("error-fetching-loans"));
           setIsMsg(true);
           return;
         }
 
         const data = await res.json();
         setLoans(data);
-        console.log("Fetched loans:", data);
       } catch (e) {
         setMsgStatus("error");
-        setMsgTitle("Fehler");
-        setMsgDescription("Netzwerkfehler beim Laden der Ausleihen.");
+        setMsgTitle(t("error"));
+        setMsgDescription(t("network-error-fetching-loans"));
         setIsMsg(true);
       } finally {
         setIsLoading(false);
@@ -89,23 +88,21 @@ export const MyLoansPage = () => {
 
       if (!res.ok) {
         setMsgStatus("error");
-        setMsgTitle("Fehler");
-        setMsgDescription(
-          "Beim Löschen der Ausleihe ist ein Fehler aufgetreten."
-        );
+        setMsgTitle(t("error"));
+        setMsgDescription(t("error-deleting-loan"));
         setIsMsg(true);
         return;
       }
 
       setLoans((prev) => prev.filter((loan) => loan.id !== loanId));
       setMsgStatus("success");
-      setMsgTitle("Erfolg");
-      setMsgDescription("Ausleihe erfolgreich gelöscht.");
+      setMsgTitle(t("success"));
+      setMsgDescription(t("loan-deletion-success"));
       setIsMsg(true);
     } catch (e) {
       setMsgStatus("error");
-      setMsgTitle("Fehler");
-      setMsgDescription("Netzwerkfehler beim Löschen der Ausleihe.");
+      setMsgTitle(t("error"));
+      setMsgDescription(t("network-error-deleting-loan"));
       setIsMsg(true);
     }
   };
@@ -132,7 +129,7 @@ export const MyLoansPage = () => {
         {isLoading && (
           <VStack colorPalette="teal">
             <Spinner color="colorPalette.600" />
-            <Text color="colorPalette.600">Loading...</Text>
+            <Text color="colorPalette.600">{t("loading")}</Text>
           </VStack>
         )}
         {loans && (
@@ -159,13 +156,13 @@ export const MyLoansPage = () => {
             </Table.ColumnGroup>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeader>Ausleihcode</Table.ColumnHeader>
-                <Table.ColumnHeader>Startdatum</Table.ColumnHeader>
-                <Table.ColumnHeader>Enddatum</Table.ColumnHeader>
-                <Table.ColumnHeader>Geräte</Table.ColumnHeader>
-                <Table.ColumnHeader>Ausleihdatum</Table.ColumnHeader>
-                <Table.ColumnHeader>Rückgabedatum</Table.ColumnHeader>
-                <Table.ColumnHeader>Aktionen</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("loan-code")}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("start-date")}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("end-date")}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("devices")}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("take-date")}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("return-date")}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("actions")}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -204,26 +201,28 @@ export const MyLoansPage = () => {
                         <Dialog.Positioner>
                           <Dialog.Content>
                             <Dialog.Header>
-                              <Dialog.Title>Sicher?</Dialog.Title>
+                              <Dialog.Title>{t("sure")}</Dialog.Title>
                             </Dialog.Header>
                             <Dialog.Body>
                               <Text>
-                                Möchtest du die Ausleihe mit dem{" "}
-                                <strong><Code>{delLoanCode}</Code></strong> Code wirklich
-                                löschen?
+                                {t("sure-delete-loan-0")}
+                                <strong>
+                                  <Code>{delLoanCode}</Code>
+                                </strong>{" "}
+                                {t("sure-delete-loan-1")}
                                 <br />
-                                Für den Admin bleibt sie weiterhin sichtbar.
+                                {t("sure-delete-loan-2")}
                               </Text>
                             </Dialog.Body>
                             <Dialog.Footer>
                               <Dialog.ActionTrigger asChild>
-                                <Button variant="outline">Abbrechen</Button>
+                                <Button variant="outline">{t("cancel")}</Button>
                               </Dialog.ActionTrigger>
                               <Button
                                 colorPalette="red"
                                 onClick={() => deleteLoan(loan.id)}
                               >
-                                <strong>Löschen</strong>
+                                <strong>{t("delete")}</strong>
                               </Button>
                             </Dialog.Footer>
                             <Dialog.CloseTrigger asChild>

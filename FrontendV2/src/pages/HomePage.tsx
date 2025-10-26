@@ -15,6 +15,7 @@ import MyAlert from "@/components/myChakra/MyAlert";
 import { borrowAbleItemsAtom } from "@/states/Atoms";
 import { createLoan } from "@/utils/Fetcher";
 import { Header } from "@/components/Header";
+import { useTranslation } from "react-i18next";
 
 export interface User {
   username: string;
@@ -22,6 +23,8 @@ export interface User {
 }
 
 export const HomePage = () => {
+  const { t } = useTranslation();
+
   const [borrowableItems, setBorrowableItems] = useAtom(borrowAbleItemsAtom);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -54,21 +57,21 @@ export const HomePage = () => {
       )}
       <Stack as="main">
         <label htmlFor="startDate">
-          <Text>Startdatum</Text>
+          <Text>{t("start-date")}</Text>
         </label>
         <Input
           id="startDate"
-          placeholder="Startdatum"
+          placeholder={t("start-date")}
           type="datetime-local"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
         <label htmlFor="endDate">
-          <Text>Enddatum</Text>
+          <Text>{t("end-date")}</Text>
         </label>
         <Input
           id="endDate"
-          placeholder="Enddatum"
+          placeholder={t("end-date")}
           type="datetime-local"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
@@ -78,8 +81,8 @@ export const HomePage = () => {
             setIsLoadingA(true);
             if (!startDate || !endDate) {
               setMsgStatus("error");
-              setMsgTitle("Fehlende Eingaben");
-              setMsgDescription("Bitte Start- und Enddatum angeben.");
+              setMsgTitle(t("missing-fields"));
+              setMsgDescription(t("missing-fields-desc"));
               setIsMsg(true);
               setIsLoadingA(false);
               return;
@@ -88,9 +91,9 @@ export const HomePage = () => {
               setIsLoadingA(false);
               if (response && response.status === "error") {
                 setMsgStatus("error");
-                setMsgTitle(response.title || "Fehler");
+                setMsgTitle(response.title || t("error"));
                 setMsgDescription(
-                  response.description || "Unbekannter Frontend Fehler"
+                  response.description || t("unknown-error")
                 );
                 setIsMsg(true);
                 return;
@@ -101,12 +104,12 @@ export const HomePage = () => {
             });
           }}
         >
-          Verfügbare Gegenstände anzeigen
+          {t("get-borrowable-items")}
         </Button>
         {isLoadingA && (
           <VStack colorPalette="teal">
             <Spinner color="colorPalette.600" />
-            <Text color="colorPalette.600">Loading...</Text>
+            <Text color="colorPalette.600">{t("loading")}</Text>
           </VStack>
         )}
         {borrowableItems.length > 0 && (
@@ -115,7 +118,7 @@ export const HomePage = () => {
               <Table.Header>
                 <Table.Row bg="bg.subtle">
                   <Table.ColumnHeader></Table.ColumnHeader>
-                  <Table.ColumnHeader>Gegenstand</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("item")}</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
 
@@ -143,21 +146,21 @@ export const HomePage = () => {
               createLoan(selectedItems, startDate, endDate).then((response) => {
                 if (response.status === "error") {
                   setMsgStatus("error");
-                  setMsgTitle(response.title || "Fehler");
+                  setMsgTitle(response.title || t("error"));
                   setMsgDescription(
-                    response.description || "Unbekannter Frontend Fehler"
+                    response.description || t("unknown-error")
                   );
                   setIsMsg(true);
                   return;
                 }
                 setMsgStatus("success");
-                setMsgTitle("Erfolg");
-                setMsgDescription("Gegenstände erfolgreich ausgeliehen.");
+                setMsgTitle(t("success"));
+                setMsgDescription(t("loan-success")) ;
                 setIsMsg(true);
               })
             }
           >
-            Gegenstände ausleihen
+            {t("create-loan")}
           </Button>
         )}
       </Stack>

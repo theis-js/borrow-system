@@ -349,7 +349,6 @@ export const createLoanInDatabase = async (
 };
 
 // These functions are only temporary, and will be deleted when the full bin is set up.
-
 export const onTake = async (loanId) => {
   const [items] = await pool.query(
     "SELECT loaned_items_id FROM loans WHERE id = ?",
@@ -405,6 +404,7 @@ export const onReturn = async (loanId) => {
   }
   return { success: false };
 };
+// Temporary functions end here.
 
 export const loginAdmin = async (username, password) => {
   const [result] = await pool.query(

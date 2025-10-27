@@ -56,6 +56,7 @@ export const HomePage = () => {
         />
       )}
       <Stack as="main">
+        <Text>{t("timezone-info")}</Text>
         <label htmlFor="startDate">
           <Text>{t("start-date")}</Text>
         </label>

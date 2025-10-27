@@ -59,5 +59,6 @@
     "sure-delete-loan-1": " loan code?",
     "sure-delete-loan-2": "It will remain visible to the admin.",
     "delete": "Delete",
-    "change-language": "Change language"
+    "change-language": "Change language",
+    "timezone-info": "The displayed dates and times are shown in Berlin timezone and must also be entered as such."
 }

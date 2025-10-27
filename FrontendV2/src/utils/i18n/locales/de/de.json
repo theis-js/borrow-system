@@ -59,5 +59,6 @@
     "sure-delete-loan-1": " Ausleihcode wirklich löschen?",
     "sure-delete-loan-2": "Für den Admin bleibt sie weiterhin sichtbar.",
     "delete": "Löschen",
-    "change-language": "Sprache ändern"
+    "change-language": "Sprache ändern",
+    "timezone-info": "Die angezeigten Daten und Uhrzeiten werden in deutscher Zeitzone dargestellt und müssen auch so eingegeben werden."
 }

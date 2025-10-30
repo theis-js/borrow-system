@@ -32,11 +32,7 @@ import { useUserContext } from "@/states/Context";
 import { useState } from "react";
 import MyAlert from "./myChakra/MyAlert";
 import { useTranslation } from "react-i18next";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 export const Header = () => {
   const navigate = useNavigate();

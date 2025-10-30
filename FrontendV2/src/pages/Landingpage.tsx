@@ -13,6 +13,7 @@ import {
 import { Lock, LockOpen } from "lucide-react";
 import MyAlert from "@/components/myChakra/MyAlert";
 import { useTranslation } from "react-i18next";
+import { API_BASE } from "@/config/api.config";
 
 export const formatDateTime = (value: string | null | undefined) => {
   if (!value) return "N/A";
@@ -21,11 +22,6 @@ export const formatDateTime = (value: string | null | undefined) => {
   const [, y, M, d, h, min] = m;
   return `${d}.${M}.${y} ${h}:${min} Uhr`;
 };
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
 
 type Loan = {
   id: number;

@@ -7,12 +7,8 @@ import Cookies from "js-cookie";
 import { Navigate, useNavigate } from "react-router-dom";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useTranslation } from "react-i18next";
-import { Footer } from "@/components/Footer";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { Footer } from "@/components/footer/Footer";
+import { API_BASE } from "@/config/api.config";
 
 export const LoginPage = () => {
   const { t } = useTranslation();
@@ -24,7 +20,7 @@ export const LoginPage = () => {
   useEffect(() => {
     if (isLoggedIn) {
       navigate("/", { replace: true });
-      window.location.reload();                     // Mit Tobais besprechen, ob das so bleiben soll
+      window.location.reload(); // Wenn entfernt: Seite bleibt schwarz und muss manuell neu geladen werden
     }
   }, [isLoggedIn, navigate]);
 

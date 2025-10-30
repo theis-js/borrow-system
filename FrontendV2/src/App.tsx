@@ -13,12 +13,11 @@ import { MyLoansPage } from "./pages/MyLoansPage";
 import Landingpage from "./pages/Landingpage";
 import { changeLanguage } from "i18next";
 import { Box, Flex } from "@chakra-ui/react";
-import { Footer } from "./components/Footer";
+import { Footer } from "./components/footer/Footer";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { API_BASE } from "@/config/api.config";
 
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+const queryClient = new QueryClient();
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -65,24 +64,26 @@ function App() {
   }, []);
 
   return (
-    <Flex direction="column" minH="100vh">
-      <Box as="main" flex="1">
-        <UserContext.Provider value={user}>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<ProtectedRoutes />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/my-loans" element={<MyLoansPage />} />
-                <Route path="/landing" element={<Landingpage />} />
-              </Route>
+    <QueryClientProvider client={queryClient}>
+      <Flex direction="column" minH="100vh">
+        <Box as="main" flex="1">
+          <UserContext.Provider value={user}>
+            <BrowserRouter>
+              <Routes>
+                <Route element={<ProtectedRoutes />}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/my-loans" element={<MyLoansPage />} />
+                  <Route path="/landing" element={<Landingpage />} />
+                </Route>
 
-              <Route path="/login" element={<LoginPage />} />
-            </Routes>
-          </BrowserRouter>
-        </UserContext.Provider>
-      </Box>
-      <Footer />
-    </Flex>
+                <Route path="/login" element={<LoginPage />} />
+              </Routes>
+            </BrowserRouter>
+          </UserContext.Provider>
+        </Box>
+        <Footer />
+      </Flex>
+    </QueryClientProvider>
   );
 }
 

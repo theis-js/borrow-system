@@ -1,8 +1,5 @@
 import Cookies from "js-cookie";
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 export const getBorrowableItems = async (
   startDate: string,
@@ -30,7 +27,6 @@ export const getBorrowableItems = async (
     }
 
     const data = await response.json();
-    console.log(data);
     return {
       data: data,
       status: "success",

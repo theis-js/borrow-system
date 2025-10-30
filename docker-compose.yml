@@ -53,5 +53,20 @@ services:
     ports:
       - "3309:3306"
 
+  mysql-new:
+    container_name: borrow_system-mysql-new
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: borrow_system_new
+      TZ: Europe/Berlin
+    volumes:
+      - mysql-data-new:/var/lib/mysql
+      - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
+    ports:
+      - "3310:3306"
+
 volumes:
   mysql-data:
+  mysql-data-new:

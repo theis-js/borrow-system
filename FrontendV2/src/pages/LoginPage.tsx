@@ -24,7 +24,7 @@ export const LoginPage = () => {
   useEffect(() => {
     if (isLoggedIn) {
       navigate("/", { replace: true });
-      window.location.reload();                                                       // Mit Tobais besprechen, ob das so bleiben soll
+      window.location.reload();                     // Mit Tobais besprechen, ob das so bleiben soll
     }
   }, [isLoggedIn, navigate]);
 

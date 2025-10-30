@@ -12,6 +12,10 @@ export const useVersionInfoQuery = () =>
         const data = await response.json();
         return data;
       } else {
+        console.error(
+          "Failed to fetch version info (versionInfo.query.ts): ",
+          response.statusText
+        );
         return {
           "backend-info": {
             version: "N/A",

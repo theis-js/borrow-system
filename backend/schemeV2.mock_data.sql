@@ -1,3 +1,5 @@
+-- MUST BE UPDATED BEFORE USE
+
 USE borrow_system_new;
 
 -- Optional: keep insert order predictable

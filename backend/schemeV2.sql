@@ -25,6 +25,7 @@ CREATE TABLE loans (
   loaned_items_id json NOT NULL DEFAULT ('[]'),
   loaned_items_name json NOT NULL DEFAULT ('[]'),
   deleted bool NOT NULL DEFAULT false,
+  note varchar(500) DEFAULT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_loans_username
     FOREIGN KEY (username) REFERENCES users(username)

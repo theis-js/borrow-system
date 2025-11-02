@@ -47,10 +47,12 @@ CREATE TABLE items (
 
 CREATE TABLE apiKeys (
   id int NOT NULL AUTO_INCREMENT,
-  api_key int NOT NULL UNIQUE,
+  api_key CHAR(15) NOT NULL UNIQUE,
   username VARCHAR(100) NOT NULL,
+  last_used_at timestamp DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   entry_created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
+  CONSTRAINT chk_api_key_len CHECK (CHAR_LENGTH(api_key) = 15),
   CONSTRAINT fk_apikeys_username
     FOREIGN KEY (username) REFERENCES users(username)
     ON UPDATE CASCADE

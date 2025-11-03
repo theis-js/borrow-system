@@ -1,18 +1,13 @@
 services:
-  #  borrow_system-frontend:
-  #    container_name: borrow_system-frontend
+  #  usr-frontendV2:
+  #    container_name: borrow_system-usr-frontend
   #    build: ./FrontendV2
   #    ports:
-  #      - "8001:8001"
-  #    environment:
-  #      - CHOKIDAR_USEPOLLING=true
-  #    volumes:
-  #      - ./FrontendV2:/app
-  #      - /app/node_modules
+  #      - "8001:80"
   #    restart: unless-stopped
 
   #  admin-frontend:
-  #    container_name: admin-frontend
+  #    container_name: borrow_system-admin-frontend
   #    build: ./admin
   #    ports:
   #      - "8003:8003"
@@ -23,7 +18,7 @@ services:
   #      - /app/node_modules
   #    restart: unless-stopped
 
-  borrow_system-backend:
+  backend:
     container_name: borrow_system-backend
     build: ./backend
     ports:
@@ -53,20 +48,5 @@ services:
     ports:
       - "3309:3306"
 
-  mysql-new:
-    container_name: borrow_system-mysql-new
-    image: mysql:8.0
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: borrow_system_new
-      TZ: Europe/Berlin
-    volumes:
-      - mysql-data-new:/var/lib/mysql
-      - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
-    ports:
-      - "3310:3306"
-
 volumes:
   mysql-data:
-  mysql-data-new:

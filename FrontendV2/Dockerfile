@@ -1,12 +1,19 @@
-FROM node:20-alpine
+FROM node:18 as builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+
+RUN npm install --frozen-lockfile
 
 COPY . .
+RUN npm run build
 
-EXPOSE 8001
+FROM nginx:alpine AS runner
 
-CMD ["npm", "run", "dev"]
+WORKDIR /usr/share/nginx/html
+
+COPY --from=builder /app/dist .
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

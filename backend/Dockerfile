@@ -1,12 +1,12 @@
 FROM node:20-alpine
 
+ENV NODE_ENV=production
 WORKDIR /backend
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci --omit=dev
 
 COPY . .
 
 EXPOSE 8002
-
 CMD ["npm", "start"]

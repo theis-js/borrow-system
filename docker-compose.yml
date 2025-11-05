@@ -33,6 +33,21 @@ services:
       timeout: 5s
       retries: 3
 
+  backend_v2:
+    container_name: borrow_system-backend_v2
+    build: ./backendV2
+    ports:
+      - "8004:8004"
+    environment:
+      NODE_ENV: production
+      DB_HOST: mysql_v2
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD_V2}
+      DB_NAME: borrow_system_v2
+    depends_on:
+      - mysql_v2
+    restart: unless-stopped
+
   mysql:
     container_name: borrow_system-mysql
     image: mysql:8.0
@@ -47,5 +62,20 @@ services:
     ports:
       - "3309:3306"
 
+  mysql_v2:
+    container_name: borrow_system-mysql-v2
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_V2}
+      MYSQL_DATABASE: borrow_system_v2
+      TZ: Europe/Berlin
+    volumes:
+      - mysql-v2-data:/var/lib/mysql
+      - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
+    ports:
+      - "3310:3306"
+
 volumes:
   mysql-data:
+  mysql-v2-data:

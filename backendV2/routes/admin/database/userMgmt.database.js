@@ -11,7 +11,7 @@ const pool = mysql
   })
   .promise();
 
-export const loginFunc = async (username, password) => {
+export const loginAdmin = async (username, password) => {
   const [rows] = await pool.query(
     "SELECT id, username, first_name, last_name, role, is_admin FROM users WHERE username = ? AND password = ?",
     [username, password]

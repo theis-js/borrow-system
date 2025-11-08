@@ -17,6 +17,29 @@ export async function generateToken(payload) {
     .sign(secret);
 }
 
+export async function authenticateAdmin(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const [scheme, token] = authHeader.split(" ");
+  if (!/^Bearer$/i.test(scheme) || !token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const payload = await verifyToken(token);
+    if (!payload?.admin) {
+      return res.status(403).json({ message: "Forbidden: admin only" });
+    }
+    req.user = payload;
+    return next();
+  } catch {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+}
+
 export async function authenticate(req, res, next) {
   const authHeader = req.headers["authorization"];
   const apiKey = req.params.apiKey;

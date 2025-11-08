@@ -1,9 +1,16 @@
 import express from "express";
 import cors from "cors";
 import env from "dotenv";
+
+// frontend routes
 import loansMgmtRouter from "./routes/app/loanMgmt.route.js";
 import userMgmtRouter from "./routes/app/userMgmt.route.js";
-import userDataMgmtRouter from "./routes/admin/userDataMgmt.route.js"
+
+// admin routes
+import userDataMgmtRouter from "./routes/admin/userDataMgmt.route.js";
+import loanDataMgmtRouter from "./routes/admin/loanDataMgmt.route.js";
+import itemDataMgmtRouter from "./routes/admin/itemDataMgmt.route.js";
+
 env.config();
 const app = express();
 const port = 8002;
@@ -14,8 +21,9 @@ app.use("/api/loans", loansMgmtRouter);
 app.use("/api/users", userMgmtRouter);
 
 // admin routes
-
+app.use("/api/admin/loan-data", loanDataMgmtRouter);
 app.use("/api/admin/user-data", userDataMgmtRouter);
+app.use("/api/admin/item-data", itemDataMgmtRouter);
 
 // Increase body size limits to support large CSV JSON payloads
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));

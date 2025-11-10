@@ -10,6 +10,7 @@ import userMgmtRouter from "./routes/app/userMgmt.route.js";
 import userDataMgmtRouter from "./routes/admin/userDataMgmt.route.js";
 import loanDataMgmtRouter from "./routes/admin/loanDataMgmt.route.js";
 import itemDataMgmtRouter from "./routes/admin/itemDataMgmt.route.js";
+import apiDataMgmtRouter from "./routes/admin/apiDataMgmt.route.js";
 
 env.config();
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/users", userMgmtRouter);
 app.use("/api/admin/loan-data", loanDataMgmtRouter);
 app.use("/api/admin/user-data", userDataMgmtRouter);
 app.use("/api/admin/item-data", itemDataMgmtRouter);
+app.use("/api/admin/api-data", apiDataMgmtRouter);
 
 // Increase body size limits to support large CSV JSON payloads
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));

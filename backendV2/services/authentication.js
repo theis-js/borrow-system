@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import env from "dotenv";
-import { getAllApiKeys } from "./database.js";
+import { verifyAPIKeyDB } from "./database.js";
 env.config();
 
 const secretKey = process.env.SECRET_KEY;
@@ -36,13 +36,13 @@ export async function authenticateAdmin(req, res, next) {
     req.user = payload;
     return next();
   } catch {
-    return res.status(403).json({ message: "Forbidden" });
+    return res.status(403).json({ message: "Forbidden 403" });
   }
 }
 
 export async function authenticate(req, res, next) {
   const authHeader = req.headers["authorization"];
-  const apiKey = req.params.apiKey;
+  const apiKey = req.params.key;
 
   if (authHeader) {
     const parts = authHeader.split(" ");
@@ -58,14 +58,17 @@ export async function authenticate(req, res, next) {
       req.user = payload;
       return next();
     } catch {
-      return res.sendStatus(403); // present token invalid
+      return res.status(403).json({ message: "Present token invalid" }); // present token invalid
     }
   } else if (apiKey) {
     try {
-      await verifyAPIKey(apiKey);
-      return next();
+      await verifyAPIKey(apiKey).then((result) => {
+        if (result.valid) {
+          return next();
+        }
+      });
     } catch {
-      return res.sendStatus(403); // API Key invalid
+      return res.status(403).json({ message: "API Key invalid" }); // fix: don't chain after sendStatus
     }
   } else {
     return res.status(401).json({ message: "Unauthorized" }); // no credentials
@@ -73,9 +76,11 @@ export async function authenticate(req, res, next) {
 }
 
 async function verifyAPIKey(apiKey) {
-  const apiKeys = await getAllApiKeys();
-  const validKey = apiKeys.find((k) => k.key === apiKey);
-  if (!validKey) {
+  const result = await verifyAPIKeyDB(apiKey);
+
+  if (result.valid) {
+    return { valid: true };
+  } else {
     throw new Error("Invalid API Key");
   }
 }

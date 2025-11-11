@@ -4,5 +4,8 @@
     },
     "frontend-info": {
         "version": "v2.0 (dev)"
+    },
+    "admin-panel-info": {
+        "version": "v1.2 (dev)"
     }
 }

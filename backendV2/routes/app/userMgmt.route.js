@@ -1,7 +1,6 @@
 import express from "express";
 import { authenticate, generateToken } from "../../services/authentication.js";
 const router = express.Router();
-import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 

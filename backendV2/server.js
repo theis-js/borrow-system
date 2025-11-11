@@ -14,6 +14,9 @@ import itemDataMgmtRouter from "./routes/admin/itemDataMgmt.route.js";
 import apiDataMgmtRouter from "./routes/admin/apiDataMgmt.route.js";
 import userMgmtRouterADMIN from "./routes/admin/userMgmt.route.js";
 
+// API routes
+import apiRouter from "./routes/api/api.route.js";
+
 env.config();
 const app = express();
 const port = 8004;
@@ -33,6 +36,9 @@ app.use("/api/admin/user-data", userDataMgmtRouter);
 app.use("/api/admin/item-data", itemDataMgmtRouter);
 app.use("/api/admin/api-data", apiDataMgmtRouter);
 app.use("/api/admin/user-mgmt", userMgmtRouterADMIN);
+
+// API routes
+app.use("/api", apiRouter);
 
 app.set("view engine", "ejs");
 

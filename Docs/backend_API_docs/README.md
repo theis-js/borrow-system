@@ -38,6 +38,18 @@ Example: `/api/items/:key`
 
 If the key is missing or invalid, the API responds with `401 Unauthorized`.
 
+### Files
+
+**You can find the authentication files here:**
+
+- `backendV2/services/authentication.js`
+- `backendV2/services/database.js`
+
+**The API routes are located here:**
+
+- `backendV2/routes/api/api.route.js`
+- `backendV2/services/api/api.database.js`
+
 ---
 
 ## Endpoints

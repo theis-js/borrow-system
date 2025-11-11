@@ -195,10 +195,15 @@ const UserTable: React.FC = () => {
         </VStack>
       )}
       {!isLoading && (
-        <Table.Root size="sm" striped>
+        <Table.Root
+          size="sm"
+          striped
+          w="100%"
+          style={{ tableLayout: "auto" }} // Spalten nach Content
+        >
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
                 <strong>#</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
@@ -213,22 +218,22 @@ const UserTable: React.FC = () => {
               <Table.ColumnHeader>
                 <strong>E-Mail</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
                 <strong>Admin</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap">
                 <strong>Passwort ändern</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
                 <strong>Rolle</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap">
                 <strong>Eintrag erstellt am</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader whiteSpace="nowrap">
                 <strong>Eintrag aktualisiert am</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
                 <strong>Aktionen</strong>
               </Table.ColumnHeader>
             </Table.Row>
@@ -236,10 +241,8 @@ const UserTable: React.FC = () => {
           <Table.Body>
             {users.map((user) => (
               <Table.Row key={user.id}>
-                <Table.Cell>{user.id}</Table.Cell>
+                <Table.Cell whiteSpace="nowrap">{user.id}</Table.Cell>
                 <Table.Cell>{user.username}</Table.Cell>
-
-                {/* Vorname */}
                 <Table.Cell>
                   <Input
                     size="sm"
@@ -249,8 +252,6 @@ const UserTable: React.FC = () => {
                     }
                   />
                 </Table.Cell>
-
-                {/* Nachname */}
                 <Table.Cell>
                   <Input
                     size="sm"
@@ -260,8 +261,6 @@ const UserTable: React.FC = () => {
                     }
                   />
                 </Table.Cell>
-
-                {/* E-Mail */}
                 <Table.Cell>
                   <Input
                     type="email"
@@ -272,14 +271,12 @@ const UserTable: React.FC = () => {
                     }
                   />
                 </Table.Cell>
-
-                {/* Admin */}
-                <Table.Cell>
+                <Table.Cell whiteSpace="nowrap">
                   <Switch.Root
                     size="sm"
                     checked={!!user.is_admin}
-                    onCheckedChange={(details) =>
-                      handleInputChange(user.id, "is_admin", details.checked)
+                    onCheckedChange={(d) =>
+                      handleInputChange(user.id, "is_admin", d.checked)
                     }
                     aria-label="Adminrechte umschalten"
                   >
@@ -289,23 +286,32 @@ const UserTable: React.FC = () => {
                     <Switch.HiddenInput />
                   </Switch.Root>
                 </Table.Cell>
-                <Table.Cell>
-                  <Button onClick={() => handlePasswordChange(user.username)}>
+                <Table.Cell whiteSpace="nowrap">
+                  <Button
+                    size="sm"
+                    onClick={() => handlePasswordChange(user.username)}
+                  >
                     Passwort ändern
                   </Button>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell whiteSpace="nowrap">
                   <Input
                     type="number"
+                    size="sm"
                     onChange={(e) =>
                       handleInputChange(user.id, "role", e.target.value)
                     }
                     value={user.role}
+                    width="70px"
                   />
                 </Table.Cell>
-                <Table.Cell>{formatDateTime(user.entry_created_at)}</Table.Cell>
-                <Table.Cell>{formatDateTime(user.entry_updated_at)}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell whiteSpace="nowrap">
+                  {formatDateTime(user.entry_created_at)}
+                </Table.Cell>
+                <Table.Cell whiteSpace="nowrap">
+                  {formatDateTime(user.entry_updated_at)}
+                </Table.Cell>
+                <Table.Cell whiteSpace="nowrap">
                   <Button
                     onClick={() =>
                       handleEdit(

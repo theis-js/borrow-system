@@ -150,10 +150,16 @@ const APIKeyTable: React.FC = () => {
         />
       )}
 
-      <Table.Root size="sm" striped>
+      <Table.Root
+        size="sm"
+        striped
+        w="100%"
+        // table-layout: auto => Spaltenbreite nach Content; volle Breite nutzen
+        style={{ tableLayout: "auto" }}
+      >
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader>
+            <Table.ColumnHeader width="1%" whiteSpace="nowrap">
               <strong>#</strong>
             </Table.ColumnHeader>
             <Table.ColumnHeader>
@@ -162,13 +168,13 @@ const APIKeyTable: React.FC = () => {
             <Table.ColumnHeader>
               <strong>Name</strong>
             </Table.ColumnHeader>
-            <Table.ColumnHeader>
+            <Table.ColumnHeader whiteSpace="nowrap">
               <strong>Eintrag erstellt am</strong>
             </Table.ColumnHeader>
-            <Table.ColumnHeader>
+            <Table.ColumnHeader whiteSpace="nowrap">
               <strong>Zuletzt benutzt am</strong>
             </Table.ColumnHeader>
-            <Table.ColumnHeader>
+            <Table.ColumnHeader width="1%" whiteSpace="nowrap">
               <strong>Aktionen</strong>
             </Table.ColumnHeader>
           </Table.Row>
@@ -176,16 +182,18 @@ const APIKeyTable: React.FC = () => {
         <Table.Body>
           {items.map((item) => (
             <Table.Row key={item.id}>
-              <Table.Cell>{item.id}</Table.Cell>
-              <Table.Cell>{item.api_key}</Table.Cell>
+              <Table.Cell whiteSpace="nowrap">{item.id}</Table.Cell>
+              <Table.Cell fontFamily="mono">{item.api_key}</Table.Cell>
               <Table.Cell>{item.entry_name}</Table.Cell>
-              <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
-              <Table.Cell>
+              <Table.Cell whiteSpace="nowrap">
+                {formatDateTime(item.entry_created_at)}
+              </Table.Cell>
+              <Table.Cell whiteSpace="nowrap">
                 {!item.last_used_at
                   ? "Nie benutzt"
                   : formatDateTime(item.last_used_at)}
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell whiteSpace="nowrap">
                 <Button
                   onClick={() =>
                     deleteAPKey(item.id).then((response) => {

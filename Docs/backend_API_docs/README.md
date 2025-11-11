@@ -1,4 +1,4 @@
-# Backend API docs (apiV2)
+# Backend API docs
 
 If you want to cooperate with me, or build something new with my backend API, feel free to reach out!
 
@@ -8,7 +8,7 @@ On this page you will learn how my API works.
 
 When you look at my backend folder and file structure, you can see that I have two files called `API`. The first file called `api.js` which is for my web frontend, because this file works together with my JWT token service.
 
-But I have built a second API. You can see the second API file in the same directory, the file is called `apiV2.js`.
+But I have built a second API. You can see the second API file in the same directory, the file is called `api.route.js` and `api.database.js`.
 
 But first you have to get an API Key. You can get the API key from my admin dashboard. When you don't have any access to my admin dashboard, please contact your administrator or me.
 
@@ -18,7 +18,7 @@ But first you have to get an API Key. You can get the API key from my admin dash
 
 - Frontend: `https://insta.the1s.de`
 - Backend: `https://backend.insta.the1s.de`
-- Base path for this API: `https://backend.insta.the1s.de/apiV2`
+- Base path for this API: `https://backend.insta.the1s.de/api`
 
 You can see the status of this and all my other services at `https://status.the1s.de`.
 
@@ -30,7 +30,7 @@ _I have also build a [fallback page](https://git.the1s.de/theis.gaedigk/fallback
 
 All endpoints require an API key as a path parameter named `:key`.
 
-Example: `/apiV2/items/:key`
+Example: `/api/items/:key`
 
 If the key is missing or invalid, the API responds with `401 Unauthorized`.
 
@@ -40,14 +40,14 @@ If the key is missing or invalid, the API responds with `401 Unauthorized`.
 
 ### 1) Get all items
 
-GET `/apiV2/items/:key`
+GET `/api/items/:key`
 
 Returns a list of all items wrapped in a `data` object.
 
 Example request:
 
 ```
-GET https://backend.insta.the1s.de/apiV2/items/12345
+GET https://backend.insta.the1s.de/api/items/12345
 ```
 
 Example response:
@@ -80,7 +80,7 @@ Status: 200 on success, 500 on failure.
 
 ### 2) Change item safe state
 
-POST `/apiV2/controlInSafe/:key/:itemId/:state`
+POST `/api/controlInSafe/:key/:itemId/:state`
 
 Updates `inSafe` (locker) state of an item.
 
@@ -89,7 +89,7 @@ Updates `inSafe` (locker) state of an item.
 Example request:
 
 ```
-POST https://backend.insta.the1s.de/apiV2/controlInSafe/12345/123/1
+POST https://backend.insta.the1s.de/api/controlInSafe/12345/123/1
 ```
 
 Example response (shape depends on database service):
@@ -110,14 +110,14 @@ Status:
 
 ### 3) Get loan by code
 
-GET `/apiV2/getLoanByCode/:key/:loan_code`
+GET `/api/getLoanByCode/:key/:loan_code`
 
 Retrieves the details of a specific loan.
 
 Example request:
 
 ```
-GET https://backend.insta.the1s.de/apiV2/getLoanByCode/12345/123456
+GET https://backend.insta.the1s.de/api/getLoanByCode/12345/123456
 ```
 
 Example response:
@@ -148,7 +148,7 @@ Status:
 
 ### 4) Set return date (now) by loan code
 
-POST `/apiV2/setReturnDate/:key/:loan_code`
+POST `/api/setReturnDate/:key/:loan_code`
 
 Sets the `returned_date` to the current server time.
 
@@ -159,7 +159,7 @@ Sets the `returned_date` to the current server time.
 Example request:
 
 ```
-POST https://backend.insta.the1s.de/apiV2/setReturnDate/12345/123456
+POST https://backend.insta.the1s.de/api/setReturnDate/12345/123456
 ```
 
 Example response:
@@ -174,7 +174,7 @@ Status: 200 on success, 500 on failure.
 
 ### 5) Set take date (now) by loan code
 
-POST `/apiV2/setTakeDate/:key/:loan_code`
+POST `/api/setTakeDate/:key/:loan_code`
 
 Sets the `take_date` to the current server time.
 
@@ -185,7 +185,7 @@ Sets the `take_date` to the current server time.
 Example request:
 
 ```
-POST https://backend.insta.the1s.de/apiV2/setTakeDate/12345/123456
+POST https://backend.insta.the1s.de/api/setTakeDate/12345/123456
 ```
 
 Example response:

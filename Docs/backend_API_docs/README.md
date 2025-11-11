@@ -30,6 +30,10 @@ _I have also build a [fallback page](https://git.the1s.de/theis.gaedigk/fallback
 
 All endpoints require an API key as a path parameter named `:key`.
 
+**The API key must be always 15 characters long and can only contain numbers.**
+
+You can get the API key from the admin dashboard.
+
 Example: `/api/items/:key`
 
 If the key is missing or invalid, the API responds with `401 Unauthorized`.

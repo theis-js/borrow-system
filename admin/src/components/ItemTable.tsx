@@ -10,6 +10,7 @@ import {
   Heading,
   Icon,
   Input,
+  Box, // added
 } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import MyAlert from "./myChakra/MyAlert";
@@ -177,148 +178,161 @@ const ItemTable: React.FC = () => {
         />
       )}
 
-      <Table.Root size="sm" striped>
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeader>
-              <strong>#</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Gegenstand</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Ausleih Berechtigung</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Im Schließfach</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Eintrag erstellt am</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Eintrag aktualisiert am</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Letzte ausleihende Person</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Derzeit ausgeliehen von</strong>
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              <strong>Aktionen</strong>
-            </Table.ColumnHeader>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {items.map((item) => (
-            <Table.Row key={item.id}>
-              <Table.Cell>{item.id}</Table.Cell>
-              <Table.Cell>
-                <Input
-                  onChange={(e) =>
-                    handleItemNameChange(item.id, e.target.value)
-                  }
-                  value={item.item_name}
-                />
-              </Table.Cell>
-              <Table.Cell>
-                <Input
-                  onChange={(e) =>
-                    handleCanBorrowRoleChange(item.id, e.target.value)
-                  }
-                  value={item.can_borrow_role}
-                />
-              </Table.Cell>
-              <Table.Cell>
-                <Button
-                  onClick={() =>
-                    changeSafeState(item.id).then(() => setReload(!reload))
-                  }
-                  size="xs"
-                  rounded="full"
-                  px={3}
-                  py={1}
-                  gap={2}
-                  variant="ghost"
-                  color={item.in_safe ? "green.600" : "red.600"}
-                  borderWidth="1px"
-                  borderColor={item.in_safe ? "green.300" : "red.300"}
-                  _hover={{
-                    bg: item.in_safe ? "green.50" : "red.50",
-                    borderColor: item.in_safe ? "green.400" : "red.400",
-                    transform: "translateY(-1px)",
-                    shadow: "sm",
-                  }}
-                  _active={{ transform: "translateY(0)" }}
-                  aria-label={
-                    item.in_safe ? "Mark as not in safe" : "Mark as in safe"
-                  }
-                >
-                  <Icon
-                    as={item.in_safe ? CheckCircle2 : XCircle}
-                    boxSize={3.5}
-                    mr={2}
-                  />
-                  <Text as="span" fontSize="xs" fontWeight="semibold">
-                    {item.in_safe ? "Yes" : "No"}
-                  </Text>
-                </Button>
-              </Table.Cell>
-              <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
-              <Table.Cell>{formatDateTime(item.entry_updated_at)}</Table.Cell>
-              <Table.Cell>{item.last_borrowed_person}</Table.Cell>
-              <Table.Cell>{item.currently_borrowing}</Table.Cell>
-              <Table.Cell>
-                <Button
-                  onClick={() =>
-                    handleEditItems(
-                      item.id,
-                      item.item_name,
-                      item.can_borrow_role
-                    ).then((response) => {
-                      if (response.success) {
-                        setError(
-                          "success",
-                          "Gegenstand erfolgreich bearbeitet!",
-                          "Gegenstand " +
-                            '"' +
-                            item.item_name +
-                            '" mit ID ' +
-                            item.id +
-                            " bearbeitet."
-                        );
-                      }
-                    })
-                  }
-                  colorPalette="teal"
-                  size="sm"
-                >
-                  <Save />
-                </Button>
-                <Button
-                  onClick={() =>
-                    deleteItem(item.id).then((response) => {
-                      if (response.success) {
-                        setItems(items.filter((i) => i.id !== item.id));
-                        setError(
-                          "success",
-                          "Gegenstand gelöscht",
-                          "Der Gegenstand wurde erfolgreich gelöscht."
-                        );
-                      }
-                    })
-                  }
-                  colorPalette="red"
-                  size="sm"
-                  ml={2}
-                >
-                  <Trash2 />
-                </Button>
-              </Table.Cell>
+      {/* make table content-sized with horizontal scroll if needed */}
+      <Box overflowX="auto">
+        <Table.Root
+          size="sm"
+          striped
+          tableLayout="auto"
+          w="max-content"
+          whiteSpace="nowrap"
+        >
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeader>
+                <strong>#</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Gegenstand</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Ausleih Berechtigung</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Im Schließfach</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Eintrag erstellt am</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Eintrag aktualisiert am</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Letzte ausleihende Person</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Derzeit ausgeliehen von</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Aktionen</strong>
+              </Table.ColumnHeader>
             </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
+          </Table.Header>
+          <Table.Body>
+            {items.map((item) => (
+              <Table.Row key={item.id}>
+                <Table.Cell>{item.id}</Table.Cell>
+                <Table.Cell>
+                  <Input
+                    size="sm"
+                    w="max-content"
+                    onChange={(e) =>
+                      handleItemNameChange(item.id, e.target.value)
+                    }
+                    value={item.item_name}
+                  />
+                </Table.Cell>
+                <Table.Cell>
+                  <Input
+                    size="sm"
+                    w="max-content"
+                    onChange={(e) =>
+                      handleCanBorrowRoleChange(item.id, e.target.value)
+                    }
+                    value={item.can_borrow_role}
+                  />
+                </Table.Cell>
+                <Table.Cell>
+                  <Button
+                    onClick={() =>
+                      changeSafeState(item.id).then(() => setReload(!reload))
+                    }
+                    size="xs"
+                    rounded="full"
+                    px={3}
+                    py={1}
+                    gap={2}
+                    variant="ghost"
+                    color={item.in_safe ? "green.600" : "red.600"}
+                    borderWidth="1px"
+                    borderColor={item.in_safe ? "green.300" : "red.300"}
+                    _hover={{
+                      bg: item.in_safe ? "green.50" : "red.50",
+                      borderColor: item.in_safe ? "green.400" : "red.400",
+                      transform: "translateY(-1px)",
+                      shadow: "sm",
+                    }}
+                    _active={{ transform: "translateY(0)" }}
+                    aria-label={
+                      item.in_safe ? "Mark as not in safe" : "Mark as in safe"
+                    }
+                  >
+                    <Icon
+                      as={item.in_safe ? CheckCircle2 : XCircle}
+                      boxSize={3.5}
+                      mr={2}
+                    />
+                    <Text as="span" fontSize="xs" fontWeight="semibold">
+                      {item.in_safe ? "Yes" : "No"}
+                    </Text>
+                  </Button>
+                </Table.Cell>
+                <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
+                <Table.Cell>{formatDateTime(item.entry_updated_at)}</Table.Cell>
+                <Table.Cell>{item.last_borrowed_person}</Table.Cell>
+                <Table.Cell>{item.currently_borrowing}</Table.Cell>
+                <Table.Cell>
+                  <Button
+                    onClick={() =>
+                      handleEditItems(
+                        item.id,
+                        item.item_name,
+                        item.can_borrow_role
+                      ).then((response) => {
+                        if (response.success) {
+                          setError(
+                            "success",
+                            "Gegenstand erfolgreich bearbeitet!",
+                            "Gegenstand " +
+                              '"' +
+                              item.item_name +
+                              '" mit ID ' +
+                              item.id +
+                              " bearbeitet."
+                          );
+                        }
+                      })
+                    }
+                    colorPalette="teal"
+                    size="sm"
+                  >
+                    <Save />
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      deleteItem(item.id).then((response) => {
+                        if (response.success) {
+                          setItems(items.filter((i) => i.id !== item.id));
+                          setError(
+                            "success",
+                            "Gegenstand gelöscht",
+                            "Der Gegenstand wurde erfolgreich gelöscht."
+                          );
+                        }
+                      })
+                    }
+                    colorPalette="red"
+                    size="sm"
+                    ml={2}
+                  >
+                    <Trash2 />
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </Box>
     </>
   );
 };

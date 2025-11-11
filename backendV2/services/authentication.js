@@ -62,11 +62,8 @@ export async function authenticate(req, res, next) {
     }
   } else if (apiKey) {
     try {
-      await verifyAPIKey(apiKey).then((result) => {
-        if (result.valid) {
-          return next();
-        }
-      });
+      await verifyAPIKey(apiKey);
+      return next();
     } catch {
       return res.status(403).json({ message: "API Key invalid" }); // fix: don't chain after sendStatus
     }
@@ -79,7 +76,7 @@ async function verifyAPIKey(apiKey) {
   const result = await verifyAPIKeyDB(apiKey);
 
   if (result.valid) {
-    return { valid: true };
+    return;
   } else {
     throw new Error("Invalid API Key");
   }

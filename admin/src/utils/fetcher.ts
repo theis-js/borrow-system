@@ -1,12 +1,8 @@
 import Cookies from "js-cookie";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 export const fetchUserData = async () => {
-  const response = await fetch(`${API_BASE}/api/allUsers`, {
+  const response = await fetch(`${API_BASE}/api/admin/user-data/users`, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },

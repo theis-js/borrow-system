@@ -16,7 +16,7 @@ import {
 router.get("/all-items", authenticateAdmin, async (req, res) => {
   const result = await getAllItems();
   if (result.success) {
-    return res.status(200).json({ items: result.data });
+    return res.status(200).json(result.data);
   }
   return res.status(500).json({ message: "Failed to retrieve items" });
 });
@@ -31,8 +31,8 @@ router.delete("/delete-item/:id", authenticateAdmin, async (req, res) => {
 });
 
 router.post("/create-item", authenticateAdmin, async (req, res) => {
-  const { item_name, can_borrow_role, in_safe } = req.body;
-  const result = await createItem(item_name, can_borrow_role, in_safe);
+  const { item_name, can_borrow_role } = req.body;
+  const result = await createItem(item_name, can_borrow_role);
   if (result.success) {
     return res.status(201).json({ message: "Item created successfully" });
   }
@@ -55,8 +55,7 @@ router.post("/edit-item/:id", authenticateAdmin, async (req, res) => {
 
 router.post("/change-safe-state/:id", authenticateAdmin, async (req, res) => {
   const itemId = req.params.id;
-  const { in_safe } = req.body;
-  const result = await changeSafeState(itemId, in_safe);
+  const result = await changeSafeState(itemId);
   if (result.success) {
     return res.status(200).json({ message: "Safe state changed successfully" });
   }

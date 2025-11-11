@@ -26,7 +26,7 @@ export const deleteItemById = async (itemId) => {
 export const createItem = async (item_name, can_borrow_role, in_safe) => {
   const [result] = await pool.query(
     "INSERT INTO items (item_name, can_borrow_role, in_safe) VALUES (?, ?, ?)",
-    [item_name, can_borrow_role, in_safe]
+    [item_name, can_borrow_role, true]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
@@ -34,9 +34,37 @@ export const createItem = async (item_name, can_borrow_role, in_safe) => {
 
 export const editItemById = async (itemId, item_name, can_borrow_role) => {
   const [result] = await pool.query(
-    "UPDATE items SET item_name = ?, can_borrow_role = ? WHERE id = ?",
+    "UPDATE items SET item_name = ?, can_borrow_role = ?, entry_updated_at = NOW() WHERE id = ?",
     [item_name, can_borrow_role, itemId]
   );
   if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};
+
+export const changeSafeState = async (itemId) => {
+  const currentState = await pool.query(
+    "SELECT in_safe FROM items WHERE id = ?",
+    [itemId]
+  );
+  if (currentState[0].length === 0) {
+    return { success: false };
+  }
+
+  if (currentState[0][0].in_safe) {
+    const [result] = await pool.query(
+      "UPDATE items SET in_safe = false WHERE id = ?",
+      [itemId]
+    );
+    if (result.affectedRows > 0) return { success: true };
+  }
+
+  if (!currentState[0][0].in_safe) {
+    const [result] = await pool.query(
+      "UPDATE items SET in_safe = true WHERE id = ?",
+      [itemId]
+    );
+    if (result.affectedRows > 0) return { success: true };
+  }
+
   return { success: false };
 };

@@ -30,18 +30,17 @@ import {
 } from "@/utils/userActions";
 import AddItemForm from "./AddItemForm";
 import { formatDateTime } from "@/utils/userFuncs";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 type Items = {
   id: number;
   item_name: string;
   can_borrow_role: string;
-  inSafe: boolean;
+  in_safe: boolean;
   entry_created_at: string;
+  entry_updated_at: string;
+  last_borrowed_person: string | null;
+  currently_borrowing: string | null;
 };
 
 const ItemTable: React.FC = () => {
@@ -82,12 +81,15 @@ const ItemTable: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${API_BASE}/api/allItems`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        });
+        const response = await fetch(
+          `${API_BASE}/api/admin/item-data/all-items`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+          }
+        );
         const data = await response.json();
         return data;
       } catch (error) {
@@ -194,6 +196,15 @@ const ItemTable: React.FC = () => {
               <strong>Eintrag erstellt am</strong>
             </Table.ColumnHeader>
             <Table.ColumnHeader>
+              <strong>Eintrag aktualisiert am</strong>
+            </Table.ColumnHeader>
+            <Table.ColumnHeader>
+              <strong>Letzte ausleihende Person</strong>
+            </Table.ColumnHeader>
+            <Table.ColumnHeader>
+              <strong>Derzeit ausgeliehen von</strong>
+            </Table.ColumnHeader>
+            <Table.ColumnHeader>
               <strong>Aktionen</strong>
             </Table.ColumnHeader>
           </Table.Row>
@@ -229,31 +240,34 @@ const ItemTable: React.FC = () => {
                   py={1}
                   gap={2}
                   variant="ghost"
-                  color={item.inSafe ? "green.600" : "red.600"}
+                  color={item.in_safe ? "green.600" : "red.600"}
                   borderWidth="1px"
-                  borderColor={item.inSafe ? "green.300" : "red.300"}
+                  borderColor={item.in_safe ? "green.300" : "red.300"}
                   _hover={{
-                    bg: item.inSafe ? "green.50" : "red.50",
-                    borderColor: item.inSafe ? "green.400" : "red.400",
+                    bg: item.in_safe ? "green.50" : "red.50",
+                    borderColor: item.in_safe ? "green.400" : "red.400",
                     transform: "translateY(-1px)",
                     shadow: "sm",
                   }}
                   _active={{ transform: "translateY(0)" }}
                   aria-label={
-                    item.inSafe ? "Mark as not in safe" : "Mark as in safe"
+                    item.in_safe ? "Mark as not in safe" : "Mark as in safe"
                   }
                 >
                   <Icon
-                    as={item.inSafe ? CheckCircle2 : XCircle}
+                    as={item.in_safe ? CheckCircle2 : XCircle}
                     boxSize={3.5}
                     mr={2}
                   />
                   <Text as="span" fontSize="xs" fontWeight="semibold">
-                    {item.inSafe ? "Yes" : "No"}
+                    {item.in_safe ? "Yes" : "No"}
                   </Text>
                 </Button>
               </Table.Cell>
               <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
+              <Table.Cell>{formatDateTime(item.entry_updated_at)}</Table.Cell>
+              <Table.Cell>{item.last_borrowed_person}</Table.Cell>
+              <Table.Cell>{item.currently_borrowing}</Table.Cell>
               <Table.Cell>
                 <Button
                   onClick={() =>

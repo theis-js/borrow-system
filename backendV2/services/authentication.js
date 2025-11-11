@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import env from "dotenv";
-import { getAllApiKeys } from "./database";
+import { getAllApiKeys } from "./database.js";
 env.config();
 
 const secretKey = process.env.SECRET_KEY;

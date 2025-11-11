@@ -61,7 +61,7 @@ export const editUserById = async (
 
 export const getAllUsers = async () => {
   const [result] = await pool.query(
-    "SELECT id, username, first_name, last_name, role, email, is_admin FROM users"
+    "SELECT id, username, first_name, last_name, role, email, is_admin, entry_created_at, entry_updated_at FROM users"
   );
   if (result.length > 0) return { success: true, data: result };
   return { success: false };

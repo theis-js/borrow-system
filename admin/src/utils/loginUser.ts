@@ -1,9 +1,5 @@
 import Cookies from "js-cookie";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 export type LoginSuccess = { success: true };
 export type LoginFailure = {
@@ -18,11 +14,19 @@ export const loginFunc = async (
   password: string
 ): Promise<LoginResult> => {
   try {
-    const response = await fetch(`${API_BASE}/api/loginAdmin`, {
+    const response = await fetch(`${API_BASE}/api/admin/user-mgmt/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
+
+    if (response.status === 403) {
+      return {
+        success: false,
+        message: "Login failed!",
+        description: "You are not an admin user.",
+      };
+    }
 
     if (!response.ok) {
       return {
@@ -39,6 +43,7 @@ export const loginFunc = async (
     return { success: true };
   } catch (error) {
     console.error("Error logging in:", error);
+
     return {
       success: false,
       message: "Login failed!",

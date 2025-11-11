@@ -19,10 +19,10 @@ export const getAllApiKeys = async () => {
   return { success: false };
 };
 
-export const createAPIentry = async (apiKey, user) => {
+export const createAPIentry = async (apiKey, entryName) => {
   const [result] = await pool.query(
-    "INSERT INTO apiKeys (api_key, username) VALUES (?, ?)",
-    [apiKey, user]
+    "INSERT INTO apiKeys (api_key, entry_name) VALUES (?, ?)",
+    [apiKey, entryName]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

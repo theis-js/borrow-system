@@ -1,14 +1,10 @@
 import Cookies from "js-cookie";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 export const handleDelete = async (userId: number) => {
   try {
     const response = await fetch(
-      `${API_BASE}/api/deleteUser/${userId}`,
+      `${API_BASE}/api/admin/user-data/delete-user/${userId}`,
       {
         method: "DELETE",
         headers: {
@@ -28,19 +24,28 @@ export const handleDelete = async (userId: number) => {
 
 export const handleEdit = async (
   userId: number,
-  username: string,
-  role: string
+  first_name: string,
+  last_name: string,
+  email: string,
+  is_admin: boolean,
+  role: number
 ) => {
   try {
     const response = await fetch(
-      `${API_BASE}/api/editUser/${userId}`,
+      `${API_BASE}/api/admin/user-data/edit-user/${userId}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ username, role }),
+        body: JSON.stringify({
+          first_name,
+          last_name,
+          role,
+          email,
+          is_admin,
+        }),
       }
     );
     if (!response.ok) {
@@ -56,17 +61,32 @@ export const handleEdit = async (
 export const createUser = async (
   username: string,
   role: number,
-  password: string
+  password: string,
+  first_name: string,
+  last_name: string,
+  email: string,
+  isAdmin: boolean
 ) => {
   try {
-    const response = await fetch(`${API_BASE}/api/createUser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-      body: JSON.stringify({ username, role, password }),
-    });
+    const response = await fetch(
+      `${API_BASE}/api/admin/user-data/create-user`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({
+          username,
+          role,
+          password,
+          isAdmin,
+          email,
+          first_name,
+          last_name,
+        }),
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to create user");
     }
@@ -79,14 +99,17 @@ export const createUser = async (
 
 export const changePW = async (newPassword: string, username: string) => {
   try {
-    const response = await fetch(`${API_BASE}/api/changePWadmin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-      body: JSON.stringify({ newPassword, username }),
-    });
+    const response = await fetch(
+      `${API_BASE}/api/admin/user-data/change-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({ username, password: newPassword }),
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to change password");
     }
@@ -100,7 +123,7 @@ export const changePW = async (newPassword: string, username: string) => {
 export const deleteLoan = async (loanId: number) => {
   try {
     const response = await fetch(
-      `${API_BASE}/api/deleteLoan/${loanId}`,
+      `${API_BASE}/api/admin/loan-data/delete-loan/${loanId}`,
       {
         method: "DELETE",
         headers: {
@@ -121,7 +144,7 @@ export const deleteLoan = async (loanId: number) => {
 export const deleteItem = async (itemId: number) => {
   try {
     const response = await fetch(
-      `${API_BASE}/api/deleteItem/${itemId}`,
+      `${API_BASE}/api/admin/item-data/delete-item/${itemId}`,
       {
         method: "DELETE",
         headers: {
@@ -144,14 +167,17 @@ export const createItem = async (
   can_borrow_role: number
 ) => {
   try {
-    const response = await fetch(`${API_BASE}/api/createItem`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-      body: JSON.stringify({ item_name, can_borrow_role }),
-    });
+    const response = await fetch(
+      `${API_BASE}/api/admin/item-data/create-item`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({ item_name, can_borrow_role }),
+      }
+    );
     if (!response.ok) {
       return {
         success: false,
@@ -172,14 +198,17 @@ export const handleEditItems = async (
   can_borrow_role: string
 ) => {
   try {
-    const response = await fetch(`${API_BASE}/api/updateItemByID`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-      body: JSON.stringify({ itemId, item_name, can_borrow_role }),
-    });
+    const response = await fetch(
+      `${API_BASE}/api/admin/item-data/edit-item/${itemId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({ item_name, can_borrow_role }),
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to edit item");
     }
@@ -193,9 +222,9 @@ export const handleEditItems = async (
 export const changeSafeState = async (itemId: number) => {
   try {
     const response = await fetch(
-      `${API_BASE}/api/changeSafeState/${itemId}`,
+      `${API_BASE}/api/admin/item-data/change-safe-state/${itemId}`,
       {
-        method: "PUT",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
@@ -211,16 +240,19 @@ export const changeSafeState = async (itemId: number) => {
   }
 };
 
-export const createAPIentry = async (apiKey: string, user: string) => {
+export const createAPIentry = async (apiKey: string, name: string) => {
   try {
-    const response = await fetch(`${API_BASE}/api/createAPIentry`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-      body: JSON.stringify({ apiKey, user }),
-    });
+    const response = await fetch(
+      `${API_BASE}/api/admin/api-data/create-api-key`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({ apiKey, entryName: name }),
+      }
+    );
     if (!response.ok) {
       return {
         success: false,
@@ -238,7 +270,7 @@ export const createAPIentry = async (apiKey: string, user: string) => {
 export const deleteAPKey = async (apiKeyId: number) => {
   try {
     const response = await fetch(
-      `${API_BASE}/api/deleteAPKey/${apiKeyId}`,
+      `${API_BASE}/api/admin/api-data/delete-api-key/${apiKeyId}`,
       {
         method: "DELETE",
         headers: {

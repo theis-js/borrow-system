@@ -1,5 +1,7 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { Box, Flex, VStack, Heading, Text, Link } from "@chakra-ui/react";
+import { API_BASE } from "@/config/api.config";
 
 type SidebarProps = {
   viewAusleihen: () => void;
@@ -15,10 +17,22 @@ const Sidebar: React.FC<SidebarProps> = ({
   viewUser,
   viewAPI,
 }) => {
+  const [info, setInfo] = useState<any>(null);
+
+  const fetchInfo = async () => {
+    const response = await fetch(`${API_BASE}/`);
+    const data = await response.json();
+    setInfo(data);
+  };
+
+  useEffect(() => {
+    fetchInfo();
+  }, []);
+
   return (
     <Box
       as="aside"
-      w="260px"
+      w="180px"
       minH="100vh"
       bg="gray.800"
       color="gray.100"
@@ -72,7 +86,33 @@ const Sidebar: React.FC<SidebarProps> = ({
         </VStack>
 
         <Box mt="auto" pt={8} fontSize="xs" color="gray.500">
-          <Text>&copy; Made with ❤️ by Theis Gaedigk</Text>
+          <Text mb={2}>&copy; Made with ❤️ by Theis Gaedigk</Text>
+          {info ? (
+            <Flex gap={2} wrap="wrap">
+              <Box
+                as="span"
+                px={2}
+                py={0.5}
+                rounded="full"
+                bg="gray.700"
+                color="gray.200"
+              >
+                Panel {info?.["admin-panel-info"]?.version ?? "—"}
+              </Box>
+              <Box
+                as="span"
+                px={2}
+                py={0.5}
+                rounded="full"
+                bg="gray.700"
+                color="gray.200"
+              >
+                Backend {info?.["backend-info"]?.version ?? "—"}
+              </Box>
+            </Flex>
+          ) : (
+            <Text color="gray.600">Lade Versionsinfos…</Text>
+          )}
         </Box>
       </Flex>
     </Box>

@@ -13,7 +13,7 @@ import {
 router.get("/all-loans", authenticateAdmin, async (req, res) => {
   const result = await getAllLoans();
   if (result.success) {
-    return res.status(200).json({ loans: result.data });
+    return res.status(200).json(result.data);
   }
   return res.status(500).json({ message: "Failed to retrieve loans" });
 });

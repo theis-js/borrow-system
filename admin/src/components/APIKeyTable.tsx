@@ -17,17 +17,14 @@ import { useState, useEffect } from "react";
 import { deleteAPKey } from "@/utils/userActions";
 import AddAPIKey from "./AddAPIKey";
 import { formatDateTime } from "@/utils/userFuncs";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 type Items = {
   id: number;
-  apiKey: string;
-  user: string;
+  api_key: string;
+  entry_name: string;
   entry_created_at: string;
+  last_used_at: string | null;
 };
 
 const APIKeyTable: React.FC = () => {
@@ -56,13 +53,17 @@ const APIKeyTable: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${API_BASE}/api/apiKeys`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        });
+        const response = await fetch(
+          `${API_BASE}/api/admin/api-data/get-api-keys`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+          }
+        );
         const data = await response.json();
+        console.log(data);
         return data;
       } catch (error) {
         setError("error", "Failed to fetch items", "There is an error");
@@ -159,10 +160,13 @@ const APIKeyTable: React.FC = () => {
               <strong>API Key</strong>
             </Table.ColumnHeader>
             <Table.ColumnHeader>
-              <strong>Benutzer</strong>
+              <strong>Name</strong>
             </Table.ColumnHeader>
             <Table.ColumnHeader>
               <strong>Eintrag erstellt am</strong>
+            </Table.ColumnHeader>
+            <Table.ColumnHeader>
+              <strong>Zuletzt benutzt am</strong>
             </Table.ColumnHeader>
             <Table.ColumnHeader>
               <strong>Aktionen</strong>
@@ -170,18 +174,23 @@ const APIKeyTable: React.FC = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {items.map((apiKey) => (
-            <Table.Row key={apiKey.id}>
-              <Table.Cell>{apiKey.id}</Table.Cell>
-              <Table.Cell>{apiKey.apiKey}</Table.Cell>
-              <Table.Cell>{apiKey.user}</Table.Cell>
-              <Table.Cell>{formatDateTime(apiKey.entry_created_at)}</Table.Cell>
+          {items.map((item) => (
+            <Table.Row key={item.id}>
+              <Table.Cell>{item.id}</Table.Cell>
+              <Table.Cell>{item.api_key}</Table.Cell>
+              <Table.Cell>{item.entry_name}</Table.Cell>
+              <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
+              <Table.Cell>
+                {!item.last_used_at
+                  ? "Nie benutzt"
+                  : formatDateTime(item.last_used_at)}
+              </Table.Cell>
               <Table.Cell>
                 <Button
                   onClick={() =>
-                    deleteAPKey(apiKey.id).then((response) => {
+                    deleteAPKey(item.id).then((response) => {
                       if (response.success) {
-                        setItems(items.filter((i) => i.id !== apiKey.id));
+                        setItems(items.filter((i) => i.id !== item.id));
                         setError(
                           "success",
                           "Gegenstand gelöscht",

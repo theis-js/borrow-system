@@ -47,7 +47,6 @@ router.delete("/delete-user/:id", authenticateAdmin, async (req, res) => {
 });
 
 router.post("/edit-user/:id", authenticateAdmin, async (req, res) => {
-  const password = req.body.password;
   const first_name = req.body.first_name;
   const last_name = req.body.last_name;
   const role = req.body.role;
@@ -57,7 +56,6 @@ router.post("/edit-user/:id", authenticateAdmin, async (req, res) => {
 
   const result = await editUserById(
     userId,
-    password,
     first_name,
     last_name,
     role,
@@ -109,7 +107,7 @@ router.post("/edit-user/:id", authenticateAdmin, async (req, res) => {
 router.get("/users", authenticateAdmin, async (req, res) => {
   const result = await getAllUsers();
   if (result.success) {
-    return res.status(200).json({ users: result.data });
+    return res.status(200).json(result.data);
   }
   return res.status(500).json({ message: "Failed to retrieve users" });
 });

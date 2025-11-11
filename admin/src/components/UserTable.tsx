@@ -10,6 +10,7 @@ import {
   HStack,
   IconButton,
   Heading,
+  Switch, // neu
 } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { fetchUserData } from "@/utils/fetcher";
@@ -23,9 +24,13 @@ import ChangePWform from "./ChangePWform";
 type User = {
   id: number;
   username: string;
-  password: string;
-  role: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  is_admin: boolean;
+  role: number;
   entry_created_at: string;
+  entry_updated_at: string;
 };
 
 const UserTable: React.FC = () => {
@@ -52,10 +57,20 @@ const UserTable: React.FC = () => {
     setIsError(true);
   };
 
-  const handleInputChange = (userId: number, field: string, value: string) => {
+  const handleInputChange = (userId: number, field: string, value: any) => {
     setUsers((prevUsers) =>
       prevUsers.map((user) =>
-        user.id === userId ? { ...user, [field]: value } : user
+        user.id === userId
+          ? {
+              ...user,
+              [field]:
+                field === "role"
+                  ? Number(value)
+                  : field === "is_admin"
+                  ? value === true || value === "true" || value === 1
+                  : value,
+            }
+          : user
       )
     );
   };
@@ -70,7 +85,7 @@ const UserTable: React.FC = () => {
       setIsLoading(true);
       try {
         const data = await fetchUserData();
-        console.log("user api response", data);
+        console.log(data);
         if (Array.isArray(data)) {
           setUsers(data);
         } else {
@@ -190,6 +205,18 @@ const UserTable: React.FC = () => {
                 <strong>Benutzername</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
+                <strong>Vorname</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Nachname</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>E-Mail</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Admin</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
                 <strong>Passwort ändern</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
@@ -197,6 +224,9 @@ const UserTable: React.FC = () => {
               </Table.ColumnHeader>
               <Table.ColumnHeader>
                 <strong>Eintrag erstellt am</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>Eintrag aktualisiert am</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
                 <strong>Aktionen</strong>
@@ -207,13 +237,57 @@ const UserTable: React.FC = () => {
             {users.map((user) => (
               <Table.Row key={user.id}>
                 <Table.Cell>{user.id}</Table.Cell>
+                <Table.Cell>{user.username}</Table.Cell>
+
+                {/* Vorname */}
                 <Table.Cell>
                   <Input
+                    size="sm"
+                    value={user.first_name ?? ""}
                     onChange={(e) =>
-                      handleInputChange(user.id, "username", e.target.value)
+                      handleInputChange(user.id, "first_name", e.target.value)
                     }
-                    value={user.username}
                   />
+                </Table.Cell>
+
+                {/* Nachname */}
+                <Table.Cell>
+                  <Input
+                    size="sm"
+                    value={user.last_name ?? ""}
+                    onChange={(e) =>
+                      handleInputChange(user.id, "last_name", e.target.value)
+                    }
+                  />
+                </Table.Cell>
+
+                {/* E-Mail */}
+                <Table.Cell>
+                  <Input
+                    type="email"
+                    size="sm"
+                    value={user.email ?? ""}
+                    onChange={(e) =>
+                      handleInputChange(user.id, "email", e.target.value)
+                    }
+                  />
+                </Table.Cell>
+
+                {/* Admin */}
+                <Table.Cell>
+                  <Switch.Root
+                    size="sm"
+                    checked={!!user.is_admin}
+                    onCheckedChange={(details) =>
+                      handleInputChange(user.id, "is_admin", details.checked)
+                    }
+                    aria-label="Adminrechte umschalten"
+                  >
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                    <Switch.HiddenInput />
+                  </Switch.Root>
                 </Table.Cell>
                 <Table.Cell>
                   <Button onClick={() => handlePasswordChange(user.username)}>
@@ -230,13 +304,17 @@ const UserTable: React.FC = () => {
                   />
                 </Table.Cell>
                 <Table.Cell>{formatDateTime(user.entry_created_at)}</Table.Cell>
+                <Table.Cell>{formatDateTime(user.entry_updated_at)}</Table.Cell>
                 <Table.Cell>
                   <Button
                     onClick={() =>
                       handleEdit(
                         user.id,
-                        user.username,
-                        user.role,
+                        user.first_name,
+                        user.last_name,
+                        user.email,
+                        user.is_admin,
+                        Number(user.role)
                       ).then((response) => {
                         if (response.success) {
                           setError(

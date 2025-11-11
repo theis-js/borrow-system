@@ -3,11 +3,7 @@ import { useEffect } from "react";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
 import Cookies from "js-cookie";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 const Layout: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,12 +11,15 @@ const Layout: React.FC = () => {
   useEffect(() => {
     if (Cookies.get("token")) {
       const verifyToken = async () => {
-        const response = await fetch(`${API_BASE}/api/verifyToken`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        });
+        const response = await fetch(
+          `${API_BASE}/api/admin/user-mgmt/verify-token`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+          }
+        );
         if (response.ok) {
           setIsLoggedIn(true);
         } else {

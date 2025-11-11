@@ -17,11 +17,7 @@ import MyAlert from "./myChakra/MyAlert";
 import { formatDateTime } from "@/utils/userFuncs";
 import { Trash2, RefreshCcwDot } from "lucide-react";
 import { deleteLoan } from "@/utils/userActions";
-
-const API_BASE =
-  (import.meta as any).env?.VITE_BACKEND_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
-  "http://localhost:8002";
+import { API_BASE } from "@/config/api.config";
 
 const LoanTable: React.FC = () => {
   const [items, setItems] = useState<Loan[]>([]);
@@ -55,18 +51,22 @@ const LoanTable: React.FC = () => {
     created_at: string;
     loaned_items_name: string[];
     deleted: boolean;
+    note: string;
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${API_BASE}/api/allLoans`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
-          },
-        });
+        const response = await fetch(
+          `${API_BASE}/api/admin/loan-data/all-loans`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+          }
+        );
         const data = await response.json();
         return data;
       } catch (error) {
@@ -162,6 +162,9 @@ const LoanTable: React.FC = () => {
                 <strong>Ausgeliehene Artikel</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
+                <strong>Notiz</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
                 <strong>Aktionen</strong>
               </Table.ColumnHeader>
             </Table.Row>
@@ -180,6 +183,7 @@ const LoanTable: React.FC = () => {
                 <Table.Cell>{formatDateTime(item.returned_date)}</Table.Cell>
                 <Table.Cell>{formatDateTime(item.created_at)}</Table.Cell>
                 <Table.Cell>{item.loaned_items_name.join(", ")}</Table.Cell>
+                <Table.Cell>{item.note}</Table.Cell>
                 <Table.Cell>
                   <Button
                     onClick={() =>

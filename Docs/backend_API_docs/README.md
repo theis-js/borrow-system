@@ -96,7 +96,7 @@ Status: 200 on success, 500 on failure.
 
 ### 2) Change item safe state
 
-POST `/api/controlInSafe/:key/:itemId/:state`
+POST `/api/change-state/:key/:itemId/:state`
 
 Updates `inSafe` (locker) state of an item.
 
@@ -126,7 +126,7 @@ Status:
 
 ### 3) Get loan by code
 
-GET `/api/getLoanByCode/:key/:loan_code`
+GET `/api/get-loan-by-code/:key/:loan_code`
 
 Retrieves the details of a specific loan.
 
@@ -164,7 +164,7 @@ Status:
 
 ### 4) Set return date (now) by loan code
 
-POST `/api/setReturnDate/:key/:loan_code`
+POST `/api/set-return-date/:key/:loan_code`
 
 Sets the `returned_date` to the current server time.
 
@@ -190,7 +190,7 @@ Status: 200 on success, 500 on failure.
 
 ### 5) Set take date (now) by loan code
 
-POST `/api/setTakeDate/:key/:loan_code`
+POST `/api/set-take-date/:key/:loan_code`
 
 Sets the `take_date` to the current server time.
 

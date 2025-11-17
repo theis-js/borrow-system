@@ -1,3 +1,7 @@
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
+
 function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
   const brand = process.env.MAIL_BRAND_COLOR || "#0ea5e9";
   const itemsList =
@@ -112,7 +116,7 @@ function buildLoanEmailText({ user, items, startDate, endDate, createdDate }) {
   ].join("\n");
 }
 
-function sendMailLoan(user, items, startDate, endDate, createdDate) {
+export function sendMailLoan(user, items, startDate, endDate, createdDate) {
   const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,

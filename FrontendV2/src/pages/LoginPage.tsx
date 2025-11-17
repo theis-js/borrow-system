@@ -25,7 +25,7 @@ export const LoginPage = () => {
   }, [isLoggedIn, navigate]);
 
   const loginFnc = async (username: string, password: string) => {
-    const response = await fetch(`${API_BASE}/api/login`, {
+    const response = await fetch(`${API_BASE}/api/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

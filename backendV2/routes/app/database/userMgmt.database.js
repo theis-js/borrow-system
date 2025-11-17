@@ -20,6 +20,22 @@ export const loginFunc = async (username, password) => {
   return { success: false };
 };
 
+export const getItems = async () => {
+  const [rows] = await pool.query("SELECT * FROM items;");
+  if (rows.length > 0) {
+    return { success: true, data: rows };
+  }
+  return { success: false };
+};
+
+export const getALLLoans = async () => {
+  const [rows] = await pool.query("SELECT * FROM loans;");
+  if (rows.length > 0) {
+    return { success: true, data: rows };
+  }
+  return { success: false };
+};
+
 export const changePassword = async (username, oldPassword, newPassword) => {
   // get user current password
   const [user] = await pool.query(

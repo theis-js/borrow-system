@@ -43,7 +43,7 @@ export const MyLoansPage = () => {
     const fetchLoans = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`${API_BASE}/api/userLoans`, {
+        const res = await fetch(`${API_BASE}/api/loans/loans`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
@@ -75,7 +75,7 @@ export const MyLoansPage = () => {
 
   const deleteLoan = async (loanId: number) => {
     try {
-      const res = await fetch(`${API_BASE}/api/SETdeleteLoan/${loanId}`, {
+      const res = await fetch(`${API_BASE}/api/loans/delete-loan/${loanId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,

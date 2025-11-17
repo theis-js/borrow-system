@@ -6,7 +6,7 @@ export const getBorrowableItems = async (
   endDate: string
 ) => {
   try {
-    const response = await fetch(`${API_BASE}/api/borrowableItems`, {
+    const response = await fetch(`${API_BASE}/api/loans/borrowable-items`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${Cookies.get("token") || ""}`,
@@ -47,15 +47,16 @@ export const getBorrowableItems = async (
 export const createLoan = async (
   itemIds: number[],
   startDate: string,
-  endDate: string
+  endDate: string,
+  note: string | null
 ) => {
-  const response = await fetch(`${API_BASE}/api/createLoan`, {
+  const response = await fetch(`${API_BASE}/api/loans/createLoan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${Cookies.get("token") || ""}`,
     },
-    body: JSON.stringify({ items: itemIds, startDate, endDate }),
+    body: JSON.stringify({ items: itemIds, startDate, endDate, note }),
   });
 
   if (!response.ok) {

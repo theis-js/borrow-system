@@ -64,7 +64,7 @@ export const Header = () => {
       return;
     }
 
-    const response = await fetch(`${API_BASE}/api/changePassword`, {
+    const response = await fetch(`${API_BASE}/api/users/change-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

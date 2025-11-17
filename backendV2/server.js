@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import env from "dotenv";
 import info from "./info.json" assert { type: "json" };
+import { authenticate } from "./services/authentication.js";
 
 // frontend routes
 import loansMgmtRouter from "./routes/app/loanMgmt.route.js";
@@ -44,6 +45,10 @@ app.set("view engine", "ejs");
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
+});
+
+app.get("/verify", authenticate, async (req, res) => {
+  res.status(200).json({ message: "Token is valid", user: req.user });
 });
 
 app.get("/", (req, res) => {

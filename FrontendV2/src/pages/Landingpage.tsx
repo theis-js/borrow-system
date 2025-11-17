@@ -39,6 +39,8 @@ type Device = {
   can_borrow_role: string;
   inSafe: number;
   entry_created_at: string;
+  last_borrowed_person: string | null;
+  currently_borrowing: string | null;
 };
 
 const Landingpage: React.FC = () => {
@@ -68,7 +70,7 @@ const Landingpage: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const loanRes = await fetch(`${API_BASE}/apiV2/allLoans`);
+        const loanRes = await fetch(`${API_BASE}/api/loans/all-loans`);
         const loanData = await loanRes.json();
         if (Array.isArray(loanData)) {
           setLoans(loanData);
@@ -80,7 +82,7 @@ const Landingpage: React.FC = () => {
           );
         }
 
-        const deviceRes = await fetch(`${API_BASE}/apiV2/allItems`);
+        const deviceRes = await fetch(`${API_BASE}/api/loans/all-items`);
         const deviceData = await deviceRes.json();
         if (Array.isArray(deviceData)) {
           setDevices(deviceData);
@@ -199,6 +201,14 @@ const Landingpage: React.FC = () => {
             <Card.Body color="fg.muted">
               <Text>
                 {t("rent-role")}: {device.can_borrow_role}
+              </Text>
+              <Text>
+                {t("last-borrowed-person")}:{" "}
+                {device.last_borrowed_person || "N/A"}
+              </Text>
+              <Text>
+                {t("currently-borrowed-by")}:{" "}
+                {device.currently_borrowing || "N/A"}
               </Text>
             </Card.Body>
           </Card.Root>

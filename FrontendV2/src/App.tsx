@@ -27,7 +27,7 @@ function App() {
   useEffect(() => {
     if (Cookies.get("token")) {
       const verifyToken = async () => {
-        const response = await fetch(`${API_BASE}/api/verifyToken`, {
+        const response = await fetch(`${API_BASE}/verify`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,

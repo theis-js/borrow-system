@@ -5,7 +5,7 @@ export const useVersionInfoQuery = () =>
   useQuery({
     queryKey: ["versionInfo"],
     queryFn: async () => {
-      const response = await fetch(`${API_BASE}/server-info`, {
+      const response = await fetch(`${API_BASE}/`, {
         method: "GET",
       });
       if (response.ok) {

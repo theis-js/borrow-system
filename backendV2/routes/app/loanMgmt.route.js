@@ -9,6 +9,10 @@ import {
   createLoanInDatabase,
   getLoanInfoWithID,
   getLoansFromDatabase,
+  getBorrowableItemsFromDatabase,
+  getALLLoans,
+  getItems,
+  SETdeleteLoanFromDatabase,
 } from "./database/loansMgmt.database.js";
 import { sendMailLoan } from "./services/mailer.js";
 
@@ -85,8 +89,61 @@ router.get("/loans", authenticate, async (req, res) => {
   const result = await getLoansFromDatabase(req.user.username);
   if (result.success) {
     res.status(200).json(result.data);
+  } else if (result.status) {
+    res.status(200).json([]);
   } else {
     res.status(500).json({ message: "Failed to fetch loans" });
+  }
+});
+
+router.get("/all-items", authenticate, async (req, res) => {
+  const result = await getItems();
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json({ message: "Failed to fetch items" });
+  }
+});
+
+router.delete("/delete-loan/:id", authenticate, async (req, res) => {
+  const loanId = req.params.id;
+  const result = await SETdeleteLoanFromDatabase(loanId);
+  if (result.success) {
+    res.status(200).json({ message: "Loan deleted successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to delete loan" });
+  }
+});
+
+router.get("/all-loans", authenticate, async (req, res) => {
+  const result = await getALLLoans();
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json({ message: "Failed to fetch loans" });
+  }
+});
+
+router.post("/borrowable-items", authenticate, async (req, res) => {
+  const { startDate, endDate } = req.body || {};
+  if (!startDate || !endDate) {
+    return res
+      .status(400)
+      .json({ message: "startDate and endDate are required" });
+  }
+
+  const result = await getBorrowableItemsFromDatabase(
+    startDate,
+    endDate,
+    req.user.role
+  );
+  if (result.success) {
+    // return the array directly for consistency with /items
+    return res.status(200).json(result.data);
+  } else {
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch borrowable items" });
   }
 });
 

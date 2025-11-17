@@ -109,7 +109,6 @@ backend/public/uploads/
 *.sqlite3
 
 # API keys and secrets (additional protection)
-config/
 secrets/
 keys/
 

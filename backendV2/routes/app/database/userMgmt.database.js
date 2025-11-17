@@ -19,3 +19,21 @@ export const loginFunc = async (username, password) => {
   if (result.length > 0) return { success: true, data: result[0] };
   return { success: false };
 };
+
+export const changePassword = async (username, oldPassword, newPassword) => {
+  // get user current password
+  const [user] = await pool.query(
+    "SELECT * FROM users WHERE username = ? AND password = ?",
+    [username, oldPassword]
+  );
+  if (user.length === 0) return { success: false };
+
+  // update password
+
+  const [result] = await pool.query(
+    "UPDATE users SET password = ? WHERE username = ?",
+    [newPassword, username]
+  );
+  if (result.affectedRows > 0) return { success: true };
+  return { success: false };
+};

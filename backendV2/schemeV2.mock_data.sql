@@ -1,39 +1,120 @@
--- Mock data for borrow_system_new
 USE borrow_system_new;
 
-START TRANSACTION;
+-- Reset tables (no FKs defined, so order is safe)
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE loans;
+TRUNCATE TABLE apiKeys;
+TRUNCATE TABLE items;
+TRUNCATE TABLE users;
+SET FOREIGN_KEY_CHECKS = 1;
 
--- Users
-INSERT INTO users (username, password, email, first_name, last_name, role, is_admin, entry_created_at)
-VALUES
-('admin', '$2b$12$adminhashedpasswordplaceholder0000000000', 'admin@example.com', 'System', 'Admin', 99, TRUE, '2025-01-01 08:00:00'),
-('alice', '$2b$12$alicehashedpasswordplaceholder0000000000', 'alice@example.com', 'Alice', 'Anderson', 1, FALSE, '2025-06-01 09:10:00'),
-('bob',   '$2b$12$bobhashedpasswordplaceholder000000000000',   'bob@example.com',   'Bob',   'Brown',    2, FALSE, '2025-06-02 10:15:00'),
-('carol', '$2b$12$carolhashedpasswordplaceholder00000000000',  'carol@example.com', 'Carol', 'Clark',   0, FALSE, '2025-06-03 11:20:00');
+-- Users (roles 1–6, plain-text passwords)
+INSERT INTO users (username, password, email, first_name, last_name, role, is_admin) VALUES
+('admin',  'adminpass', 'admin@example.com',  'System', 'Admin',   6, true),
+('alice',  'alice123',  'alice@example.com',  'Alice',  'Andersen',1, false),
+('bob',    'bob12345',  'bob@example.com',    'Bob',    'Berg',    2, false),
+('carol',  'carol123',  'carol@example.com',  'Carol',  'Christensen', 3, false),
+('dave',   'dave123',   'dave@example.com',   'Dave',   'Dahl',    4, false),
+('erin',   'erin123',   'erin@example.com',   'Erin',   'Enevoldsen', 5, false),
+('frank',  'frank123',  'frank@example.com',  'Frank',  'Fisher',  2, false),
+('grace',  'grace123',  'grace@example.com',  'Grace',  'Gundersen',1, false),
+('heidi',  'heidi123',  'heidi@example.com',  'Heidi',  'Hansen',  4, false),
+('tech',   'techpass',  'tech@example.com',   'Tech',   'User',    5, true);
 
--- Items (ids will start at 1)
-INSERT INTO items (item_name, can_borrow_role, in_safe, entry_created_at, last_borrowed_person, currently_borrowing)
-VALUES
-('MacBook Pro 16\"', 1, TRUE,  '2025-05-01 09:00:00', 'alice', NULL),
-('Projector Epson X200', 2, TRUE, '2025-04-20 10:00:00', 'bob', NULL),
-('Canon EOS R6', 1, TRUE,      '2025-03-15 14:30:00', NULL, NULL),
-('Wireless Microphone', 0, TRUE,'2025-05-10 12:00:00', 'carol', NULL),
-('USB-C Charger', 0, FALSE,    '2025-05-11 12:30:00', 'alice', 'alice');
+-- Items (safe_nr is two digits or NULL; currently_borrowing aligns with active loans)
+INSERT INTO items (item_name, can_borrow_role, in_safe, safe_nr, last_borrowed_person, currently_borrowing) VALUES
+('Laptop A',           2, false, NULL, 'grace',  'bob'),
+('Laptop B',           2, true,  '01', NULL,     NULL),
+('Camera Canon',       3, true,  '02', 'erin',   NULL),
+('Microphone Rode',    1, true,  '03', 'grace',  NULL),
+('Tripod Manfrotto',   1, true,  '04', 'frank',  NULL),
+('Oscilloscope Tek',   4, true,  '05', NULL,     NULL),
+('VR Headset',         3, false, NULL, 'heidi',  'carol'),
+('Keycard Programmer', 6, true,  '06', 'admin',  NULL);
 
--- Loans
-INSERT INTO loans (username, loan_code, start_date, end_date, take_date, returned_date, created_at, loaned_items_id, loaned_items_name, deleted, note)
-VALUES
-('alice', '000101', '2025-06-10 09:00:00', '2025-06-17 09:00:00', '2025-06-10 09:05:00', NULL, '2025-06-10 09:00:00',
- JSON_ARRAY(1,5), JSON_ARRAY('MacBook Pro 16\"','USB-C Charger'), FALSE, 'For project work'),
-('bob',   '000102', '2025-06-01 14:00:00', '2025-06-04 12:00:00', '2025-06-01 14:10:00', '2025-06-04 11:50:00', '2025-06-01 14:00:00',
- JSON_ARRAY(2), JSON_ARRAY('Projector Epson X200'), FALSE, NULL),
-('carol', '000103', '2025-06-05 08:00:00', '2025-06-06 18:00:00', NULL, NULL, '2025-06-05 08:00:00',
- JSON_ARRAY(4), JSON_ARRAY('Wireless Microphone'), FALSE, 'Reserved for event');
+-- Loans (JSON arrays, 6-digit numeric loan_code)
+-- Assumes the items above have ids 1..8 in insert order
+INSERT INTO loans (
+  username,
+  lockers,
+  loan_code,
+  start_date,
+  end_date,
+  take_date,
+  returned_date,
+  loaned_items_id,
+  loaned_items_name,
+  deleted,
+  note
+) VALUES
+-- Active loan: bob has Laptop A
+('bob',
+  '["01"]',
+  '123456',
+  '2025-11-15 09:00:00',
+  '2025-11-22 17:00:00',
+  '2025-11-15 09:15:00',
+  NULL,
+  '[1]',
+  '["Laptop A"]',
+  false,
+  'Active loan - Laptop A'
+),
+-- Returned loan: frank had Tripod Manfrotto
+('frank',
+  '["04"]',
+  '234567',
+  '2025-10-01 10:00:00',
+  '2025-10-07 16:00:00',
+  '2025-10-01 10:05:00',
+  '2025-10-05 15:30:00',
+  '[5]',
+  '["Tripod Manfrotto"]',
+  false,
+  'Completed loan'
+),
+-- Future reservation: dave will take Oscilloscope Tek
+('dave',
+  '["05"]',
+  '345678',
+  '2025-12-10 09:00:00',
+  '2025-12-12 17:00:00',
+  NULL,
+  NULL,
+  '[6]',
+  '["Oscilloscope Tek"]',
+  false,
+  'Reserved'
+),
+-- Active loan: carol has VR Headset
+('carol',
+  '["02"]',
+  '456789',
+  '2025-11-10 13:00:00',
+  '2025-11-20 12:00:00',
+  '2025-11-10 13:10:00',
+  NULL,
+  '[7]',
+  '["VR Headset"]',
+  false,
+  'Active loan - VR Headset'
+),
+-- Soft-deleted historic loan: grace had Microphone + Tripod
+('grace',
+  '["03","04"]',
+  '567890',
+  '2025-09-01 09:00:00',
+  '2025-09-03 17:00:00',
+  '2025-09-01 09:10:00',
+  '2025-09-03 16:45:00',
+  '[4,5]',
+  '["Microphone Rode","Tripod Manfrotto"]',
+  true,
+  'Canceled/soft-deleted record'
+);
 
--- API keys (15 digits)
-INSERT INTO apiKeys (api_key, entry_name, entry_created_at, last_used_at)
-VALUES
-('000000000000001', 'internal-service-key', '2025-01-02 07:00:00', NULL),
-('123456789012345', 'ci-pipeline', '2025-02-15 08:30:00', '2025-06-10 09:00:00');
-
-COMMIT;
+-- API keys (8-digit numeric keys)
+INSERT INTO apiKeys (api_key, entry_name, last_used_at) VALUES
+('12345678', 'CI token',     '2025-11-15 08:00:00'),
+('87654321', 'Local dev',    NULL),
+('00000001', 'Monitoring',   '2025-11-10 12:30:00');

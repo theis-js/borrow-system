@@ -21,7 +21,7 @@ export const getItemsFromDatabaseV2 = async () => {
 
 export const getLoanByCodeV2 = async (loan_code) => {
   const [result] = await pool.query(
-    "SELECT * FROM loans WHERE loan_code = ?;",
+    "SELECT username, returned_date, take_date, lockers FROM loans WHERE loan_code = ?;",
     [loan_code]
   );
   if (result.length > 0) {

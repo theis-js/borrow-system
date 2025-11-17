@@ -88,14 +88,4 @@ router.post(
   }
 );
 
-// Route for API to get ALL items from the database (only for landingpage)
-router.get("/all-items", async (req, res) => {
-  const result = await getItemsFromDatabaseV2();
-  if (result.success) {
-    res.status(200).json(result.data);
-  } else {
-    res.status(500).json({ message: "Failed to fetch items" });
-  }
-});
-
 export default router;

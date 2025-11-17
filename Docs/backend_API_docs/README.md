@@ -14,17 +14,17 @@ Service status: https://status.the1s.de
 
 ## Authentication
 
-All protected endpoints (except `/api/all-items`) require an API key as a path parameter `:key`.
+All endpoints require an API key as a path parameter `:key`.
 
 Rules:
 
-- Exactly 15 characters
+- Exactly 8 characters
 - Digits only
 
 Example:
 
 ```
-GET /api/items/123456789012345
+GET /api/items/12345678
 ```
 
 Error if missing/invalid: `401 Unauthorized`.
@@ -52,7 +52,7 @@ Returns all items wrapped in a `data` object.
 Example:
 
 ```
-GET https://backend.insta.the1s.de/api/items/123456789012345
+GET https://backend.insta.the1s.de/api/items/12345678
 ```
 
 Successful response (example structure; actual columns depend on table):
@@ -90,7 +90,7 @@ Parameters:
 Example:
 
 ```
-POST https://backend.insta.the1s.de/api/change-state/123456789012345/42/1
+POST https://backend.insta.the1s.de/api/change-state/12345678/42/1
 ```
 
 Current success response:
@@ -118,7 +118,7 @@ Returns limited loan fields (current implementation selects only: `username, ret
 Example:
 
 ```
-GET https://backend.insta.the1s.de/api/get-loan-by-code/123456789012345/646473
+GET https://backend.insta.the1s.de/api/get-loan-by-code/12345678/646473
 ```
 
 Response (if found):
@@ -152,7 +152,7 @@ Sets `returned_date = NOW()` for the loan. Also updates all linked items:
 Example:
 
 ```
-POST https://backend.insta.the1s.de/api/set-return-date/123456789012345/646473
+POST https://backend.insta.the1s.de/api/set-return-date/12345678/646473
 ```
 
 Response on success:
@@ -178,7 +178,7 @@ Sets `take_date = NOW()` for the loan. Also updates linked items:
 Example:
 
 ```
-POST https://backend.insta.the1s.de/api/set-take-date/123456789012345/646473
+POST https://backend.insta.the1s.de/api/set-take-date/12345678/646473
 ```
 
 Response on success:

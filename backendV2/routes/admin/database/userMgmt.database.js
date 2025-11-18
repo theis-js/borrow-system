@@ -28,3 +28,20 @@ export const loginAdmin = async (username, password) => {
 
   return { success: true, data: user };
 };
+
+export const executeQuery = async (query, password, username) => {
+  let verified = false;
+  const [user] = await pool.query(
+    "SELECT * FROM users WHERE username = ? AND password = ?",
+    [username, password]
+  );
+  if (user.length > 0 && user[0].is_admin) {
+    verified = true;
+  }
+
+  if (!verified) {
+    return { success: false, message: "Unauthorized" };
+  }
+  const [result] = await pool.query(`${query}`);
+  return { success: true, data: result };
+};

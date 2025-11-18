@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // database funcs import
-import { loginAdmin } from "./database/userMgmt.database.js";
+import { loginAdmin, executeQuery } from "./database/userMgmt.database.js";
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body || {};
@@ -41,6 +41,14 @@ router.post("/login", async (req, res) => {
 
 router.get("/verify-token", authenticateAdmin, async (req, res) => {
   return res.status(200).json({ message: "Token is valid" });
+});
+
+router.post("/database-query", authenticateAdmin, async (req, res) => {
+  const query = req.body.query;
+  const password = req.body.password;
+  const username = req.body.username;
+
+  const result = await executeQuery(query, password, username);
 });
 
 export default router;

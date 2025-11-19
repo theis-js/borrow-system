@@ -147,6 +147,8 @@ export const MyLoansPage = () => {
               <Table.Column style={{ width: "14%" }} />
               {/* Rückgabedatum */}
               <Table.Column style={{ width: "14%" }} />
+              {/* Notiz */}
+              <Table.Column style={{ width: "14%" }} />
               {/* Aktionen */}
               <Table.Column style={{ width: "8%" }} />
             </Table.ColumnGroup>
@@ -158,6 +160,7 @@ export const MyLoansPage = () => {
                 <Table.ColumnHeader>{t("devices")}</Table.ColumnHeader>
                 <Table.ColumnHeader>{t("take-date")}</Table.ColumnHeader>
                 <Table.ColumnHeader>{t("return-date")}</Table.ColumnHeader>
+                <Table.ColumnHeader>{t("note")}</Table.ColumnHeader>
                 <Table.ColumnHeader>{t("actions")}</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
@@ -178,6 +181,7 @@ export const MyLoansPage = () => {
                   </Table.Cell>
                   <Table.Cell>{formatDate(loan.take_date)}</Table.Cell>
                   <Table.Cell>{formatDate(loan.returned_date)}</Table.Cell>
+                  <Table.Cell>{loan.note}</Table.Cell>
                   <Table.Cell>
                     <Dialog.Root role="alertdialog">
                       <Dialog.Trigger asChild>

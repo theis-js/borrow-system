@@ -1,61 +1,85 @@
 # Backend API (V2) Documentation
 
-This document describes the current backend API routes and their real response shapes.
+This document describes the current backend API routes and their real response shapes, based on the code in `backendV2`.
+
+---
 
 ## Base URLs
 
-- Frontend: https://insta.the1s.de
-- Backend: https://backend.insta.the1s.de
-- Base path: https://backend.insta.the1s.de/api
+- Frontend: `https://insta.the1s.de`
+- Backend: `https://backend.insta.the1s.de`
+- Base path: `https://backend.insta.the1s.de/api`
 
-Service status: https://status.the1s.de
+Service status: `https://status.the1s.de`
 
 ---
 
 ## Authentication
 
-All endpoints require an API key as a path parameter `:key`.
+All **protected** endpoints require an API key as a path parameter `:key`.
 
-Rules:
+Rules for `:key`:
 
-- Exactly 8 characters
-- Digits only
+- Exactly 8 characters  
+- Digits only (`^[0-9]{8}$`)
 
 Example:
 
-```
+```http
 GET /api/items/12345678
 ```
 
-Error if missing/invalid: `401 Unauthorized`.
+On missing / invalid key:
 
-Auth modules:
+- Status: `401 Unauthorized`
+- Body (exact message depends on `authenticate` in `backendV2/services/authentication.js`)
 
-- backendV2/services/authentication.js
-- backendV2/services/database.js
+Auth-related modules:
+
+- `backendV2/services/authentication.js`
+- `backendV2/services/database.js`
 
 Route handlers:
 
-- backendV2/routes/api/api.route.js
-- backendV2/routes/api/api.database.js
+- `backendV2/routes/api/api.route.js`
+- `backendV2/routes/api/api.database.js`
 
 ---
 
-## Endpoints
+## Endpoints (Overview)
 
-### 1) Get all items (authenticated)
+1. **Public**
+   - `GET /api/all-items` – List all items (no auth; from original docs)
 
-GET `/api/items/:key`
+2. **Items (authenticated)**
+   - `GET /api/items/:key` – List all items
+   - `POST /api/change-state/:key/:itemId/:state` – Toggle item safe state
 
-Returns all items wrapped in a `data` object.
+3. **Loans (authenticated)**
+   - `GET /api/get-loan-by-code/:key/:loan_code` – Get loan by code
+   - `POST /api/set-take-date/:key/:loan_code` – Set “take” date and mark items as out
+   - `POST /api/set-return-date/:key/:loan_code` – Set “return” date and mark items as returned
 
-Example:
+---
 
-```
+## 1) Items
+
+### 1.1 Get all items
+
+**GET** `/api/items/:key`
+
+Returns all items wrapped in a `data` property.
+
+- Handler: `getItemsFromDatabaseV2` in `api.database.js`
+- SQL: `SELECT * FROM items;`
+
+#### Example request
+
+```http
 GET https://backend.insta.the1s.de/api/items/12345678
 ```
 
-Successful response (example structure; actual columns depend on table):
+#### Successful response
 
 ```json
 {
@@ -65,177 +89,234 @@ Successful response (example structure; actual columns depend on table):
       "item_name": "DJI 1er Mikro",
       "can_borrow_role": 4,
       "inSafe": 1,
-      "currently_borrowing": null,
+      "safe_nr": "01",
+      "entry_created_at": "2025-08-19T22:02:16.000Z",
+      "entry_updated_at": "2025-08-19T22:02:16.000Z",
       "last_borrowed_person": "alice",
-      "entry_created_at": "2025-08-19T22:02:16.000Z"
+      "currently_borrowing": null
     }
   ]
 }
 ```
 
-Status codes:
+#### Error response
 
-- 200 success
-- 500 database error
-
-### 2) Toggle item safe state (authenticated)
-
-POST `/api/change-state/:key/:itemId/:state`
-
-Parameters:
-
-- `itemId`: numeric item ID
-- `state`: must be `"1"` or `"0"` (validated), but the current implementation IGNORES this value and toggles `inSafe` (SQL uses `SET inSafe = NOT inSafe`).
-
-Example:
-
+```json
+{ "message": "Failed to fetch items" }
 ```
+
+#### Status codes
+
+- `200 OK` – success, `data` is an array (possibly empty)
+- `401 Unauthorized` – invalid / missing key
+- `500 Internal Server Error` – database error or `success: false` from DB layer
+
+---
+
+### 2.2 Toggle item safe state
+
+**POST** `/api/change-state/:key/:itemId/:state`
+
+> You do not need this endpoint to set the states of the items when the items are taken out or returned. When you take or return a loan, the item states are set automatically by the loan endpoints. This endpoint is only for manually toggling the `inSafe` state of an item.
+
+Path parameters:
+
+- `:key` – API key (8 digits)
+- `:itemId` – numeric `id` of the item
+- `:state` – must be `"1"` or `"0"`
+
+Handler in `api.route.js` calls `changeInSafeStateV2(itemId)`, which executes:
+
+```sql
+UPDATE items SET inSafe = NOT inSafe WHERE id = ?
+```
+
+#### Example request
+
+```http
 POST https://backend.insta.the1s.de/api/change-state/12345678/42/1
 ```
 
-Current success response:
+(Will toggle `inSafe` for item `42`, regardless of the final `1`.)
+
+#### Successful response (current implementation)
 
 ```json
-{}
+{
+  "data": null
+}
 ```
 
-(Empty object because the handler sends `{ data: result.data }` and the database layer returns no `data`.)
+#### Error responses
 
-Status codes:
+Invalid `state` (anything other than `"0"` or `"1"`):
 
-- 200 toggled
-- 400 invalid `state` (anything other than "0"/"1")
-- 500 failure
-
-Note: To actually set a specific state, the database function would need adjustment.
-
-### 3) Get loan by code (authenticated)
-
-GET `/api/get-loan-by-code/:key/:loan_code`
-
-Returns limited loan fields (current implementation selects only: `username, returned_date, take_date, lockers`).
-
-Example:
-
+```json
+{ "message": "Invalid state value" }
 ```
+
+Failed update:
+
+```json
+{ "message": "Failed to update item state" }
+```
+
+#### Status codes
+
+- `200 OK` – item state toggled
+- `400 Bad Request` – invalid `state` parameter
+- `401 Unauthorized` – invalid / missing key
+- `500 Internal Server Error` – database/update failure or `success: false` from DB layer
+
+---
+
+## 3) Loans
+
+### 3.1 Get loan by code
+
+**GET** `/api/get-loan-by-code/:key/:loan_code`
+
+Path parameters:
+
+- `:key` – API key
+- `:loan_code` – 6-digit loan code (`^[0-9]{6}$` per DB constraint)
+
+Database layer (`getLoanByCodeV2`) currently selects:
+
+```sql
+SELECT first_name, returned_date, take_date, lockers
+FROM loans
+WHERE loan_code = ?;
+```
+
+#### Example request
+
+```http
 GET https://backend.insta.the1s.de/api/get-loan-by-code/12345678/646473
 ```
 
-Response (if found):
+#### Successful response
 
 ```json
 {
   "data": {
-    "username": "theis",
+    "first_name": "Theis",
     "returned_date": null,
     "take_date": "2025-08-25T13:23:00.000Z",
-    "lockers": "A2"
+    "lockers": ["01", "03"]
   }
 }
 ```
 
-Status codes:
-
-- 200 found
-- 404 not found
-
-### 4) Set return date (authenticated)
-
-POST `/api/set-return-date/:key/:loan_code`
-
-Sets `returned_date = NOW()` for the loan. Also updates all linked items:
-
-- `inSafe = 1`
-- `currently_borrowing = NULL`
-- `last_borrowed_person = <loan owner username>`
-
-Example:
-
-```
-POST https://backend.insta.the1s.de/api/set-return-date/12345678/646473
-```
-
-Response on success:
+#### Error response
 
 ```json
-{}
+{ "message": "Loan not found" }
 ```
 
-Status codes:
+#### Status codes
 
-- 200 success
-- 500 failure
-
-### 5) Set take date (authenticated)
-
-POST `/api/set-take-date/:key/:loan_code`
-
-Sets `take_date = NOW()` for the loan. Also updates linked items:
-
-- `inSafe = 0`
-- `currently_borrowing = <loan owner username>`
-
-Example:
-
-```
-POST https://backend.insta.the1s.de/api/set-take-date/12345678/646473
-```
-
-Response on success:
-
-```json
-{}
-```
-
-Status codes:
-
-- 200 success
-- 500 failure
-
-### 6) Get all items (public, no key)
-
-GET `/api/all-items`
-
-Same data as endpoint (1) but NOT wrapped in `data`.
-
-Example:
-
-```
-GET https://backend.insta.the1s.de/api/all-items
-```
-
-Response:
-
-```json
-[
-  {
-    "id": 1,
-    "item_name": "DJI 1er Mikro",
-    "can_borrow_role": 4,
-    "inSafe": 1,
-    "currently_borrowing": null,
-    "last_borrowed_person": "alice",
-    "entry_created_at": "2025-08-19T22:02:16.000Z"
-  }
-]
-```
-
-Status codes:
-
-- 200 success
-- 500 failure
+- `200 OK` – loan found
+- `401 Unauthorized` – invalid / missing key
+- `404 Not Found` – no matching loan for this `loan_code`
 
 ---
 
-## Response Summary
+### 3.2 Set take date
 
-Common success forms:
+**POST** `/api/set-take-date/:key/:loan_code`
 
-- List (wrapped): `{ "data": [ ... ] }`
-- Single loan: `{ "data": { ... } }`
-- Mutation (current implementation): `{}` (no payload)
+Path parameters:
 
-Errors:
+- `:key` – API key
+- `:loan_code` – loan code
+
+#### Example request
+
+```http
+POST https://backend.insta.the1s.de/api/set-take-date/12345678/646473
+```
+
+#### Successful response
+
+```json
+{
+  "data": null
+}
+```
+
+#### Error response
+
+```json
+{ "message": "Failed to set take date" }
+```
+
+#### Status codes
+
+- `200 OK` – take date set and items marked as out
+- `401 Unauthorized` – invalid / missing key
+- `500 Internal Server Error` – invalid loan, missing items, or DB error / `success: false`
+
+---
+
+### 3.3 Set return date
+
+**POST** `/api/set-return-date/:key/:loan_code`
+
+Path parameters:
+
+- `:key` – API key
+- `:loan_code` – loan code
+
+#### Example request
+
+```http
+POST https://backend.insta.the1s.de/api/set-return-date/12345678/646473
+```
+
+#### Successful response (current implementation)
+
+```json
+{
+  "data": null
+}
+```
+
+#### Error response
+
+```json
+{ "message": "Failed to set return date" }
+```
+
+#### Status codes
+
+- `200 OK` – return date set and items marked as returned
+- `401 Unauthorized` – invalid / missing key
+- `500 Internal Server Error` – invalid loan, missing items, or DB error / `success: false`
+
+---
+
+## Common Response Shapes
+
+**Success – list (authenticated items):**
+
+```json
+{ "data": [ /* array of rows */ ] }
+```
+
+**Success – single loan:**
+
+```json
+{ "data": { /* selected loan fields */ } }
+```
+
+**Success – mutations (current code):**
+
+```json
+{ "data": null }
+```
+
+**Errors:**
 
 ```json
 { "message": "Failed to fetch items" }
@@ -246,22 +327,10 @@ Errors:
 { "message": "Failed to set take date" }
 ```
 
-Status Codes:
+**HTTP Status Codes:**
 
-- 200 OK
-- 400 Bad Request (invalid state param)
-- 401 Unauthorized (invalid/missing key)
-- 404 Not Found (loan)
-- 500 Internal Server Error (database/update failure)
-
----
-
-## Notes / Implementation Gaps
-
-- `change-state` ignores requested `state` and toggles instead.
-- Mutation endpoints return empty JSON; include a result object if feedback is needed.
-- `get-loan-by-code` returns fewer fields than earlier documentation suggested.
-
----
-
-For collaboration, reach out via the admin channel.
+- `200 OK` – operation succeeded
+- `400 Bad Request` – invalid `state` parameter
+- `401 Unauthorized` – invalid/missing API key
+- `404 Not Found` – loan not found
+- `500 Internal Server Error` – database / server failure or `success: false` from DB layer

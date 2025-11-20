@@ -14,6 +14,7 @@ import { Lock, LockOpen } from "lucide-react";
 import MyAlert from "@/components/myChakra/MyAlert";
 import { useTranslation } from "react-i18next";
 import { API_BASE } from "@/config/api.config";
+import Cookies from "js-cookie";
 
 export const formatDateTime = (value: string | null | undefined) => {
   if (!value) return "N/A";
@@ -70,7 +71,12 @@ const Landingpage: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const loanRes = await fetch(`${API_BASE}/api/loans/all-loans`);
+        const loanRes = await fetch(`${API_BASE}/api/loans/all-loans`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        });
         const loanData = await loanRes.json();
         if (Array.isArray(loanData)) {
           setLoans(loanData);
@@ -82,7 +88,12 @@ const Landingpage: React.FC = () => {
           );
         }
 
-        const deviceRes = await fetch(`${API_BASE}/api/loans/all-items`);
+        const deviceRes = await fetch(`${API_BASE}/api/loans/all-items`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        });
         const deviceData = await deviceRes.json();
         if (Array.isArray(deviceData)) {
           setDevices(deviceData);

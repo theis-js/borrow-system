@@ -12,6 +12,8 @@ import {
   IconButton,
   Menu,
   Box,
+  Avatar,
+  Card,
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import Cookies from "js-cookie";
@@ -55,6 +57,7 @@ export const Header = () => {
 
   // Dialog control
   const [isPwOpen, setPwOpen] = useState(false);
+  const [userDialog, setUserDialog] = useState(false);
 
   const changePassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -93,6 +96,7 @@ export const Header = () => {
   };
 
   const username = userData.first_name ? userData.first_name : "N/A";
+  const fullname = userData.first_name + " " + userData.last_name;
 
   const logout = () => {
     Cookies.remove("token");
@@ -255,6 +259,17 @@ export const Header = () => {
           </HStack>
         </Stack>
 
+        <HStack>
+          <Avatar.Root>
+            <button
+              onClick={() => setUserDialog(true)}
+              style={{ cursor: "pointer" }}
+            >
+              <Avatar.Fallback name={fullname} />
+            </button>
+          </Avatar.Root>
+        </HStack>
+
         {/* Right: Actions */}
         {/* Desktop actions */}
         <HStack
@@ -335,6 +350,50 @@ export const Header = () => {
           </Button>
         </HStack>
       </Flex>
+
+      {userDialog && (
+        <Card.Root maxW="sm">
+          <Card.Header>
+            <Card.Title>
+              {" "}
+              <Avatar.Root>
+                <button
+                  onClick={() => setUserDialog(true)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <Avatar.Fallback name={fullname} />
+                </button>
+              </Avatar.Root>
+            </Card.Title>
+            <Card.Description>{t("user-info-desc")}</Card.Description>
+          </Card.Header>
+          <Card.Body>
+            <Stack gap="4" w="full">
+              <Text>
+                <strong>{t("first-name")}:</strong> {userData.first_name}
+              </Text>
+              <Text>
+                <strong>{t("last-name")}:</strong> {userData.last_name}
+              </Text>
+              <Text>
+                <strong>{t("username")}:</strong> {userData.username}
+              </Text>
+              <Text>
+                <strong>{t("role")}:</strong> {userData.role}
+              </Text>
+              <Text>
+                <strong>{t("admin-status")}:</strong>{" "}
+                {userData.is_admin ? t("yes") : t("no")}
+              </Text>
+            </Stack>
+          </Card.Body>
+          <Card.Footer justifyContent="flex-end">
+            <Button variant="outline" onClick={() => setUserDialog(false)}>
+              {t("cancel")}
+            </Button>
+          </Card.Footer>
+        </Card.Root>
+      )}
 
       {/* Passwort-Dialog (kontrolliert) */}
       <Dialog.Root open={isPwOpen} onOpenChange={(e: any) => setPwOpen(e.open)}>

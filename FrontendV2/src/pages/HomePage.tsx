@@ -63,7 +63,9 @@ export const HomePage = () => {
       <Stack as="main">
         <Text>{t("timezone-info")}</Text>
         <label htmlFor="startDate">
-          <Text>{t("start-date")}</Text>
+          <strong>
+            <Text>{t("start-date")}</Text>
+          </strong>
         </label>
         <Input
           id="startDate"
@@ -73,7 +75,9 @@ export const HomePage = () => {
           onChange={(e) => setStartDate(e.target.value)}
         />
         <label htmlFor="endDate">
-          <Text>{t("end-date")}</Text>
+          <strong>
+            <Text>{t("end-date")}</Text>
+          </strong>
         </label>
         <Input
           id="endDate"

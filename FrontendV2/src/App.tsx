@@ -79,7 +79,7 @@ function App() {
                 <Route element={<ProtectedRoutes />}>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/my-loans" element={<MyLoansPage />} />
-                  <Route path="/landing" element={<Landingpage />} />
+                  <Route path="/landingpage" element={<Landingpage />} />
                 </Route>
 
                 <Route path="/login" element={<LoginPage />} />

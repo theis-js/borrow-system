@@ -62,5 +62,15 @@
     "change-language": "Change language",
     "timezone-info": "The displayed dates and times are shown in Berlin timezone and must also be entered as such.",
     "optional-note": "Optional note",
-    "note": "Note"
+    "note": "Note",
+    "user-info-desc": "Here you can view and edit your personal information.",
+    "role": "Role",
+    "admin-status": "Admin status",
+    "first-name": "First name",
+    "last-name": "Last name",
+    "app-title": "Borrow System",
+    "last-borrowed-person": "Last borrowed by",
+    "currently-borrowed-by": "Currently borrowed by",
+    "back": "Go back",
+    "landingpage": "Overview page"
 }

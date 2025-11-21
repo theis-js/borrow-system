@@ -62,5 +62,15 @@
     "change-language": "Sprache ändern",
     "timezone-info": "Die angezeigten Daten und Uhrzeiten werden in deutscher Zeitzone dargestellt und müssen auch so eingegeben werden.",
     "optional-note": "Optionale Notiz",
-    "note": "Notiz"
+    "note": "Notiz",
+    "user-info-desc": "Hier können Sie Ihre persönlichen Informationen einsehen und ändern.",
+    "role": "Rolle",
+    "admin-status": "Admin-Status",
+    "first-name": "Vorname",
+    "last-name": "Nachname",
+    "app-title": "Ausleihsystem",
+    "last-borrowed-person": "Zuletzt ausgeliehen von",
+    "currently-borrowed-by": "Derzeit ausgeliehen von",
+    "back": "Zurückgehen",
+    "landingpage": "Übersichtsseite"
 }

@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   Flex,
   Heading,
@@ -14,6 +13,7 @@ import {
   Box,
   Avatar,
   Card,
+  Grid,
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import Cookies from "js-cookie";
@@ -28,7 +28,8 @@ import {
   LogOut,
   CalendarPlus,
   MoreVertical,
-  Flag,
+  Languages,
+  Table,
 } from "lucide-react";
 import { useUserContext } from "@/states/Context";
 import { useState } from "react";
@@ -97,6 +98,18 @@ export const Header = () => {
 
   const username = userData.first_name ? userData.first_name : "N/A";
   const fullname = userData.first_name + " " + userData.last_name;
+  const randomColor = [
+    "gray",
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "teal",
+    "blue",
+    "cyan",
+    "purple",
+    "pink",
+  ];
 
   const logout = () => {
     Cookies.remove("token");
@@ -158,12 +171,12 @@ export const Header = () => {
                 }
               />
               <Menu.Item
-                value="change-password"
-                onSelect={() => setPwOpen(true)}
+                value="landingpage"
+                onSelect={() => navigate("/landingpage", { replace: true })}
                 children={
                   <HStack gap={3}>
-                    <RotateCcwKey size={16} />
-                    <Text as="span">{t("change-password")}</Text>
+                    <Table size={16} />
+                    <Text as="span">{t("landingpage")}</Text>
                   </HStack>
                 }
               />
@@ -177,7 +190,7 @@ export const Header = () => {
                 }}
                 children={
                   <HStack gap={3}>
-                    <LifeBuoy size={16} />
+                    <Languages size={16} />
                     <Text as="span">{t("change-language")}</Text>
                   </HStack>
                 }
@@ -244,7 +257,7 @@ export const Header = () => {
               size="2xl"
               className="tracking-tight text-slate-900 dark:text-slate-100"
             >
-              Home
+              {t("app-title")}
             </Heading>
           </Flex>
 
@@ -253,13 +266,11 @@ export const Header = () => {
               {t("greeting")}
               <strong>{username}</strong>!
             </Text>
-            <Badge variant="subtle" px={2} py={1} borderRadius="full">
-              Rolle: {userData?.role ?? "—"}
-            </Badge>
           </HStack>
         </Stack>
 
-        <HStack>
+        {/* Avatar: visible on mobile, hidden on desktop (desktop version is in the actions bar) */}
+        <HStack display={{ base: "flex", md: "none" }}>
           <Avatar.Root>
             <button
               onClick={() => setUserDialog(true)}
@@ -279,6 +290,18 @@ export const Header = () => {
           flexWrap="wrap"
           display={{ base: "none", md: "flex" }}
         >
+          {/* Desktop avatar, aligned with action buttons */}
+          <Avatar.Root
+            colorPalette={randomColor[Math.floor(Math.random() * 10)]}
+          >
+            <button
+              onClick={() => setUserDialog(true)}
+              style={{ cursor: "pointer" }}
+            >
+              <Avatar.Fallback name={fullname} />
+            </button>
+          </Avatar.Root>
+
           <Button
             colorScheme="teal"
             onClick={() => navigate("/", { replace: true })}
@@ -296,10 +319,10 @@ export const Header = () => {
             </HStack>
           </Button>
 
-          <Button variant="ghost" onClick={() => setPwOpen(true)}>
+          <Button onClick={() => navigate("/landingpage", { replace: true })}>
             <HStack gap={2}>
-              <RotateCcwKey size={18} />
-              <Text as="span">{t("change-password")}</Text>
+              <Table size={18} />
+              <Text as="span">{t("landingpage")}</Text>
             </HStack>
           </Button>
 
@@ -313,7 +336,7 @@ export const Header = () => {
             }}
           >
             <HStack gap={2}>
-              <Flag size={18} />
+              <Languages size={18} />
               <Text as="span">{t("change-language")}</Text>
             </HStack>
           </Button>
@@ -351,48 +374,84 @@ export const Header = () => {
         </HStack>
       </Flex>
 
+      {/* User Info Dialoge */}
       {userDialog && (
-        <Card.Root maxW="sm">
-          <Card.Header>
-            <Card.Title>
-              {" "}
-              <Avatar.Root>
-                <button
-                  onClick={() => setUserDialog(true)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Avatar.Fallback name={fullname} />
-                </button>
-              </Avatar.Root>
-            </Card.Title>
-            <Card.Description>{t("user-info-desc")}</Card.Description>
-          </Card.Header>
-          <Card.Body>
-            <Stack gap="4" w="full">
-              <Text>
-                <strong>{t("first-name")}:</strong> {userData.first_name}
-              </Text>
-              <Text>
-                <strong>{t("last-name")}:</strong> {userData.last_name}
-              </Text>
-              <Text>
-                <strong>{t("username")}:</strong> {userData.username}
-              </Text>
-              <Text>
-                <strong>{t("role")}:</strong> {userData.role}
-              </Text>
-              <Text>
-                <strong>{t("admin-status")}:</strong>{" "}
-                {userData.is_admin ? t("yes") : t("no")}
-              </Text>
-            </Stack>
-          </Card.Body>
-          <Card.Footer justifyContent="flex-end">
-            <Button variant="outline" onClick={() => setUserDialog(false)}>
-              {t("cancel")}
-            </Button>
-          </Card.Footer>
-        </Card.Root>
+        <Flex
+          position="fixed"
+          inset={0}
+          zIndex={1000}
+          align="center"
+          justify="center"
+          bg="blackAlpha.400"
+          backdropFilter="blur(6px)"
+        >
+          <Card.Root maxW="sm" w="full" mx={4}>
+            <Card.Header>
+              <Card.Title>
+                <Flex justify="center" align="center" w="100%">
+                  <Avatar.Root
+                    size={"2xl"}
+                    colorPalette={randomColor[Math.floor(Math.random() * 10)]}
+                  >
+                    <Avatar.Fallback name={fullname} />
+                  </Avatar.Root>
+                </Flex>
+              </Card.Title>
+              <Card.Description>{t("user-info-desc")}</Card.Description>
+            </Card.Header>
+            <Card.Body>
+              <Stack gap="4" w="full">
+                <Box as="dl">
+                  <Grid
+                    templateColumns="auto 1fr"
+                    rowGap={2}
+                    columnGap={4}
+                    alignItems="start"
+                  >
+                    <Text as="dt" fontWeight="bold" textAlign="left">
+                      {t("first-name")}:
+                    </Text>
+                    <Text as="dd">{userData.first_name}</Text>
+
+                    <Text as="dt" fontWeight="bold" textAlign="left">
+                      {t("last-name")}:
+                    </Text>
+                    <Text as="dd">{userData.last_name}</Text>
+
+                    <Text as="dt" fontWeight="bold" textAlign="left">
+                      {t("username")}:
+                    </Text>
+                    <Text as="dd">{userData.username}</Text>
+
+                    <Text as="dt" fontWeight="bold" textAlign="left">
+                      {t("role")}:
+                    </Text>
+                    <Text as="dd">{userData.role}</Text>
+
+                    <Text as="dt" fontWeight="bold" textAlign="left">
+                      {t("admin-status")}:
+                    </Text>
+                    <Text as="dd">
+                      {userData.is_admin ? t("yes") : t("no")}
+                    </Text>
+                  </Grid>
+                </Box>
+
+                <Button variant="solid" onClick={() => setPwOpen(true)}>
+                  <HStack gap={2}>
+                    <RotateCcwKey size={18} />
+                    <Text as="span">{t("change-password")}</Text>
+                  </HStack>
+                </Button>
+              </Stack>
+            </Card.Body>
+            <Card.Footer justifyContent="flex-end">
+              <Button variant="outline" onClick={() => setUserDialog(false)}>
+                {t("cancel")}
+              </Button>
+            </Card.Footer>
+          </Card.Root>
+        </Flex>
       )}
 
       {/* Passwort-Dialog (kontrolliert) */}

@@ -48,19 +48,19 @@ services:
       - mysql_v2
     restart: unless-stopped
 
-  mysql:
-    container_name: borrow_system-mysql
-    image: mysql:8.0
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: borrow_system
-      TZ: Europe/Berlin
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
-    ports:
-      - "3309:3306"
+  # mysql:
+  #   container_name: borrow_system-mysql
+  #   image: mysql:8.0
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+  #     MYSQL_DATABASE: borrow_system
+  #     TZ: Europe/Berlin
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #     - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
+  #   ports:
+  #     - "3309:3306"
 
   mysql_v2:
     container_name: borrow_system-mysql-v2

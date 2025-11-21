@@ -10,11 +10,11 @@ import {
   SimpleGrid,
   Button,
 } from "@chakra-ui/react";
-import { Lock, LockOpen } from "lucide-react";
 import MyAlert from "@/components/myChakra/MyAlert";
 import { useTranslation } from "react-i18next";
 import { API_BASE } from "@/config/api.config";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 export const formatDateTime = (value: string | null | undefined) => {
   if (!value) return "N/A";
@@ -38,7 +38,7 @@ type Device = {
   id: number;
   item_name: string;
   can_borrow_role: string;
-  inSafe: number;
+  in_safe: number;
   entry_created_at: string;
   last_borrowed_person: string | null;
   currently_borrowing: string | null;
@@ -46,6 +46,7 @@ type Device = {
 
 const Landingpage: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -119,6 +120,10 @@ const Landingpage: React.FC = () => {
         Matthias-Claudius-Schule Technik
       </Heading>
 
+      <Button onClick={() => navigate("/", { replace: true })}>
+        {t("back")}
+      </Button>
+
       <Heading as="h2" size="md" mb={4}>
         {t("all-loans")}
       </Heading>
@@ -158,10 +163,10 @@ const Landingpage: React.FC = () => {
                 <strong>{t("rented-items")}</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>{t("return-date")}</strong>
+                <strong>{t("take-date")}</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>{t("take-date")}</strong>
+                <strong>{t("return-date")}</strong>
               </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
@@ -177,8 +182,8 @@ const Landingpage: React.FC = () => {
                     ? loan.loaned_items_name.join(", ")
                     : loan.loaned_items_name}
                 </Table.Cell>
-                <Table.Cell>{formatDateTime(loan.returned_date)}</Table.Cell>
                 <Table.Cell>{formatDateTime(loan.take_date)}</Table.Cell>
+                <Table.Cell>{formatDateTime(loan.returned_date)}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -201,24 +206,25 @@ const Landingpage: React.FC = () => {
           <Card.Root
             key={device.id}
             size="sm"
-            bg={device.inSafe ? "green" : "red"}
+            bg={device.in_safe ? "green" : "red"}
             h="full"
             minH="100px"
           >
             <Card.Header>
-              {device.inSafe ? <LockOpen size={16} /> : <Lock size={16} />}
-              <Heading size="md">{device.item_name}</Heading>
+              <Heading size="md">
+                <strong>{device.item_name}</strong>
+              </Heading>
             </Card.Header>
-            <Card.Body color="fg.muted">
+            <Card.Body>
               <Text>
-                {t("rent-role")}: {device.can_borrow_role}
+                <strong>{t("role")}</strong>: {device.can_borrow_role}
               </Text>
               <Text>
-                {t("last-borrowed-person")}:{" "}
+                <strong>{t("last-borrowed-person")}</strong>:{" "}
                 {device.last_borrowed_person || "N/A"}
               </Text>
               <Text>
-                {t("currently-borrowed-by")}:{" "}
+                <strong>{t("currently-borrowed-by")}</strong>:{" "}
                 {device.currently_borrowing || "N/A"}
               </Text>
             </Card.Body>
@@ -238,7 +244,6 @@ const Landingpage: React.FC = () => {
           borderRadius="full"
         >
           <HStack gap={2}>
-            <LockOpen size={16} />
             <Text>{t("in-locker")}</Text>
           </HStack>
         </Button>
@@ -251,7 +256,6 @@ const Landingpage: React.FC = () => {
           borderRadius="full"
         >
           <HStack gap={2}>
-            <Lock size={16} />
             <Text>{t("not-in-locker")}</Text>
           </HStack>
         </Button>

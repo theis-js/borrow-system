@@ -124,8 +124,8 @@ const APIKeyTable: React.FC = () => {
       </HStack>
       {/* End action toolbar */}
 
-      <Heading marginBottom={4} size="md">
-        Gegenstände
+      <Heading marginBottom={4} size="2xl">
+        API Keys
       </Heading>
       {isError && (
         <MyAlert

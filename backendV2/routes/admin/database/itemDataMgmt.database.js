@@ -23,10 +23,10 @@ export const deleteItemById = async (itemId) => {
   return { success: false };
 };
 
-export const createItem = async (item_name, can_borrow_role, in_safe) => {
+export const createItem = async (item_name, can_borrow_role, lockerNumber) => {
   const [result] = await pool.query(
-    "INSERT INTO items (item_name, can_borrow_role, in_safe) VALUES (?, ?, ?)",
-    [item_name, can_borrow_role, true]
+    "INSERT INTO items (item_name, can_borrow_role, in_safe, safe_nr) VALUES (?, ?, ?, ?)",
+    [item_name, can_borrow_role, true, lockerNumber]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

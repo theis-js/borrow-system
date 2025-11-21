@@ -37,7 +37,7 @@ CREATE TABLE items (
   item_name varchar(255) NOT NULL UNIQUE,
   can_borrow_role INT NOT NULL,
   in_safe bool NOT NULL DEFAULT true,
-  safe_nr CHAR(2) DEFAULT NULL,
+  safe_nr CHAR(2) DEFAULT NULL UNIQUE,
   entry_created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   entry_updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   last_borrowed_person varchar(255) DEFAULT NULL,

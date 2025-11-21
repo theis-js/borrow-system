@@ -25,15 +25,19 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, alert }) => {
         <Card.Body>
           <Stack gap="4" w="full">
             <Field.Root>
-              <Field.Label>Gegenstandsname</Field.Label>
+              <Field.Label>Gegenstandsname (muss einzigartig sein)</Field.Label>
               <Input id="item_name" placeholder="z.B. Laptop" />
+            </Field.Root>
+            <Field.Root>
+              <Field.Label>Schließfachnummer (immer zwei Zahlen)</Field.Label>
+              <Input id="lockerNumber" placeholder="Nummer 01 - 06" />
             </Field.Root>
             <Field.Root>
               <Field.Label>Ausleih-Berechtigung (Rolle)</Field.Label>
               <Input
                 id="can_borrow_role"
                 type="number"
-                placeholder="Zahl (1 - 4)"
+                placeholder="Zahl (1 - 6)"
               />
             </Field.Root>
           </Stack>
@@ -53,10 +57,17 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, alert }) => {
                 (document.getElementById("can_borrow_role") as HTMLInputElement)
                   ?.value
               );
+              const lockerValue = (
+                document.getElementById("lockerNumber") as HTMLInputElement
+              )?.value.trim();
+
+              const lockerNumber =
+                lockerValue === "" ? null : Number(lockerValue);
 
               if (!name || Number.isNaN(role)) return;
+              if (lockerNumber !== null && Number.isNaN(lockerNumber)) return;
 
-              const res = await createItem(name, role);
+              const res = await createItem(name, role, lockerNumber);
               if (res.success) {
                 alert(
                   "success",

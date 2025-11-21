@@ -38,6 +38,7 @@ type Items = {
   item_name: string;
   can_borrow_role: string;
   in_safe: boolean;
+  safe_nr: string;
   entry_created_at: string;
   entry_updated_at: string;
   last_borrowed_person: string | null;
@@ -63,6 +64,12 @@ const ItemTable: React.FC = () => {
   const handleCanBorrowRoleChange = (id: number, value: string) => {
     setItems((prev) =>
       prev.map((it) => (it.id === id ? { ...it, can_borrow_role: value } : it))
+    );
+  };
+
+  const handleLockerNumberChange = (id: number, value: string) => {
+    setItems((prev) =>
+      prev.map((it) => (it.id === id ? { ...it, lockerNumber: value } : it))
     );
   };
 
@@ -202,16 +209,19 @@ const ItemTable: React.FC = () => {
                 <strong>Im Schließfach</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
+                <strong>Schließfachnummer</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
                 <strong>Eintrag erstellt am</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
                 <strong>Eintrag aktualisiert am</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Letzte ausleihende Person</strong>
+                <strong>LaP *</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
-                <strong>Derzeit ausgeliehen von</strong>
+                <strong>Dav **</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
                 <strong>Aktionen</strong>
@@ -277,6 +287,16 @@ const ItemTable: React.FC = () => {
                     </Text>
                   </Button>
                 </Table.Cell>
+                <Table.Cell>
+                  <Input
+                    size="sm"
+                    w="max-content"
+                    onChange={(e) =>
+                      handleLockerNumberChange(item.id, e.target.value)
+                    }
+                    value={item.safe_nr}
+                  />
+                </Table.Cell>
                 <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
                 <Table.Cell>{formatDateTime(item.entry_updated_at)}</Table.Cell>
                 <Table.Cell>{item.last_borrowed_person}</Table.Cell>
@@ -287,6 +307,7 @@ const ItemTable: React.FC = () => {
                       handleEditItems(
                         item.id,
                         item.item_name,
+                        item.safe_nr,
                         item.can_borrow_role
                       ).then((response) => {
                         if (response.success) {
@@ -333,6 +354,8 @@ const ItemTable: React.FC = () => {
           </Table.Body>
         </Table.Root>
       </Box>
+      <Text>* LaP = Letzte ausleihende Person</Text>
+      <Text>** Dav = Derzeit ausgeliehen von</Text>
     </>
   );
 };

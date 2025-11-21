@@ -31,8 +31,8 @@ router.delete("/delete-item/:id", authenticateAdmin, async (req, res) => {
 });
 
 router.post("/create-item", authenticateAdmin, async (req, res) => {
-  const { item_name, can_borrow_role } = req.body;
-  const result = await createItem(item_name, can_borrow_role);
+  const { item_name, can_borrow_role, lockerNumber } = req.body;
+  const result = await createItem(item_name, can_borrow_role, lockerNumber);
   if (result.success) {
     return res.status(201).json({ message: "Item created successfully" });
   }

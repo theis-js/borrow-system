@@ -164,8 +164,10 @@ export const deleteItem = async (itemId: number) => {
 
 export const createItem = async (
   item_name: string,
-  can_borrow_role: number
+  can_borrow_role: number,
+  lockerNumber: number | null
 ) => {
+  console.log(JSON.stringify({ item_name, can_borrow_role, lockerNumber }));
   try {
     const response = await fetch(
       `${API_BASE}/api/admin/item-data/create-item`,
@@ -175,7 +177,7 @@ export const createItem = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ item_name, can_borrow_role }),
+        body: JSON.stringify({ item_name, can_borrow_role, lockerNumber }),
       }
     );
     if (!response.ok) {
@@ -195,8 +197,10 @@ export const createItem = async (
 export const handleEditItems = async (
   itemId: number,
   item_name: string,
+  safe_nr: string | null,
   can_borrow_role: string
 ) => {
+  const newSafeNr = Number(safe_nr || 0);
   try {
     const response = await fetch(
       `${API_BASE}/api/admin/item-data/edit-item/${itemId}`,
@@ -206,7 +210,7 @@ export const handleEditItems = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ item_name, can_borrow_role }),
+        body: JSON.stringify({ item_name, newSafeNr, can_borrow_role }),
       }
     );
     if (!response.ok) {

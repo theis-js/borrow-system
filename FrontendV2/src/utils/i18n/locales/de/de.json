@@ -61,5 +61,6 @@
     "delete": "Löschen",
     "change-language": "Sprache ändern",
     "timezone-info": "Die angezeigten Daten und Uhrzeiten werden in deutscher Zeitzone dargestellt und müssen auch so eingegeben werden.",
-    "optional-note": "Optionale Notiz"
+    "optional-note": "Optionale Notiz",
+    "note": "Notiz"
 }

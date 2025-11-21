@@ -3,6 +3,9 @@ import { useContext } from "react";
 
 export interface User {
   username: string;
+  is_admin: boolean;
+  first_name: string;
+  last_name: string;
   role: number;
 }
 
@@ -12,7 +15,7 @@ export function useUserContext() {
   const user = useContext(UserContext);
 
   if (user === undefined) {
-    throw new Error("useUserContext must be used with a UserContext")
+    throw new Error("useUserContext must be used with a UserContext");
   }
 
   return user;

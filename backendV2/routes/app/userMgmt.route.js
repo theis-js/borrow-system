@@ -12,6 +12,9 @@ router.post("/login", async (req, res) => {
   if (result.success) {
     const token = await generateToken({
       username: result.data.username,
+      is_admin: result.data.is_admin,
+      first_name: result.data.first_name,
+      last_name: result.data.last_name,
       role: result.data.role,
     });
     res.status(200).json({ message: "Login successful", token });

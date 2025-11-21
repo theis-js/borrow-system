@@ -37,6 +37,7 @@ import { API_BASE } from "@/config/api.config";
 export const Header = () => {
   const navigate = useNavigate();
   const userData = useUserContext();
+  console.log(userData);
   const { t } = useTranslation();
 
   // Error handling states
@@ -91,9 +92,7 @@ export const Header = () => {
     setConfirmPassword("");
   };
 
-  const username = userData?.username
-    ? userData.username[0].toUpperCase() + userData.username.slice(1)
-    : "User";
+  const username = userData.first_name ? userData.first_name : "N/A";
 
   const logout = () => {
     Cookies.remove("token");

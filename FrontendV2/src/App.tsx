@@ -36,7 +36,13 @@ function App() {
         if (response.ok) {
           setTriggerLogout(false);
           const data = await response.json();
-          setUser({ username: data.user.username, role: data.user.role });
+          setUser({
+            username: data.user.username,
+            is_admin: data.user.is_admin,
+            first_name: data.user.first_name,
+            last_name: data.user.last_name,
+            role: data.user.role,
+          });
           setIsLoggedIn(true);
         } else {
           Cookies.remove("token");

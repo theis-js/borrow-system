@@ -36,7 +36,7 @@ export const deleteUserById = async (userId) => {
 
 export const changePassword = async (userId, newPassword) => {
   const [result] = await pool.query(
-    "UPDATE users SET password = ? WHERE id = ?",
+    "UPDATE users SET password = ?, entry_updated_at = NOW() WHERE id = ?",
     [newPassword, userId]
   );
   if (result.affectedRows > 0) return { success: true };
@@ -52,7 +52,7 @@ export const editUserById = async (
   is_admin
 ) => {
   const [result] = await pool.query(
-    "UPDATE users SET  first_name = ?, last_name = ?, role = ?, email = ?, is_admin = ? WHERE id = ?",
+    "UPDATE users SET  first_name = ?, last_name = ?, role = ?, email = ?, is_admin = ?, entry_updated_at = NOW() WHERE id = ?",
     [first_name, last_name, role, email, is_admin, userId]
   );
   if (result.affectedRows > 0) return { success: true };

@@ -17,7 +17,15 @@ export const verifyAPIKeyDB = async (apiKey) => {
     [apiKey]
   );
   if (result.length > 0) {
-    return { valid: true };
+    const [lastUsed] = await pool.query(
+      "UPDATE apiKeys SET last_used_at = NOW() WHERE api_key = ?;",
+      [apiKey]
+    );
+    if (lastUsed.affectedRows > 0) {
+      return { valid: true };
+    } else {
+      return { valid: false };
+    }
   } else {
     return { valid: false };
   }

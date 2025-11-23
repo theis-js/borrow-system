@@ -68,7 +68,7 @@ const ItemTable: React.FC = () => {
 
   const handleLockerNumberChange = (id: number, value: string) => {
     setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, lockerNumber: value } : it))
+      prev.map((it) => (it.id === id ? { ...it, safe_nr: value } : it))
     );
   };
 

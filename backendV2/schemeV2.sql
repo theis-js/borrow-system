@@ -43,7 +43,8 @@ CREATE TABLE items (
   last_borrowed_person varchar(255) DEFAULT NULL,
   currently_borrowing varchar(255) DEFAULT NULL,
   PRIMARY KEY (id),
-  CHECK (safe_nr REGEXP '^[0-9]{2}$' OR safe_nr IS NULL)
+  CHECK (safe_nr REGEXP '^[0-9]{2}$' OR safe_nr IS NULL),
+  UNIQUE KEY ux_items_safe_nr (safe_nr)
 ) ENGINE=InnoDB;
 
 CREATE UNIQUE INDEX ux_items_safe_nr_not_null

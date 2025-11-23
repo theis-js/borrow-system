@@ -37,7 +37,7 @@ CREATE TABLE items (
   item_name varchar(255) NOT NULL UNIQUE,
   can_borrow_role INT NOT NULL,
   in_safe bool NOT NULL DEFAULT true,
-  safe_nr CHAR(2) DEFAULT NULL UNIQUE,
+  safe_nr CHAR(2) DEFAULT NULL,
   entry_created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   entry_updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   last_borrowed_person varchar(255) DEFAULT NULL,
@@ -45,6 +45,10 @@ CREATE TABLE items (
   PRIMARY KEY (id),
   CHECK (safe_nr REGEXP '^[0-9]{2}$' OR safe_nr IS NULL)
 ) ENGINE=InnoDB;
+
+CREATE UNIQUE INDEX ux_items_safe_nr_not_null
+ON items (safe_nr)
+WHERE safe_nr IS NOT NULL;
 
 CREATE TABLE apiKeys (
   id INT NOT NULL AUTO_INCREMENT,

@@ -184,8 +184,10 @@ export const MyLoansPage = () => {
                     <Table.Cell>{formatDate(loan.start_date)}</Table.Cell>
                     <Table.Cell>{formatDate(loan.end_date)}</Table.Cell>
                     <Table.Cell>
-                      <Text title={loan.loaned_items_name}>
-                        {loan.loaned_items_name}
+                      <Text>
+                        {Array.isArray(loan.loaned_items_name)
+                          ? loan.loaned_items_name.join(", ")
+                          : "-"}
                       </Text>
                     </Table.Cell>
                     <Table.Cell>{formatDate(loan.take_date)}</Table.Cell>

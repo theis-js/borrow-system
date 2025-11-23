@@ -21,7 +21,7 @@ export const getItemsFromDatabaseV2 = async () => {
 
 export const getLoanByCodeV2 = async (loan_code) => {
   const [result] = await pool.query(
-    "SELECT first_name, returned_date, take_date, lockers FROM loans WHERE loan_code = ?;",
+    "SELECT username, returned_date, take_date, lockers FROM loans WHERE loan_code = ?;",
     [loan_code]
   );
   if (result.length > 0) {
@@ -32,7 +32,7 @@ export const getLoanByCodeV2 = async (loan_code) => {
 
 export const changeInSafeStateV2 = async (itemId) => {
   const [result] = await pool.query(
-    "UPDATE items SET inSafe = NOT inSafe WHERE id = ?",
+    "UPDATE items SET in_safe = NOT in_safe WHERE id = ?",
     [itemId]
   );
   if (result.affectedRows > 0) {
@@ -59,7 +59,7 @@ export const setReturnDateV2 = async (loanCode) => {
     : JSON.parse(items[0].loaned_items_id || "[]");
 
   const [setItemStates] = await pool.query(
-    "UPDATE items SET inSafe = 1, currently_borrowing = NULL, last_borrowed_person = (?) WHERE id IN (?)",
+    "UPDATE items SET in_safe = 1, currently_borrowing = NULL, last_borrowed_person = (?) WHERE id IN (?)",
     [owner[0].username, itemIds]
   );
 
@@ -92,7 +92,7 @@ export const setTakeDateV2 = async (loanCode) => {
     : JSON.parse(items[0].loaned_items_id || "[]");
 
   const [setItemStates] = await pool.query(
-    "UPDATE items SET inSafe = 0, currently_borrowing = (?) WHERE id IN (?)",
+    "UPDATE items SET in_safe = 0, currently_borrowing = (?) WHERE id IN (?)",
     [owner[0].username, itemIds]
   );
 

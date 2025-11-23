@@ -20,7 +20,7 @@ All **protected** endpoints require an API key as a path parameter `:key`.
 
 Rules for `:key`:
 
-- Exactly 8 characters  
+- Exactly 8 characters
 - Digits only (`^[0-9]{8}$`)
 
 Example:
@@ -49,9 +49,11 @@ Route handlers:
 ## Endpoints (Overview)
 
 1. **Public**
+
    - `GET /api/all-items` – List all items (no auth; from original docs)
 
 2. **Items (authenticated)**
+
    - `GET /api/items/:key` – List all items
    - `POST /api/change-state/:key/:itemId/:state` – Toggle item safe state
 
@@ -88,7 +90,7 @@ GET https://backend.insta.the1s.de/api/items/12345678
       "id": 1,
       "item_name": "DJI 1er Mikro",
       "can_borrow_role": 4,
-      "inSafe": 1,
+      "in_safe": 1,
       "safe_nr": "01",
       "entry_created_at": "2025-08-19T22:02:16.000Z",
       "entry_updated_at": "2025-08-19T22:02:16.000Z",
@@ -115,7 +117,7 @@ GET https://backend.insta.the1s.de/api/items/12345678
 
 ### 2.2 Toggle item safe state
 
-**POST** `/api/change-state/:key/:itemId/:state`
+**POST** `/api/change-state/:key/:itemId`
 
 > You do not need this endpoint to set the states of the items when the items are taken out or returned. When you take or return a loan, the item states are set automatically by the loan endpoints. This endpoint is only for manually toggling the `inSafe` state of an item.
 
@@ -123,21 +125,20 @@ Path parameters:
 
 - `:key` – API key (8 digits)
 - `:itemId` – numeric `id` of the item
-- `:state` – must be `"1"` or `"0"`
 
 Handler in `api.route.js` calls `changeInSafeStateV2(itemId)`, which executes:
 
 ```sql
-UPDATE items SET inSafe = NOT inSafe WHERE id = ?
+UPDATE items SET in_safe = NOT in_safe WHERE id = ?
 ```
 
 #### Example request
 
 ```http
-POST https://backend.insta.the1s.de/api/change-state/12345678/42/1
+POST https://backend.insta.the1s.de/api/change-state/12345678/42
 ```
 
-(Will toggle `inSafe` for item `42`, regardless of the final `1`.)
+(Will toggle `in_safe` for item `42`.)
 
 #### Successful response (current implementation)
 
@@ -301,13 +302,21 @@ POST https://backend.insta.the1s.de/api/set-return-date/12345678/646473
 **Success – list (authenticated items):**
 
 ```json
-{ "data": [ /* array of rows */ ] }
+{
+  "data": [
+    /* array of rows */
+  ]
+}
 ```
 
 **Success – single loan:**
 
 ```json
-{ "data": { /* selected loan fields */ } }
+{
+  "data": {
+    /* selected loan fields */
+  }
+}
 ```
 
 **Success – mutations (current code):**

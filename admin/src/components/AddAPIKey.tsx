@@ -37,17 +37,17 @@ const AddAPIKey: React.FC<AddAPIKeyProps> = ({ onClose, alert }) => {
             <InputGroup
               endElement={
                 <Span color="fg.muted" textStyle="xs">
-                  {value.length} / {15}
+                  {value.length} / {8}
                 </Span>
               }
             >
               <Input
-                placeholder="Er muss 15 Zeichen lang sein"
+                placeholder="Er muss 8 zahlen lang sein"
                 value={value}
                 id="apiKey"
-                maxLength={15}
+                maxLength={8}
                 onChange={(e) => {
-                  setValue(e.currentTarget.value.slice(0, 15));
+                  setValue(e.currentTarget.value.slice(0, 8));
                 }}
               />
             </InputGroup>

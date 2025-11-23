@@ -41,7 +41,7 @@ export const getLoanByCodeV2 = async (loan_code) => {
 
 export const changeInSafeStateV2 = async (itemId) => {
   const [result] = await pool.query(
-    "UPDATE items SET inSafe = NOT inSafe WHERE id = ?",
+    "UPDATE items SET in = NOT inSafe WHERE id = ?",
     [itemId]
   );
   if (result.affectedRows > 0) {

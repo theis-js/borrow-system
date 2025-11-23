@@ -13,6 +13,7 @@ import {
   Dialog,
   Portal,
   Code,
+  Box,
 } from "@chakra-ui/react";
 import { Header } from "@/components/Header";
 import { Trash2 } from "lucide-react";
@@ -129,114 +130,125 @@ export const MyLoansPage = () => {
           </VStack>
         )}
         {loans && (
-          <Table.Root
-            size="sm"
-            variant="outline"
-            style={{ tableLayout: "fixed", width: "100%" }}
+          <Box
+            overflowX="auto"
+            width="100%"
+            // Optional: add bottom padding to avoid scrollbar overlap
+            pb={2}
           >
-            <Table.ColumnGroup>
-              {/* Ausleihcode */}
-              <Table.Column style={{ width: "14%" }} />
-              {/* Startdatum */}
-              <Table.Column style={{ width: "14%" }} />
-              {/* Enddatum */}
-              <Table.Column style={{ width: "14%" }} />
-              {/* Geräte (flexibler) */}
-              <Table.Column style={{ width: "28%" }} />
-              {/* Ausleihdatum */}
-              <Table.Column style={{ width: "14%" }} />
-              {/* Rückgabedatum */}
-              <Table.Column style={{ width: "14%" }} />
-              {/* Notiz */}
-              <Table.Column style={{ width: "14%" }} />
-              {/* Aktionen */}
-              <Table.Column style={{ width: "8%" }} />
-            </Table.ColumnGroup>
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader>{t("loan-code")}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t("start-date")}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t("end-date")}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t("devices")}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t("take-date")}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t("return-date")}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t("note")}</Table.ColumnHeader>
-                <Table.ColumnHeader>{t("actions")}</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {loans.map((loan) => (
-                <Table.Row key={loan.id}>
-                  <Table.Cell>
-                    <Text title={loan.loan_code}>
-                      <Code variant="solid">{`${loan.loan_code}`}</Code>
-                    </Text>
-                  </Table.Cell>
-                  <Table.Cell>{formatDate(loan.start_date)}</Table.Cell>
-                  <Table.Cell>{formatDate(loan.end_date)}</Table.Cell>
-                  <Table.Cell>
-                    <Text title={loan.loaned_items_name}>
-                      {loan.loaned_items_name}
-                    </Text>
-                  </Table.Cell>
-                  <Table.Cell>{formatDate(loan.take_date)}</Table.Cell>
-                  <Table.Cell>{formatDate(loan.returned_date)}</Table.Cell>
-                  <Table.Cell>{loan.note}</Table.Cell>
-                  <Table.Cell>
-                    <Dialog.Root role="alertdialog">
-                      <Dialog.Trigger asChild>
-                        <Button
-                          onClick={() => setDelLoanCode(loan.loan_code)}
-                          aria-label="Ausleihe löschen"
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Trash2 />
-                        </Button>
-                      </Dialog.Trigger>
-                      <Portal>
-                        <Dialog.Backdrop />
-                        <Dialog.Positioner>
-                          <Dialog.Content>
-                            <Dialog.Header>
-                              <Dialog.Title>{t("sure")}</Dialog.Title>
-                            </Dialog.Header>
-                            <Dialog.Body>
-                              <Text>
-                                {t("sure-delete-loan-0")}
-                                <strong>
-                                  <Code>{delLoanCode}</Code>
-                                </strong>{" "}
-                                {t("sure-delete-loan-1")}
-                                <br />
-                                {t("sure-delete-loan-2")}
-                              </Text>
-                            </Dialog.Body>
-                            <Dialog.Footer>
-                              <Dialog.ActionTrigger asChild>
-                                <Button variant="outline">{t("cancel")}</Button>
-                              </Dialog.ActionTrigger>
-                              <Button
-                                colorPalette="red"
-                                onClick={() => deleteLoan(loan.id)}
-                              >
-                                <strong>{t("delete")}</strong>
-                              </Button>
-                            </Dialog.Footer>
-                            <Dialog.CloseTrigger asChild>
-                              <CloseButton size="sm" />
-                            </Dialog.CloseTrigger>
-                          </Dialog.Content>
-                        </Dialog.Positioner>
-                      </Portal>
-                    </Dialog.Root>
-                  </Table.Cell>
+            <Table.Root
+              size="sm"
+              variant="outline"
+              // minWidth ensures we don't cram all columns on tiny screens;
+              // horizontal scrolling will appear instead.
+              style={{ tableLayout: "fixed", width: "100%", minWidth: "800px" }}
+            >
+              <Table.ColumnGroup>
+                {/* Ausleihcode */}
+                <Table.Column style={{ width: "14%" }} />
+                {/* Startdatum */}
+                <Table.Column style={{ width: "14%" }} />
+                {/* Enddatum */}
+                <Table.Column style={{ width: "14%" }} />
+                {/* Geräte (flexibler) */}
+                <Table.Column style={{ width: "28%" }} />
+                {/* Ausleihdatum */}
+                <Table.Column style={{ width: "14%" }} />
+                {/* Rückgabedatum */}
+                <Table.Column style={{ width: "14%" }} />
+                {/* Notiz */}
+                <Table.Column style={{ width: "14%" }} />
+                {/* Aktionen */}
+                <Table.Column style={{ width: "8%" }} />
+              </Table.ColumnGroup>
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeader>{t("loan-code")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("start-date")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("end-date")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("devices")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("take-date")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("return-date")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("note")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("actions")}</Table.ColumnHeader>
                 </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
+              </Table.Header>
+              <Table.Body>
+                {loans.map((loan) => (
+                  <Table.Row key={loan.id}>
+                    <Table.Cell>
+                      <Text title={loan.loan_code}>
+                        <Code variant="solid">{`${loan.loan_code}`}</Code>
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>{formatDate(loan.start_date)}</Table.Cell>
+                    <Table.Cell>{formatDate(loan.end_date)}</Table.Cell>
+                    <Table.Cell>
+                      <Text title={loan.loaned_items_name}>
+                        {loan.loaned_items_name}
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>{formatDate(loan.take_date)}</Table.Cell>
+                    <Table.Cell>{formatDate(loan.returned_date)}</Table.Cell>
+                    <Table.Cell>{loan.note}</Table.Cell>
+                    <Table.Cell>
+                      <Dialog.Root role="alertdialog">
+                        <Dialog.Trigger asChild>
+                          <Button
+                            onClick={() => setDelLoanCode(loan.loan_code)}
+                            aria-label="Ausleihe löschen"
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Trash2 />
+                          </Button>
+                        </Dialog.Trigger>
+                        <Portal>
+                          <Dialog.Backdrop />
+                          <Dialog.Positioner>
+                            <Dialog.Content>
+                              <Dialog.Header>
+                                <Dialog.Title>{t("sure")}</Dialog.Title>
+                              </Dialog.Header>
+                              <Dialog.Body>
+                                <Text>
+                                  {t("sure-delete-loan-0")}
+                                  <strong>
+                                    <Code>{delLoanCode}</Code>
+                                  </strong>{" "}
+                                  {t("sure-delete-loan-1")}
+                                  <br />
+                                  {t("sure-delete-loan-2")}
+                                </Text>
+                              </Dialog.Body>
+                              <Dialog.Footer>
+                                <Dialog.ActionTrigger asChild>
+                                  <Button variant="outline">
+                                    {t("cancel")}
+                                  </Button>
+                                </Dialog.ActionTrigger>
+                                <Button
+                                  colorPalette="red"
+                                  onClick={() => deleteLoan(loan.id)}
+                                >
+                                  <strong>{t("delete")}</strong>
+                                </Button>
+                              </Dialog.Footer>
+                              <Dialog.CloseTrigger asChild>
+                                <CloseButton size="sm" />
+                              </Dialog.CloseTrigger>
+                            </Dialog.Content>
+                          </Dialog.Positioner>
+                        </Portal>
+                      </Dialog.Root>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+          </Box>
         )}
       </Container>
     </>

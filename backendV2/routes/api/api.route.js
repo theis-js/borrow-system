@@ -23,25 +23,16 @@ router.get("/items/:key", authenticate, async (req, res) => {
 });
 
 // Route for API to control the safe state of an item
-router.post(
-  "/change-state/:key/:itemId/:state",
-  authenticate,
-  async (req, res) => {
-    const itemId = req.params.itemId;
-    const state = req.params.state;
+router.post("/change-state/:key/:itemId", authenticate, async (req, res) => {
+  const itemId = req.params.itemId;
 
-    if (state === "1" || state === "0") {
-      const result = await changeInSafeStateV2(itemId, state);
-      if (result.success) {
-        res.status(200).json({ data: result.data });
-      } else {
-        res.status(500).json({ message: "Failed to update item state" });
-      }
-    } else {
-      res.status(400).json({ message: "Invalid state value" });
-    }
+  const result = await changeInSafeStateV2(itemId);
+  if (result.success) {
+    res.status(200).json({ data: result.data });
+  } else {
+    res.status(500).json({ message: "Failed to update item state" });
   }
-);
+});
 
 // Route for API to get a loan by its code
 router.get(

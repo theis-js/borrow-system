@@ -20,7 +20,7 @@ import apiRouter from "./routes/api/api.route.js";
 
 env.config();
 const app = express();
-const port = 8004;
+const port = 8102;
 
 app.use(cors());
 // Body-Parser VOR den Routen registrieren

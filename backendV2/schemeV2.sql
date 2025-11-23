@@ -47,10 +47,6 @@ CREATE TABLE items (
   UNIQUE KEY ux_items_safe_nr (safe_nr)
 ) ENGINE=InnoDB;
 
-CREATE UNIQUE INDEX ux_items_safe_nr_not_null
-ON items (safe_nr)
-WHERE safe_nr IS NOT NULL;
-
 CREATE TABLE apiKeys (
   id INT NOT NULL AUTO_INCREMENT,
   api_key CHAR(8) NOT NULL UNIQUE,

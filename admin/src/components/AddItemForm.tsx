@@ -30,7 +30,7 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, alert }) => {
             </Field.Root>
             <Field.Root>
               <Field.Label>Schließfachnummer (immer zwei Zahlen)</Field.Label>
-              <Input id="lockerNumber" placeholder="Nummer 01 - 06" />
+              <Input id="safe_nr" placeholder="Nummer 01 - 06" />
             </Field.Root>
             <Field.Root>
               <Field.Label>Ausleih-Berechtigung (Rolle)</Field.Label>
@@ -57,17 +57,16 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, alert }) => {
                 (document.getElementById("can_borrow_role") as HTMLInputElement)
                   ?.value
               );
-              const lockerValue = (
-                document.getElementById("lockerNumber") as HTMLInputElement
+              const safeNrValue = (
+                document.getElementById("safe_nr") as HTMLInputElement
               )?.value.trim();
 
-              const lockerNumber =
-                lockerValue === "" ? null : Number(lockerValue);
+              const safeNr = safeNrValue === "" ? null : safeNrValue;
 
               if (!name || Number.isNaN(role)) return;
-              if (lockerNumber !== null && Number.isNaN(lockerNumber)) return;
+              if (safeNr !== null && !/^\d{2}$/.test(safeNr)) return;
 
-              const res = await createItem(name, role, lockerNumber);
+              const res = await createItem(name, role, safeNr);
               if (res.success) {
                 alert(
                   "success",

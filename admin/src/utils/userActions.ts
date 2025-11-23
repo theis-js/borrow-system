@@ -165,7 +165,7 @@ export const deleteItem = async (itemId: number) => {
 export const createItem = async (
   item_name: string,
   can_borrow_role: number,
-  lockerNumber: number | null
+  lockerNumber: string | null
 ) => {
   console.log(JSON.stringify({ item_name, can_borrow_role, lockerNumber }));
   try {

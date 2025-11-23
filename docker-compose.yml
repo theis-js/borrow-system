@@ -6,7 +6,7 @@ services:
       - "8101:80"
     restart: unless-stopped
 
-  dmin-frontend:
+  admin-frontend:
     container_name: borrow_system-admin-frontend
     build: ./admin
     ports:
@@ -37,7 +37,7 @@ services:
     container_name: borrow_system-backend_v2
     build: ./backendV2
     ports:
-      - "8004:8004"
+      - "8102:8102"
     environment:
       NODE_ENV: production
       DB_HOST: mysql_v2

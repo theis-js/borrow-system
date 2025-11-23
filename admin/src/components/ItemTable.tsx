@@ -10,7 +10,6 @@ import {
   Heading,
   Icon,
   Input,
-  Box, // added
 } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import MyAlert from "./myChakra/MyAlert";
@@ -185,15 +184,9 @@ const ItemTable: React.FC = () => {
         />
       )}
 
-      {/* make table content-sized with horizontal scroll if needed */}
-      <Box overflowX="auto">
-        <Table.Root
-          size="sm"
-          striped
-          tableLayout="auto"
-          w="max-content"
-          whiteSpace="nowrap"
-        >
+      {/* make table fill available width, like UserTable */}
+      {!isLoading && (
+        <Table.Root size="sm" striped w="100%" style={{ tableLayout: "auto" }}>
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader>
@@ -353,7 +346,7 @@ const ItemTable: React.FC = () => {
             ))}
           </Table.Body>
         </Table.Root>
-      </Box>
+      )}
       <Text>* LaP = Letzte ausleihende Person</Text>
       <Text>** Dav = Derzeit ausgeliehen von</Text>
     </>

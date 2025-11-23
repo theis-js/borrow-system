@@ -32,10 +32,21 @@ export const createItem = async (item_name, can_borrow_role, lockerNumber) => {
   return { success: false };
 };
 
-export const editItemById = async (itemId, item_name, can_borrow_role) => {
+export const editItemById = async (
+  itemId,
+  item_name,
+  can_borrow_role,
+  safe_nr
+) => {
+  let newSafeNr;
+  if (safe_nr === null || safe_nr === "") {
+    newSafeNr = null;
+  } else {
+    newSafeNr = safe_nr;
+  }
   const [result] = await pool.query(
-    "UPDATE items SET item_name = ?, can_borrow_role = ?, entry_updated_at = NOW() WHERE id = ?",
-    [item_name, can_borrow_role, itemId]
+    "UPDATE items SET item_name = ?, can_borrow_role = ?, safe_nr = ?, entry_updated_at = NOW() WHERE id = ?",
+    [item_name, can_borrow_role, newSafeNr, itemId]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

@@ -200,7 +200,6 @@ export const handleEditItems = async (
   safe_nr: string | null,
   can_borrow_role: string
 ) => {
-  const newSafeNr = Number(safe_nr || 0);
   try {
     const response = await fetch(
       `${API_BASE}/api/admin/item-data/edit-item/${itemId}`,
@@ -210,7 +209,7 @@ export const handleEditItems = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ item_name, newSafeNr, can_borrow_role }),
+        body: JSON.stringify({ item_name, safe_nr, can_borrow_role }),
       }
     );
     if (!response.ok) {

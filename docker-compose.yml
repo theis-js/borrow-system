@@ -1,17 +1,17 @@
 services:
-  #  usr-frontend_v2:
-  #    container_name: borrow_system-usr-frontend
-  #    build: ./FrontendV2
-  #    ports:
-  #      - "8001:80"
-  #    restart: unless-stopped
+  usr-frontend_v2:
+    container_name: borrow_system-usr-frontend
+    build: ./FrontendV2
+    ports:
+      - "8101:80"
+    restart: unless-stopped
 
-  #  admin-frontend:
-  #    container_name: borrow_system-admin-frontend
-  #    build: ./admin
-  #    ports:
-  #      - "8003:80"
-  #    restart: unless-stopped
+  dmin-frontend:
+    container_name: borrow_system-admin-frontend
+    build: ./admin
+    ports:
+      - "8103:80"
+    restart: unless-stopped
 
   #backend:
   #  container_name: borrow_system-backend

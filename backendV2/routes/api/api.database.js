@@ -114,3 +114,14 @@ export const getAllLoansV2 = async () => {
   }
   return { success: false };
 };
+
+export const openDoor = async (doorKey) => {
+  const [result] = await pool.query(
+    "SELECT lockers FROM doorKeys WHERE door_key = ?;",
+    [doorKey]
+  );
+  if (result.length > 0) {
+    return { success: true, data: result[0] };
+  }
+  return { success: false };
+};

@@ -3,14 +3,15 @@
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import * as React from "react";
 import type { ReactNode } from "react";
+import { ColorModeProvider as ThemeColorModeProvider } from "./color-mode";
 
 export interface ColorModeProviderProps {
   children: React.ReactNode;
 }
 
 export function ColorModeProvider({ children }: ColorModeProviderProps) {
-  // add real color-mode logic here if you need it
-  return <>{children}</>;
+  // Wrap children with the real color-mode provider
+  return <ThemeColorModeProvider>{children}</ThemeColorModeProvider>;
 }
 
 export function Provider({ children }: { children: ReactNode }) {

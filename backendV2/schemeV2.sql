@@ -38,6 +38,7 @@ CREATE TABLE items (
   can_borrow_role INT NOT NULL,
   in_safe bool NOT NULL DEFAULT true,
   safe_nr INT DEFAULT NULL UNIQUE,
+  door_key INT DEFAULT NULL UNIQUE,
   entry_created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   entry_updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   last_borrowed_person varchar(255) DEFAULT NULL,
@@ -53,11 +54,4 @@ CREATE TABLE apiKeys (
   entry_created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   CHECK (api_key REGEXP '^[0-9]{8}$')
-) ENGINE=InnoDB;
-
-CREATE TABLE doorKeys (
-	id int NOT NULL AUTO_INCREMENT,
-  door_key INT NOT NULL,
-  lockers INT NOT NULL,
-  PRIMARY KEY (id)
 ) ENGINE=InnoDB;

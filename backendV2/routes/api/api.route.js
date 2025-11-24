@@ -80,6 +80,7 @@ router.post(
   }
 );
 
+// Route for API to open a door
 router.get("/open-door/:key/:doorKey", authenticate, async (req, res) => {
   const doorKey = req.params.doorKey;
 

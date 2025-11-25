@@ -1,87 +1,88 @@
-# Backend API (V2) Documentation
+# Borrow System API Documentation
 
-This document describes the current backend API routes and their real response shapes, based on the code in `backendV2`.
-
----
-
-## Base URLs
-
-- Frontend: `https://insta.the1s.de`
-- Backend: `https://backend.insta.the1s.de`
-- Base path: `https://backend.insta.the1s.de/api`
-
-Service status: `https://status.the1s.de`
+**Frontend:** https://insta.the1s.de  
+**Backend base URL:** `https://backend.insta.the1s.de/api`
 
 ---
 
 ## Authentication
 
-All **protected** endpoints require an API key as a path parameter `:key`.
+All API endpoints require **either**:
 
-Rules for `:key`:
+### 1. Bearer Token (JWT)
 
-- Exactly 8 characters
-- Digits only (`^[0-9]{8}$`)
+Send an `Authorization` header:
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+- Used for user-based access.
+- Token must be valid and not expired.
+
+### 2. API Key (for devices / machine-to-machine)
+
+Include an API key in the route as `:key` parameter:
+
+```text
+/api/.../:key/...
+```
 
 Example:
 
 ```http
-GET /api/items/12345678
+GET /api/items/ABC123
 ```
 
-On missing / invalid key:
-
-- Status: `401 Unauthorized`
-- Body (exact message depends on `authenticate` in `backendV2/services/authentication.js`)
-
-Auth-related modules:
-
-- `backendV2/services/authentication.js`
-- `backendV2/services/database.js`
-
-Route handlers:
-
-- `backendV2/routes/api/api.route.js`
-- `backendV2/routes/api/api.database.js`
+Where `ABC123` is your API key.  
+The API key is validated server-side.
 
 ---
 
-## Endpoints (Overview)
+## Common Response Codes
 
-1. **Public**
-
-   - `GET /api/all-items` – List all items (no auth; from original docs)
-
-2. **Items (authenticated)**
-
-   - `GET /api/items/:key` – List all items
-   - `POST /api/change-state/:key/:itemId/:state` – Toggle item safe state
-
-3. **Loans (authenticated)**
-   - `GET /api/get-loan-by-code/:key/:loan_code` – Get loan by code
-   - `POST /api/set-take-date/:key/:loan_code` – Set “take” date and mark items as out
-   - `POST /api/set-return-date/:key/:loan_code` – Set “return” date and mark items as returned
+- `200 OK` – Request was successful.
+- `401 Unauthorized` – Missing or malformed credentials.
+- `403 Forbidden` – Credentials invalid or not allowed to access this resource.
+- `404 Not Found` – Resource (e.g., loan) not found.
+- `500 Internal Server Error` – Unexpected server error.
 
 ---
 
-## 1) Items
+## Endpoints
 
-### 1.1 Get all items
+### 1. Get All Items
 
 **GET** `/api/items/:key`
 
-Returns all items wrapped in a `data` property.
+Returns a list of all items.
 
-- Handler: `getItemsFromDatabaseV2` in `api.database.js`
-- SQL: `SELECT * FROM items;`
+#### Path Parameters
 
-#### Example request
+- `:key` – API key (string)
+
+#### Authentication
+
+- Either:
+  - Valid `Authorization: Bearer <token>`
+  - Or valid `:key` path parameter
+
+#### Request Example
 
 ```http
-GET https://backend.insta.the1s.de/api/items/12345678
+GET /api/items/ABC123 HTTP/1.1
+Host: backend.insta.the1s.de
 ```
 
-#### Successful response
+or
+
+```http
+GET /api/items/dummyKey HTTP/1.1
+Host: backend.insta.the1s.de
+Authorization: Bearer <JWT_TOKEN>
+```
+
+#### Successful Response (200)
 
 ```json
 {
@@ -90,8 +91,9 @@ GET https://backend.insta.the1s.de/api/items/12345678
       "id": 1,
       "item_name": "DJI 1er Mikro",
       "can_borrow_role": 4,
-      "in_safe": 1,
-      "safe_nr": "01",
+      "inSafe": 1,
+      "safe_nr": 3,
+      "door_key": "123",
       "entry_created_at": "2025-08-19T22:02:16.000Z",
       "entry_updated_at": "2025-08-19T22:02:16.000Z",
       "last_borrowed_person": "alice",
@@ -101,245 +103,271 @@ GET https://backend.insta.the1s.de/api/items/12345678
 }
 ```
 
-#### Error response
+#### Error Response (500)
 
 ```json
-{ "message": "Failed to fetch items" }
+{
+  "message": "Failed to fetch items"
+}
 ```
-
-#### Status codes
-
-- `200 OK` – success, `data` is an array (possibly empty)
-- `401 Unauthorized` – invalid / missing key
-- `500 Internal Server Error` – database error or `success: false` from DB layer
 
 ---
 
-### 2.2 Toggle item safe state
+### 2. Toggle Item Safe State
+
+Toggles `in_safe` between `0` and `1` for a given item.
+
+**Keep in mind that when you return a loan by code, the item states are automatically updated.**
 
 **POST** `/api/change-state/:key/:itemId`
 
-> You do not need this endpoint to set the states of the items when the items are taken out or returned. When you take or return a loan, the item states are set automatically by the loan endpoints. This endpoint is only for manually toggling the `inSafe` state of an item.
+#### Path Parameters
 
-Path parameters:
+- `:key` – API key (string)
+- `:itemId` – Item ID (integer)
 
-- `:key` – API key (8 digits)
-- `:itemId` – numeric `id` of the item
+#### Authentication
 
-Handler in `api.route.js` calls `changeInSafeStateV2(itemId)`, which executes:
+- Either Bearer token or `:key` API key.
 
-```sql
-UPDATE items SET in_safe = NOT in_safe WHERE id = ?
-```
-
-#### Example request
+#### Request Example
 
 ```http
-POST https://backend.insta.the1s.de/api/change-state/12345678/42
+POST /api/change-state/ABC123/42 HTTP/1.1
+Host: backend.insta.the1s.de
 ```
 
-(Will toggle `in_safe` for item `42`.)
-
-#### Successful response (current implementation)
+#### Successful Response (200)
 
 ```json
 {
-  "data": null
+  "data": {}
 }
 ```
 
-#### Error responses
+_(Implementation currently only returns `{ success: true }`, so `data` may be empty.)_
 
-Invalid `state` (anything other than `"0"` or `"1"`):
-
-```json
-{ "message": "Invalid state value" }
-```
-
-Failed update:
+#### Error Response (500)
 
 ```json
-{ "message": "Failed to update item state" }
+{
+  "message": "Failed to update item state"
+}
 ```
-
-#### Status codes
-
-- `200 OK` – item state toggled
-- `400 Bad Request` – invalid `state` parameter
-- `401 Unauthorized` – invalid / missing key
-- `500 Internal Server Error` – database/update failure or `success: false` from DB layer
 
 ---
 
-## 3) Loans
+### 3. Get Loan by Code
 
-### 3.1 Get loan by code
+Fetch loan information by `loan_code`.
 
 **GET** `/api/get-loan-by-code/:key/:loan_code`
 
-Path parameters:
+#### Path Parameters
 
-- `:key` – API key
-- `:loan_code` – 6-digit loan code (`^[0-9]{6}$` per DB constraint)
+- `:key` – API key (string)
+- `:loan_code` – Loan code (string)
 
-Database layer (`getLoanByCodeV2`) currently selects:
+#### Authentication
 
-```sql
-SELECT first_name, returned_date, take_date, lockers
-FROM loans
-WHERE loan_code = ?;
-```
+- Either Bearer token or `:key` API key.
 
-#### Example request
+#### Request Example
 
 ```http
-GET https://backend.insta.the1s.de/api/get-loan-by-code/12345678/646473
+GET /api/get-loan-by-code/ABC123/12345 HTTP/1.1
+Host: backend.insta.the1s.de
 ```
 
-#### Successful response
+#### Successful Response (200)
 
 ```json
 {
   "data": {
-    "first_name": "Theis",
+    "username": "john",
     "returned_date": null,
-    "take_date": "2025-08-25T13:23:00.000Z",
-    "lockers": ["01", "03"]
+    "take_date": "2025-01-01T10:00:00.000Z",
+    "lockers": "[1, 2, 3]"
   }
 }
 ```
 
-#### Error response
-
-```json
-{ "message": "Loan not found" }
-```
-
-#### Status codes
-
-- `200 OK` – loan found
-- `401 Unauthorized` – invalid / missing key
-- `404 Not Found` – no matching loan for this `loan_code`
-
----
-
-### 3.2 Set take date
-
-**POST** `/api/set-take-date/:key/:loan_code`
-
-Path parameters:
-
-- `:key` – API key
-- `:loan_code` – loan code
-
-#### Example request
-
-```http
-POST https://backend.insta.the1s.de/api/set-take-date/12345678/646473
-```
-
-#### Successful response
+#### Error Response (404)
 
 ```json
 {
-  "data": null
+  "message": "Loan not found"
 }
 ```
 
-#### Error response
-
-```json
-{ "message": "Failed to set take date" }
-```
-
-#### Status codes
-
-- `200 OK` – take date set and items marked as out
-- `401 Unauthorized` – invalid / missing key
-- `500 Internal Server Error` – invalid loan, missing items, or DB error / `success: false`
-
 ---
 
-### 3.3 Set return date
+### 4. Set Loan Return Date
+
+Sets `returned_date = NOW()` on a loan and updates related items:
+
+- `in_safe = 1`
+- `currently_borrowing = NULL`
+- `last_borrowed_person = username`
 
 **POST** `/api/set-return-date/:key/:loan_code`
 
-Path parameters:
+#### Path Parameters
 
-- `:key` – API key
-- `:loan_code` – loan code
+- `:key` – API key (string)
+- `:loan_code` – Loan code (string)
 
-#### Example request
+#### Authentication
+
+- Either Bearer token or `:key` API key.
+
+#### Request Example
 
 ```http
-POST https://backend.insta.the1s.de/api/set-return-date/12345678/646473
+POST /api/set-return-date/ABC123/12345 HTTP/1.1
+Host: backend.insta.the1s.de
 ```
 
-#### Successful response (current implementation)
+#### Successful Response (200)
 
 ```json
 {
-  "data": null
+  "data": {}
 }
 ```
 
-#### Error response
+#### Error Response (500)
 
 ```json
-{ "message": "Failed to set return date" }
+{
+  "message": "Failed to set return date"
+}
 ```
-
-#### Status codes
-
-- `200 OK` – return date set and items marked as returned
-- `401 Unauthorized` – invalid / missing key
-- `500 Internal Server Error` – invalid loan, missing items, or DB error / `success: false`
 
 ---
 
-## Common Response Shapes
+### 5. Set Loan Take Date
 
-**Success – list (authenticated items):**
+Sets `take_date = NOW()` on a loan and updates related items:
+
+- `in_safe = 0`
+- `currently_borrowing = username`
+
+**POST** `/api/set-take-date/:key/:loan_code`
+
+#### Path Parameters
+
+- `:key` – API key (string)
+- `:loan_code` – Loan code (string)
+
+#### Authentication
+
+- Either Bearer token or `:key` API key.
+
+#### Request Example
+
+```http
+POST /api/set-take-date/ABC123/LOAN-12345 HTTP/1.1
+Host: backend.insta.the1s.de
+```
+
+#### Successful Response (200)
 
 ```json
 {
-  "data": [
-    /* array of rows */
-  ]
+  "data": {}
 }
 ```
 
-**Success – single loan:**
+#### Error Response (500)
+
+```json
+{
+  "message": "Failed to set take date"
+}
+```
+
+---
+
+### 6. Open Door by Door Key
+
+Looks up an item by its `door_key`, toggles `in_safe`, and returns safe information.
+
+**GET** `/api/open-door/:key/:doorKey`
+
+#### Path Parameters
+
+- `:key` – API key (string)
+- `:doorKey` – Door key/token (string) used by hardware to identify the locker.
+
+#### Authentication
+
+- Either Bearer token or `:key` API key.
+
+#### Request Example
+
+```http
+GET /api/open-door/ABC123/123 HTTP/1.1
+Host: backend.insta.the1s.de
+```
+
+#### Successful Response (200)
 
 ```json
 {
   "data": {
-    /* selected loan fields */
+    "safe_nr": 5,
+    "id": 42
   }
 }
 ```
 
-**Success – mutations (current code):**
+#### Error Response (500)
 
 ```json
-{ "data": null }
+{
+  "message": "Failed to open door"
+}
 ```
 
-**Errors:**
+---
+
+## Authentication Error Messages
+
+### Missing credentials
+
+Status: `401`
 
 ```json
-{ "message": "Failed to fetch items" }
-{ "message": "Failed to update item state" }
-{ "message": "Invalid state value" }
-{ "message": "Loan not found" }
-{ "message": "Failed to set return date" }
-{ "message": "Failed to set take date" }
+{
+  "message": "Unauthorized"
+}
 ```
 
-**HTTP Status Codes:**
+### Invalid JWT
 
-- `200 OK` – operation succeeded
-- `400 Bad Request` – invalid `state` parameter
-- `401 Unauthorized` – invalid/missing API key
-- `404 Not Found` – loan not found
-- `500 Internal Server Error` – database / server failure or `success: false` from DB layer
+Status: `403`
+
+```json
+{
+  "message": "Present token invalid"
+}
+```
+
+### Invalid API Key
+
+Status: `403`
+
+```json
+{
+  "message": "API Key invalid"
+}
+```
+
+---
+
+## Notes
+
+- All responses are JSON.
+- Time fields like `take_date` and `returned_date` are in the format returned by MySQL (usually ISO-like strings).
+- `loaned_items_id` in the database is stored as a JSON array string (e.g. `"[1,2,3]"`) and is parsed internally; clients do not interact with this field directly via current endpoints.

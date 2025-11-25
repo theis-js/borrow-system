@@ -114,3 +114,22 @@ export const getAllLoansV2 = async () => {
   }
   return { success: false };
 };
+
+export const openDoor = async (doorKey) => {
+  const [result] = await pool.query(
+    "SELECT safe_nr, id FROM items WHERE door_key = ?;",
+    [doorKey]
+  );
+  if (result.length > 0) {
+    const [changeItemSate] = await pool.query(
+      "UPDATE items SET in_safe = NOT in_safe WHERE id = ?",
+      [result[0].id]
+    );
+    if (changeItemSate.affectedRows > 0) {
+      return { success: true, data: result[0] };
+    } else {
+      return { success: false };
+    }
+  }
+  return { success: false };
+};

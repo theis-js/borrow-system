@@ -69,12 +69,20 @@ export const createLoanInDatabase = async (
       )
       .filter(Boolean);
 
-    // Build lockers array (unique, only 2-digit strings)
+    // Build lockers array (unique, only 2-digit numbers from safe_nr)
     const lockers = [
       ...new Set(
         itemsRows
           .map((r) => r.safe_nr)
-          .filter((sn) => typeof sn === "string" && /^\d{2}$/.test(sn))
+          .filter(
+            (sn) =>
+              sn !== null &&
+              sn !== undefined &&
+              Number.isInteger(Number(sn)) &&
+              Number(sn) >= 0 &&
+              Number(sn) <= 99
+          )
+          .map((sn) => Number(sn))
       ),
     ];
 

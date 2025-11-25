@@ -36,7 +36,8 @@ export const editItemById = async (
   itemId,
   item_name,
   can_borrow_role,
-  safe_nr
+  safe_nr,
+  door_key
 ) => {
   let newSafeNr;
   if (safe_nr === null || safe_nr === "") {
@@ -45,8 +46,8 @@ export const editItemById = async (
     newSafeNr = safe_nr;
   }
   const [result] = await pool.query(
-    "UPDATE items SET item_name = ?, can_borrow_role = ?, safe_nr = ?, entry_updated_at = NOW() WHERE id = ?",
-    [item_name, can_borrow_role, newSafeNr, itemId]
+    "UPDATE items SET item_name = ?, can_borrow_role = ?, safe_nr = ?, door_key = ?, entry_updated_at = NOW() WHERE id = ?",
+    [item_name, can_borrow_role, newSafeNr, door_key, itemId]
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };

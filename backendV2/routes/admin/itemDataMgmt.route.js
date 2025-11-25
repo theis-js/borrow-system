@@ -41,13 +41,14 @@ router.post("/create-item", authenticateAdmin, async (req, res) => {
 
 router.post("/edit-item/:id", authenticateAdmin, async (req, res) => {
   const itemId = req.params.id;
-  const { item_name, can_borrow_role, safe_nr } = req.body;
+  const { item_name, can_borrow_role, safe_nr, door_key } = req.body;
 
   const result = await editItemById(
     itemId,
     item_name,
     can_borrow_role,
-    safe_nr
+    safe_nr,
+    door_key
   );
   if (result.success) {
     return res.status(200).json({ message: "Item edited successfully" });

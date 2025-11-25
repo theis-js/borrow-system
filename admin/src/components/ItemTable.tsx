@@ -38,6 +38,7 @@ type Items = {
   can_borrow_role: string;
   in_safe: boolean;
   safe_nr: string;
+  door_key: string;
   entry_created_at: string;
   entry_updated_at: string;
   last_borrowed_person: string | null;
@@ -69,6 +70,12 @@ const ItemTable: React.FC = () => {
   const handleLockerNumberChange = (id: number, value: string) => {
     setItems((prev) =>
       prev.map((it) => (it.id === id ? { ...it, safe_nr: value } : it))
+    );
+  };
+
+  const handleDoorKeyChange = (id: number, value: string) => {
+    setItems((prev) =>
+      prev.map((it) => (it.id === id ? { ...it, door_key: value } : it))
     );
   };
 
@@ -205,6 +212,9 @@ const ItemTable: React.FC = () => {
                 <strong>Schließfachnummer</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
+                <strong>Schlüssel</strong>
+              </Table.ColumnHeader>
+              <Table.ColumnHeader>
                 <strong>Eintrag erstellt am</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
@@ -290,6 +300,16 @@ const ItemTable: React.FC = () => {
                     value={item.safe_nr}
                   />
                 </Table.Cell>
+                <Table.Cell>
+                  <Input
+                    size="sm"
+                    w="max-content"
+                    onChange={(e) =>
+                      handleDoorKeyChange(item.id, e.target.value)
+                    }
+                    value={item.door_key}
+                  />
+                </Table.Cell>
                 <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
                 <Table.Cell>{formatDateTime(item.entry_updated_at)}</Table.Cell>
                 <Table.Cell>{item.last_borrowed_person}</Table.Cell>
@@ -301,6 +321,7 @@ const ItemTable: React.FC = () => {
                         item.id,
                         item.item_name,
                         item.safe_nr,
+                        item.door_key,
                         item.can_borrow_role
                       ).then((response) => {
                         if (response.success) {

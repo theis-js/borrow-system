@@ -184,7 +184,7 @@ export const createItem = async (
       return {
         success: false,
         message:
-          "Fehler beim Erstellen des Gegenstands. Der Name des Gegenstandes darf nicht mehrmals vergeben werden.",
+          "Fehler beim Erstellen des Gegenstands. Der Name des Gegenstandes und die Schließfachnummer dürfen nicht mehrmals vergeben werden.",
       };
     }
     return { success: true };
@@ -198,6 +198,7 @@ export const handleEditItems = async (
   itemId: number,
   item_name: string,
   safe_nr: string | null,
+  door_key: string | null,
   can_borrow_role: string
 ) => {
   try {
@@ -209,7 +210,7 @@ export const handleEditItems = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ item_name, safe_nr, can_borrow_role }),
+        body: JSON.stringify({ item_name, safe_nr, door_key, can_borrow_role }),
       }
     );
     if (!response.ok) {

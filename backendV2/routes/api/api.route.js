@@ -10,6 +10,7 @@ import {
   setTakeDateV2,
   setReturnDateV2,
   getLoanByCodeV2,
+  openDoor,
 } from "./api.database.js";
 
 // Route for API to get all items from the database
@@ -78,5 +79,17 @@ router.post(
     }
   }
 );
+
+// Route for API to open a door
+router.get("/open-door/:key/:doorKey", authenticate, async (req, res) => {
+  const doorKey = req.params.doorKey;
+
+  const result = await openDoor(doorKey);
+  if (result.success) {
+    res.status(200).json({ data: result.data });
+  } else {
+    res.status(500).json({ message: "Failed to open door" });
+  }
+});
 
 export default router;

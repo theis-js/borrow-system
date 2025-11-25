@@ -2,6 +2,38 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
+const formatDateTime = (value) => {
+  if (value == null) return "N/A";
+
+  const toOut = (d) => {
+    if (!(d instanceof Date) || isNaN(d.getTime())) return "N/A";
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mi = String(d.getMinutes()).padStart(2, "0");
+    return `${dd}.${mm}.${yyyy} ${hh}:${mi} Uhr`;
+  };
+
+  if (value instanceof Date) return toOut(value);
+  if (typeof value === "number") return toOut(new Date(value));
+
+  const s = String(value).trim();
+
+  // Direct pattern: "YYYY-MM-DD[ T]HH:mm[:ss]"
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::\d{2})?/);
+  if (m) {
+    const [, y, M, d, h, min] = m;
+    return `${d}.${M}.${y} ${h}:${min} Uhr`;
+  }
+
+  // ISO or other parseable formats
+  const dObj = new Date(s);
+  if (!isNaN(dObj.getTime())) return toOut(dObj);
+
+  return "N/A";
+};
+
 function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
   const brand = process.env.MAIL_BRAND_COLOR || "#0ea5e9";
   const itemsList =
@@ -142,7 +174,8 @@ export function sendMailLoan(user, items, startDate, endDate, createdDate) {
       html: buildLoanEmail({ user, items, startDate, endDate, createdDate }),
     });
 
-    console.log("Message sent:", info.messageId);
+    // debugging logs
+    // console.log("Message sent:", info.messageId);
   })();
-  console.log("sendMailLoan called");
+  // console.log("sendMailLoan called");
 }

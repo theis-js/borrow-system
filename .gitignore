@@ -113,3 +113,7 @@ secrets/
 keys/
 
 ToDo.txt
+
+
+# only in development branch
+next-env.d.ts

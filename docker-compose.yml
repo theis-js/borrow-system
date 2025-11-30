@@ -12,7 +12,6 @@ services:
     container_name: borrow_system-admin-frontend
     networks:
       - proxynet
-      - borrow_system-internal
     build: ./admin
     ports:
       - "8103:80"

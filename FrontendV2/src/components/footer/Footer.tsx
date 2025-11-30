@@ -14,7 +14,7 @@ export const Footer = () => {
       left="0"
       right="0"
     >
-      Made with ❤️ by Theis Gaedigk - Year 2019 at MCS-Bochum
+      Made with ❤️ by Theis Gaedigk - Class of 2019 at MCS-Bochum
       <br />
       Frontend-Version: {info ? info["frontend-info"].version : "N/A"} |
       Backend-Version: {info ? info["backend-info"].version : "N/A"}

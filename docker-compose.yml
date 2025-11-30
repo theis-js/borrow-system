@@ -59,4 +59,4 @@ networks:
   proxynet:
     external: true
   borrow_system-internal:
-    external: false
+    external: true

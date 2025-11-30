@@ -3,7 +3,6 @@ services:
     container_name: borrow_system-usr-frontend
     networks:
       - proxynet
-      - borrow_system-internal
     build: ./FrontendV2
     ports:
       - "8101:80"
@@ -23,7 +22,6 @@ services:
     container_name: borrow_system-backend_v2
     networks:
       - proxynet
-      - borrow_system-internal
     build: ./backendV2
     ports:
       - "8102:8102"
@@ -40,7 +38,7 @@ services:
   mysql_v2:
     container_name: borrow_system-mysql-v2
     networks:
-      - borrow_system-internal
+      - proxynet
     image: mysql:8.0
     restart: unless-stopped
     environment:
@@ -57,6 +55,4 @@ volumes:
 
 networks:
   proxynet:
-    external: true
-  borrow_system-internal:
     external: true

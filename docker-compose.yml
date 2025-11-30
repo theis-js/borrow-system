@@ -50,8 +50,6 @@ services:
     volumes:
       - mysql-v2-data:/var/lib/mysql
       - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
-    ports:
-      - "3310:3306"
 
 volumes:
   mysql-data:

@@ -63,7 +63,7 @@
     "timezone-info": "The displayed dates and times are shown in Berlin timezone and must also be entered as such.",
     "optional-note": "Optional note",
     "note": "Note",
-    "user-info-desc": "Here you can view and edit your personal information.",
+    "user-info-desc": "Here you can view your personal information and change your password. If you need to make further changes, please contact an administrator.",
     "role": "Role",
     "admin-status": "Admin status",
     "first-name": "First name",

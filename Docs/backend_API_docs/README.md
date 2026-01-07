@@ -31,10 +31,10 @@ Include an API key in the route as `:key` parameter:
 Example:
 
 ```http
-GET /api/items/ABC123
+GET /api/items/12345678
 ```
 
-Where `ABC123` is your API key.  
+Where `12345678` is your API key.  
 The API key is validated server-side.
 
 ---
@@ -59,7 +59,7 @@ Returns a list of all items.
 
 #### Path Parameters
 
-- `:key` – API key (string)
+- `:key` – API key (8-digit number)
 
 #### Authentication
 
@@ -70,14 +70,7 @@ Returns a list of all items.
 #### Request Example
 
 ```http
-GET /api/items/ABC123 HTTP/1.1
-Host: backend.insta.the1s.de
-```
-
-or
-
-```http
-GET /api/items/dummyKey HTTP/1.1
+GET /api/items/12345678 HTTP/1.1
 Host: backend.insta.the1s.de
 Authorization: Bearer <JWT_TOKEN>
 ```
@@ -123,7 +116,7 @@ Toggles `in_safe` between `0` and `1` for a given item.
 
 #### Path Parameters
 
-- `:key` – API key (string)
+- `:key` – API key (8-digit number)
 - `:itemId` – Item ID (integer)
 
 #### Authentication
@@ -133,7 +126,7 @@ Toggles `in_safe` between `0` and `1` for a given item.
 #### Request Example
 
 ```http
-POST /api/change-state/ABC123/42 HTTP/1.1
+POST /api/change-state/12345678/42 HTTP/1.1
 Host: backend.insta.the1s.de
 ```
 
@@ -165,7 +158,7 @@ Fetch loan information by `loan_code`.
 
 #### Path Parameters
 
-- `:key` – API key (string)
+- `:key` – API key (8-digit number)
 - `:loan_code` – Loan code (string)
 
 #### Authentication
@@ -175,7 +168,7 @@ Fetch loan information by `loan_code`.
 #### Request Example
 
 ```http
-GET /api/get-loan-by-code/ABC123/12345 HTTP/1.1
+GET /api/get-loan-by-code/12345678/12345 HTTP/1.1
 Host: backend.insta.the1s.de
 ```
 
@@ -214,7 +207,7 @@ Sets `returned_date = NOW()` on a loan and updates related items:
 
 #### Path Parameters
 
-- `:key` – API key (string)
+- `:key` – API key (8-digit number)
 - `:loan_code` – Loan code (string)
 
 #### Authentication
@@ -224,7 +217,7 @@ Sets `returned_date = NOW()` on a loan and updates related items:
 #### Request Example
 
 ```http
-POST /api/set-return-date/ABC123/12345 HTTP/1.1
+POST /api/set-return-date/12345678/12345 HTTP/1.1
 Host: backend.insta.the1s.de
 ```
 
@@ -257,7 +250,7 @@ Sets `take_date = NOW()` on a loan and updates related items:
 
 #### Path Parameters
 
-- `:key` – API key (string)
+- `:key` – API key (8-digit number)
 - `:loan_code` – Loan code (string)
 
 #### Authentication
@@ -267,7 +260,7 @@ Sets `take_date = NOW()` on a loan and updates related items:
 #### Request Example
 
 ```http
-POST /api/set-take-date/ABC123/LOAN-12345 HTTP/1.1
+POST /api/set-take-date/12345678/LOAN-12345 HTTP/1.1
 Host: backend.insta.the1s.de
 ```
 
@@ -297,7 +290,7 @@ Looks up an item by its `door_key`, toggles `in_safe`, and returns safe informat
 
 #### Path Parameters
 
-- `:key` – API key (string)
+- `:key` – API key (8-digit number)
 - `:doorKey` – Door key/token (string) used by hardware to identify the locker.
 
 #### Authentication
@@ -307,7 +300,7 @@ Looks up an item by its `door_key`, toggles `in_safe`, and returns safe informat
 #### Request Example
 
 ```http
-GET /api/open-door/ABC123/123 HTTP/1.1
+GET /api/open-door/12345678/123 HTTP/1.1
 Host: backend.insta.the1s.de
 ```
 

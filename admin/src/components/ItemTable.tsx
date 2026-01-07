@@ -193,7 +193,12 @@ const ItemTable: React.FC = () => {
 
       {/* make table fill available width, like UserTable */}
       {!isLoading && (
-        <Table.Root size="sm" striped w="100%" style={{ tableLayout: "auto" }}>
+        <Table.Root
+          size="sm"
+          striped
+          w="100%"
+          style={{ tableLayout: "auto" }} // Spalten nach Content
+        >
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader>
@@ -208,10 +213,10 @@ const ItemTable: React.FC = () => {
               <Table.ColumnHeader>
                 <strong>Im Schließfach</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
                 <strong>Schließfachnummer</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
                 <strong>Schlüssel</strong>
               </Table.ColumnHeader>
               <Table.ColumnHeader>
@@ -226,7 +231,7 @@ const ItemTable: React.FC = () => {
               <Table.ColumnHeader>
                 <strong>Dav **</strong>
               </Table.ColumnHeader>
-              <Table.ColumnHeader>
+              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
                 <strong>Aktionen</strong>
               </Table.ColumnHeader>
             </Table.Row>
@@ -314,7 +319,7 @@ const ItemTable: React.FC = () => {
                 <Table.Cell>{formatDateTime(item.entry_updated_at)}</Table.Cell>
                 <Table.Cell>{item.last_borrowed_person}</Table.Cell>
                 <Table.Cell>{item.currently_borrowing}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell whiteSpace="nowrap">
                   <Button
                     onClick={() =>
                       handleEditItems(

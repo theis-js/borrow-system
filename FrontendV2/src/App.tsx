@@ -16,6 +16,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { Footer } from "./components/footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { API_BASE } from "@/config/api.config";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 const queryClient = new QueryClient();
 
@@ -83,6 +84,7 @@ function App() {
                 </Route>
 
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/not-found" element={<NotFoundPage />} />
               </Routes>
             </BrowserRouter>
           </UserContext.Provider>

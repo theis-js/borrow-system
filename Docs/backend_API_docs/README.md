@@ -1,7 +1,7 @@
 # Borrow System API Documentation
 
 **Frontend:** https://insta.the1s.de  
-**Backend base URL:** `https://backend.insta.the1s.de/api`
+**Backend base URL:** `https://insta.the1s.de/backend/api`
 
 ---
 

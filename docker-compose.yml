@@ -16,8 +16,6 @@ services:
   backend_v2:
     container_name: borrow_system-backend_v2
     build: ./backendV2
-    ports:
-      - "8004:8004"
     environment:
       NODE_ENV: production
       DB_HOST: mysql_v2

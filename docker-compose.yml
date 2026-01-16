@@ -22,8 +22,6 @@ services:
     networks:
       - proxynet
     build: ./backendV2
-    ports:
-      - "8102:8102"
     environment:
       NODE_ENV: production
       DB_HOST: mysql_v2

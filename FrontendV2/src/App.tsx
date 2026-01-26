@@ -16,6 +16,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { Footer } from "./components/footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { API_BASE } from "@/config/api.config";
+import { ContactPage } from "./pages/ContactPage";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/my-loans" element={<MyLoansPage />} />
                   <Route path="/landingpage" element={<Landingpage />} />
+                  <Route path="/contact" element={<ContactPage />} />
                 </Route>
 
                 <Route path="/login" element={<LoginPage />} />

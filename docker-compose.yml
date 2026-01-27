@@ -18,6 +18,8 @@ services:
     networks:
       - proxynet
     build: ./backendV2
+    ports:
+      - "8004:8004"
     environment:
       NODE_ENV: production
       DB_HOST: mysql_v2

@@ -6,6 +6,7 @@ dotenv.config();
 
 // database funcs import
 import { loginFunc, changePassword } from "./database/userMgmt.database.js";
+import { sendMail } from "./services/mailer_v2.js";
 
 router.post("/login", async (req, res) => {
   const result = await loginFunc(req.body.username, req.body.password);
@@ -33,6 +34,15 @@ router.post("/change-password", authenticate, async (req, res) => {
   } else {
     res.status(500).json({ message: "Failed to change password" });
   }
+});
+
+router.post("/contact", authenticate, async (req, res) => {
+  const message = req.body.message;
+  const username = req.user.username;
+
+  sendMail(username, message);
+
+  res.status(200).json({ message: "Contact message sent successfully" });
 });
 
 export default router;

@@ -16,7 +16,6 @@ import { setIsLoggedInAtom, triggerLogoutAtom } from "@/states/Atoms";
 import { useNavigate } from "react-router-dom";
 import {
   CircleUserRound,
-  Code,
   LifeBuoy,
   LogOut,
   CalendarPlus,

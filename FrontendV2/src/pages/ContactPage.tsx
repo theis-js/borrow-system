@@ -17,7 +17,7 @@ export const ContactPage = () => {
 
   const sendMessage = async () => {
     // Logic to send the message
-    const result = await fetch(`${API_BASE}/contact`, {
+    const result = await fetch(`${API_BASE}/api/users/contact`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${Cookies.get("token") || ""}`,

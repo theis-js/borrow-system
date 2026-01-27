@@ -4,8 +4,6 @@ services:
     networks:
       - proxynet
     build: ./FrontendV2
-    ports:
-      - "8101:80"
     restart: unless-stopped
 
   admin-frontend:
@@ -13,8 +11,6 @@ services:
     networks:
       - proxynet
     build: ./admin
-    ports:
-      - "8103:80"
     restart: unless-stopped
 
   backend_v2:

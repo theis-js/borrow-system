@@ -23,6 +23,7 @@ import {
   MoreVertical,
   Languages,
   Table,
+  ContactRound,
 } from "lucide-react";
 import { useUserContext } from "@/states/Context";
 import { useState } from "react";
@@ -144,7 +145,7 @@ export const Header = () => {
                   window.open(
                     "https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki",
                     "_blank",
-                    "noopener,noreferrer"
+                    "noopener,noreferrer",
                   )
                 }
                 children={
@@ -155,18 +156,12 @@ export const Header = () => {
                 }
               />
               <Menu.Item
-                value="source-code"
-                onSelect={() =>
-                  window.open(
-                    "https://git.the1s.de/Matthias-Claudius-Schule/borrow-system",
-                    "_blank",
-                    "noopener,noreferrer"
-                  )
-                }
+                value="contact"
+                onSelect={() => navigate("/contact", { replace: true })}
                 children={
                   <HStack gap={3}>
-                    <Code size={16} />
-                    <Text as="span">{t("source-code")}</Text>
+                    <ContactRound size={16} />
+                    <Text as="span">{t("contact")}</Text>
                   </HStack>
                 }
               />
@@ -296,17 +291,15 @@ export const Header = () => {
             </Button>
           </a>
 
-          <a
-            href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system"
-            target="_blank"
+          <Button
+            variant={"outline"}
+            onClick={() => navigate("/contact", { replace: true })}
           >
-            <Button variant="ghost">
-              <HStack gap={2}>
-                <Code size={18} />
-                <Text as="span">{t("source-code")}</Text>
-              </HStack>
-            </Button>
-          </a>
+            <HStack gap={2}>
+              <ContactRound size={18} />
+              <Text as="span">{t("contact")}</Text>
+            </HStack>
+          </Button>
 
           <Button onClick={logout} variant="outline" colorScheme="red">
             <HStack gap={2}>
@@ -318,7 +311,13 @@ export const Header = () => {
       </Flex>
 
       {/* User Info Dialoge */}
-      {userDialog && <UserDialogue setUserDialog={setUserDialog} fullname={fullname} randomColor={randomColor} />}
+      {userDialog && (
+        <UserDialogue
+          setUserDialog={setUserDialog}
+          fullname={fullname}
+          randomColor={randomColor}
+        />
+      )}
     </Stack>
   );
 };

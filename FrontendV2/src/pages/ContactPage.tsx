@@ -1,8 +1,9 @@
-import { Field, Textarea, Button, Alert } from "@chakra-ui/react";
+import { Field, Textarea, Button, Alert, Container } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { API_BASE } from "@/config/api.config";
 import Cookies from "js-cookie";
+import { Header } from "@/components/Header";
 
 interface Alert {
   type: "info" | "warning" | "success" | "error" | "neutral";
@@ -44,7 +45,8 @@ export const ContactPage = () => {
   };
 
   return (
-    <>
+    <Container className="px-6 sm:px-8 pt-10">
+      <Header />
       <Field.Root invalid={message === ""}>
         <Field.Label>
           {t("contactPage_messageLabel")}
@@ -70,6 +72,6 @@ export const ContactPage = () => {
         </Alert.Root>
       )}
       <Button onClick={sendMessage}>{t("contactPage_sendButton")}</Button>
-    </>
+    </Container>
   );
 };

@@ -72,5 +72,14 @@
     "last-borrowed-person": "Last borrowed by",
     "currently-borrowed-by": "Currently borrowed by",
     "back": "Go back",
-    "landingpage": "Overview page"
+    "landingpage": "Overview page",
+    "contactPage_successHeadline": "Message sent successfully",
+    "contactPage_successText": "Thank you for contacting us. We will get back to you as soon as possible.",
+    "contactPage_errorHeadline": "Error sending message",
+    "contactPage_errorText": "An error occurred while sending your message. Please try again later.",
+    "contactPage_sendButton": "Send message",
+    "contactPage_messageLabel": "Message",
+    "contactPage_messagePlaceholder": "Enter your message here...",
+    "contactPage_messageErrorText": "This field cannot be empty.",
+    "contact": "Contact"
 }

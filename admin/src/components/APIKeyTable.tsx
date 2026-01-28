@@ -63,7 +63,6 @@ const APIKeyTable: React.FC = () => {
           }
         );
         const data = await response.json();
-        console.log(data);
         return data;
       } catch (error) {
         setError("error", "Failed to fetch items", "There is an error");

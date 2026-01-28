@@ -16,7 +16,7 @@ export const createLoanInDatabase = async (
   startDate,
   endDate,
   note,
-  itemIds
+  itemIds,
 ) => {
   if (!username)
     return { success: false, code: "BAD_REQUEST", message: "Missing username" };
@@ -52,7 +52,7 @@ export const createLoanInDatabase = async (
     // Ensure all items exist and collect names + lockers
     const [itemsRows] = await conn.query(
       "SELECT id, item_name, safe_nr FROM items WHERE id IN (?)",
-      [itemIds]
+      [itemIds],
     );
     if (!itemsRows || itemsRows.length !== itemIds.length) {
       await conn.rollback();
@@ -65,7 +65,7 @@ export const createLoanInDatabase = async (
 
     const itemNames = itemIds
       .map(
-        (id) => itemsRows.find((r) => Number(r.id) === Number(id))?.item_name
+        (id) => itemsRows.find((r) => Number(r.id) === Number(id))?.item_name,
       )
       .filter(Boolean);
 
@@ -80,9 +80,9 @@ export const createLoanInDatabase = async (
               sn !== undefined &&
               Number.isInteger(Number(sn)) &&
               Number(sn) >= 0 &&
-              Number(sn) <= 99
+              Number(sn) <= 99,
           )
-          .map((sn) => Number(sn))
+          .map((sn) => Number(sn)),
       ),
     ];
 
@@ -98,7 +98,7 @@ export const createLoanInDatabase = async (
           AND l.start_date < ?
           AND COALESCE(l.returned_date, l.end_date) > ?
         `,
-      [itemIds, end, start]
+      [itemIds, end, start],
     );
     if (confRows?.[0]?.conflicts > 0) {
       await conn.rollback();
@@ -115,7 +115,7 @@ export const createLoanInDatabase = async (
       const candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
       const [exists] = await conn.query(
         "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
-        [candidate]
+        [candidate],
       );
       if (exists.length === 0) {
         loanCode = candidate;
@@ -146,7 +146,7 @@ export const createLoanInDatabase = async (
         JSON.stringify(itemIds.map((n) => Number(n))),
         JSON.stringify(itemNames),
         note,
-      ]
+      ],
     );
 
     await conn.commit();
@@ -189,7 +189,7 @@ export const getLoanInfoWithID = async (loanId) => {
 export const getLoansFromDatabase = async (username) => {
   const [result] = await pool.query(
     "SELECT * FROM loans WHERE username = ? AND deleted = 0;",
-    [username]
+    [username],
   );
   if (result.length > 0) {
     return { success: true, status: true, data: result };
@@ -202,7 +202,7 @@ export const getLoansFromDatabase = async (username) => {
 export const getBorrowableItemsFromDatabase = async (
   startDate,
   endDate,
-  role = 0
+  role = 0,
 ) => {
   // Overlap if: loan.start < end AND effective_end > start
   // effective_end is returned_date if set, otherwise end_date
@@ -236,7 +236,7 @@ export const getBorrowableItemsFromDatabase = async (
 export const SETdeleteLoanFromDatabase = async (loanId) => {
   const [result] = await pool.query(
     "UPDATE loans SET deleted = 1 WHERE id = ?;",
-    [loanId]
+    [loanId],
   );
   if (result.affectedRows > 0) {
     return { success: true };
@@ -257,6 +257,72 @@ export const getItems = async () => {
   const [result] = await pool.query("SELECT * FROM items;");
   if (result.length > 0) {
     return { success: true, data: result };
+  }
+  return { success: false };
+};
+
+export const setReturnDate = async (loanCode) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  const [owner] = await pool.query(
+    "SELECT username FROM loans WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  if (items.length === 0) return { success: false };
+
+  const itemIds = Array.isArray(items[0].loaned_items_id)
+    ? items[0].loaned_items_id
+    : JSON.parse(items[0].loaned_items_id || "[]");
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET in_safe = 1, currently_borrowing = NULL, last_borrowed_person = (?) WHERE id IN (?)",
+    [owner[0].username, itemIds],
+  );
+
+  const [result] = await pool.query(
+    "UPDATE loans SET returned_date = NOW() WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
+    return { success: true };
+  }
+  return { success: false };
+};
+
+export const setTakeDate = async (loanCode) => {
+  const [items] = await pool.query(
+    "SELECT loaned_items_id FROM loans WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  const [owner] = await pool.query(
+    "SELECT username FROM loans WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  if (items.length === 0) return { success: false };
+
+  const itemIds = Array.isArray(items[0].loaned_items_id)
+    ? items[0].loaned_items_id
+    : JSON.parse(items[0].loaned_items_id || "[]");
+
+  const [setItemStates] = await pool.query(
+    "UPDATE items SET in_safe = 0, currently_borrowing = (?) WHERE id IN (?)",
+    [owner[0].username, itemIds],
+  );
+
+  const [result] = await pool.query(
+    "UPDATE loans SET take_date = NOW() WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
+    return { success: true };
   }
   return { success: false };
 };

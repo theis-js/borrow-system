@@ -112,6 +112,86 @@ export const MyLoansPage = () => {
     return `${d}.${M}.${y} ${h}:${min}`;
   };
 
+  const handleTakeAction = async (loanCode: string) => {
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/loans/set-take-date/${loanCode}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+
+      if (!res.ok) {
+        setMsgStatus("error");
+        setMsgTitle(t("error"));
+        setMsgDescription(t("error-take-loan"));
+        setIsMsg(true);
+        return;
+      }
+
+      // Update the loan in state
+      setLoans((prev) =>
+        prev.map((loan) =>
+          loan.loan_code === loanCode
+            ? { ...loan, take_date: new Date().toISOString() }
+            : loan,
+        ),
+      );
+      setMsgStatus("success");
+      setMsgTitle(t("success"));
+      setMsgDescription(t("take-loan-success"));
+      setIsMsg(true);
+    } catch (e) {
+      setMsgStatus("error");
+      setMsgTitle(t("error"));
+      setMsgDescription(t("network-error"));
+      setIsMsg(true);
+    }
+  };
+
+  const handleReturnAction = async (loanCode: string) => {
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/loans/set-return-date/${loanCode}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+
+      if (!res.ok) {
+        setMsgStatus("error");
+        setMsgTitle(t("error"));
+        setMsgDescription(t("error-return-loan"));
+        setIsMsg(true);
+        return;
+      }
+
+      // Update the loan in state
+      setLoans((prev) =>
+        prev.map((loan) =>
+          loan.loan_code === loanCode
+            ? { ...loan, returned_date: new Date().toISOString() }
+            : loan,
+        ),
+      );
+      setMsgStatus("success");
+      setMsgTitle(t("success"));
+      setMsgDescription(t("return-loan-success"));
+      setIsMsg(true);
+    } catch (e) {
+      setMsgStatus("error");
+      setMsgTitle(t("error"));
+      setMsgDescription(t("network-error"));
+      setIsMsg(true);
+    }
+  };
+
   return (
     <>
       <Container className="px-6 sm:px-8 pt-10">
@@ -190,8 +270,33 @@ export const MyLoansPage = () => {
                           : "-"}
                       </Text>
                     </Table.Cell>
-                    <Table.Cell>{formatDate(loan.take_date)}</Table.Cell>
-                    <Table.Cell>{formatDate(loan.returned_date)}</Table.Cell>
+                    <Table.Cell>
+                      {loan.take_date ? (
+                        formatDate(loan.take_date)
+                      ) : (
+                        <Button
+                          size="xs"
+                          colorPalette="teal"
+                          onClick={() => handleTakeAction(loan.loan_code)}
+                        >
+                          {t("take")}
+                        </Button>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {loan.returned_date ? (
+                        formatDate(loan.returned_date)
+                      ) : (
+                        <Button
+                          size="xs"
+                          colorPalette="blue"
+                          onClick={() => handleReturnAction(loan.loan_code)}
+                          disabled={!loan.take_date}
+                        >
+                          {t("return")}
+                        </Button>
+                      )}
+                    </Table.Cell>
                     <Table.Cell>{loan.note}</Table.Cell>
                     <Table.Cell>
                       <Dialog.Root role="alertdialog">

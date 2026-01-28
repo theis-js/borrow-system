@@ -13,6 +13,8 @@ import {
   getALLLoans,
   getItems,
   SETdeleteLoanFromDatabase,
+  setReturnDate,
+  setTakeDate,
 } from "./database/loansMgmt.database.js";
 import { sendMailLoan } from "./services/mailer.js";
 
@@ -48,7 +50,7 @@ router.post("/createLoan", authenticate, async (req, res) => {
       start,
       end,
       note,
-      itemIds
+      itemIds,
     );
 
     if (result.success) {
@@ -59,7 +61,7 @@ router.post("/createLoan", authenticate, async (req, res) => {
         mailInfo.data.loaned_items_name,
         mailInfo.data.start_date,
         mailInfo.data.end_date,
-        mailInfo.data.created_at
+        mailInfo.data.created_at,
       );
       return res.status(201).json({
         message: "Loan created successfully",
@@ -93,6 +95,26 @@ router.get("/loans", authenticate, async (req, res) => {
     res.status(200).json([]);
   } else {
     res.status(500).json({ message: "Failed to fetch loans" });
+  }
+});
+
+router.post("/set-return-date/:loan_code", authenticate, async (req, res) => {
+  const loanCode = req.params.loan_code;
+  const result = await setReturnDate(loanCode);
+  if (result.success) {
+    res.status(200).json({ data: result.data });
+  } else {
+    res.status(500).json({ message: "Failed to set return date" });
+  }
+});
+
+router.post("/set-take-date/:loan_code", authenticate, async (req, res) => {
+  const loanCode = req.params.loan_code;
+  const result = await setTakeDate(loanCode);
+  if (result.success) {
+    res.status(200).json({ data: result.data });
+  } else {
+    res.status(500).json({ message: "Failed to set take date" });
   }
 });
 
@@ -135,7 +157,7 @@ router.post("/borrowable-items", authenticate, async (req, res) => {
   const result = await getBorrowableItemsFromDatabase(
     startDate,
     endDate,
-    req.user.role
+    req.user.role,
   );
   if (result.success) {
     // return the array directly for consistency with /items

@@ -81,5 +81,10 @@
     "contactPage_messageLabel": "Nachricht",
     "contactPage_messagePlaceholder": "Geben Sie hier Ihre Nachricht ein...",
     "contactPage_messageErrorText": "Dieses Feld darf nicht leer sein.",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "take": "Abholen",
+    "return": "Zurückgeben",
+    "take-loan-success": "Ausleihe erfolgreich abgeholt",
+    "return-loan-success": "Ausleihe erfolgreich zurückgegeben",
+    "network-error": "Netzwerkfehler. Kontaktieren Sie den Administrator."
 }

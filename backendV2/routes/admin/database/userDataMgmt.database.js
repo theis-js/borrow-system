@@ -18,11 +18,11 @@ export const createUser = async (
   isAdmin,
   email,
   first_name,
-  last_name
+  last_name,
 ) => {
   const [result] = await pool.query(
     "INSERT INTO users (username, role, password, is_admin, email, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    [username, role, password, isAdmin, email, first_name, last_name]
+    [username, role, password, isAdmin, email, first_name, last_name],
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
@@ -34,10 +34,10 @@ export const deleteUserById = async (userId) => {
   return { success: false };
 };
 
-export const changePassword = async (userId, newPassword) => {
+export const changePassword = async (username, newPassword) => {
   const [result] = await pool.query(
-    "UPDATE users SET password = ?, entry_updated_at = NOW() WHERE id = ?",
-    [newPassword, userId]
+    "UPDATE users SET password = ?, entry_updated_at = NOW() WHERE username = ?",
+    [newPassword, username],
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
@@ -49,11 +49,11 @@ export const editUserById = async (
   last_name,
   role,
   email,
-  is_admin
+  is_admin,
 ) => {
   const [result] = await pool.query(
     "UPDATE users SET  first_name = ?, last_name = ?, role = ?, email = ?, is_admin = ?, entry_updated_at = NOW() WHERE id = ?",
-    [first_name, last_name, role, email, is_admin, userId]
+    [first_name, last_name, role, email, is_admin, userId],
   );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
@@ -61,7 +61,7 @@ export const editUserById = async (
 
 export const getAllUsers = async () => {
   const [result] = await pool.query(
-    "SELECT id, username, first_name, last_name, role, email, is_admin, entry_created_at, entry_updated_at FROM users"
+    "SELECT id, username, first_name, last_name, role, email, is_admin, entry_created_at, entry_updated_at FROM users",
   );
   if (result.length > 0) return { success: true, data: result };
   return { success: false };
@@ -70,7 +70,7 @@ export const getAllUsers = async () => {
 export const getUserById = async (userId) => {
   const [rows] = await pool.query(
     "SELECT id, username, first_name, last_name, role, email, is_admin FROM users WHERE id = ?",
-    [userId]
+    [userId],
   );
   if (rows.length === 0) {
     return { success: false };

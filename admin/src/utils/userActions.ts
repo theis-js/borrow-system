@@ -167,7 +167,6 @@ export const createItem = async (
   can_borrow_role: number,
   lockerNumber: string | null
 ) => {
-  console.log(JSON.stringify({ item_name, can_borrow_role, lockerNumber }));
   try {
     const response = await fetch(
       `${API_BASE}/api/admin/item-data/create-item`,

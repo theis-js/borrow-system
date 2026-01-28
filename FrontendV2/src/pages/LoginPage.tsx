@@ -4,7 +4,7 @@ import { Button, Card, Field, Input, Stack } from "@chakra-ui/react";
 import { setIsLoggedInAtom, triggerLogoutAtom } from "@/states/Atoms";
 import { useAtom } from "jotai";
 import Cookies from "js-cookie";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useTranslation } from "react-i18next";
 import { Footer } from "@/components/footer/Footer";
@@ -16,13 +16,15 @@ export const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(setIsLoggedInAtom);
   const [triggerLogout, setTriggerLogout] = useAtom(triggerLogoutAtom);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate("/", { replace: true });
-      window.location.reload(); // Wenn entfernt: Seite bleibt schwarz und muss manuell neu geladen werden
+      navigate(from, { replace: true });
+      window.location.reload(); // if deleted, the user context is not updated in time
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, navigate, from]);
 
   const loginFnc = async (username: string, password: string) => {
     const response = await fetch(`${API_BASE}/api/users/login`, {
@@ -61,11 +63,11 @@ export const LoginPage = () => {
       return;
     }
     setTriggerLogout(false);
-    navigate("/", { replace: true });
+    navigate(from, { replace: true });
   };
 
   if (isLoggedIn) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   return (

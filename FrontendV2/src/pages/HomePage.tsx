@@ -108,7 +108,6 @@ export const HomePage = () => {
               }
               setBorrowableItems(response.data);
               setIsMsg(false);
-              console.log(borrowableItems);
             });
           }}
         >

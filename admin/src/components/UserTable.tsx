@@ -85,7 +85,6 @@ const UserTable: React.FC = () => {
       setIsLoading(true);
       try {
         const data = await fetchUserData();
-        console.log(data);
         if (Array.isArray(data)) {
           setUsers(data);
         } else {

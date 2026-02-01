@@ -22,7 +22,6 @@ import {
   MoreVertical,
   Languages,
   Table,
-  ContactRound,
 } from "lucide-react";
 import { useUserContext } from "@/states/Context";
 import { useState } from "react";
@@ -154,16 +153,6 @@ export const Header = () => {
                   </HStack>
                 }
               />
-              <Menu.Item
-                value="contact"
-                onSelect={() => navigate("/contact", { replace: true })}
-                children={
-                  <HStack gap={3}>
-                    <ContactRound size={16} />
-                    <Text as="span">{t("contact")}</Text>
-                  </HStack>
-                }
-              />
               <Menu.Separator />
               <Menu.Item
                 value="logout"
@@ -289,17 +278,6 @@ export const Header = () => {
               </HStack>
             </Button>
           </a>
-
-          <Button
-            variant={"outline"}
-            onClick={() => navigate("/contact", { replace: true })}
-          >
-            <HStack gap={2}>
-              <ContactRound size={18} />
-              <Text as="span">{t("contact")}</Text>
-            </HStack>
-          </Button>
-
           <Button onClick={logout} variant="outline" colorScheme="red">
             <HStack gap={2}>
               <LogOut size={18} />

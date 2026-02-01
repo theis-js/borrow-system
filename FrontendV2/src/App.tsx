@@ -80,7 +80,6 @@ function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/my-loans" element={<MyLoansPage />} />
                   <Route path="/landingpage" element={<Landingpage />} />
-                  <Route path="/contact" element={<ContactPage />} />
                 </Route>
 
                 <Route path="/login" element={<LoginPage />} />

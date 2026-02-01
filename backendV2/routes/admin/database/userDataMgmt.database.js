@@ -29,14 +29,14 @@ export const createUser = async (
 };
 
 export const deleteUserById = async (userId) => {
-  const [result] = await pool.query("DELETE FROM users WHERE id = ?", [userId]);
+  const [result] = await pool.query("DELETE FROM users WHERE id = ? AND secret_user = false", [userId]);
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
 };
 
 export const changePassword = async (username, newPassword) => {
   const [result] = await pool.query(
-    "UPDATE users SET password = ?, entry_updated_at = NOW() WHERE username = ?",
+    "UPDATE users SET password = ?, entry_updated_at = NOW() WHERE username = ? AND secret_user = false",
     [newPassword, username],
   );
   if (result.affectedRows > 0) return { success: true };
@@ -52,7 +52,7 @@ export const editUserById = async (
   is_admin,
 ) => {
   const [result] = await pool.query(
-    "UPDATE users SET  first_name = ?, last_name = ?, role = ?, email = ?, is_admin = ?, entry_updated_at = NOW() WHERE id = ?",
+    "UPDATE users SET  first_name = ?, last_name = ?, role = ?, email = ?, is_admin = ?, entry_updated_at = NOW() WHERE id = ? AND secret_user = false",
     [first_name, last_name, role, email, is_admin, userId],
   );
   if (result.affectedRows > 0) return { success: true };
@@ -61,7 +61,7 @@ export const editUserById = async (
 
 export const getAllUsers = async () => {
   const [result] = await pool.query(
-    "SELECT id, username, first_name, last_name, role, email, is_admin, entry_created_at, entry_updated_at FROM users",
+    "SELECT id, username, first_name, last_name, role, email, is_admin, entry_created_at, entry_updated_at FROM users WHERE secret_user = false",
   );
   if (result.length > 0) return { success: true, data: result };
   return { success: false };
@@ -69,7 +69,7 @@ export const getAllUsers = async () => {
 
 export const getUserById = async (userId) => {
   const [rows] = await pool.query(
-    "SELECT id, username, first_name, last_name, role, email, is_admin FROM users WHERE id = ?",
+    "SELECT id, username, first_name, last_name, role, email, is_admin FROM users WHERE id = ? AND secret_user = false",
     [userId],
   );
   if (rows.length === 0) {

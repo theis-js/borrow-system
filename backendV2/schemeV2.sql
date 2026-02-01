@@ -11,6 +11,7 @@ CREATE TABLE users (
   is_admin bool NOT NULL DEFAULT false,
   entry_created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   entry_updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  secret_user bool NOT NULL DEFAULT false,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 

@@ -1,25 +1,23 @@
 services:
   usr-frontend_v2:
-    container_name: borrow_system-usr-frontend
+    container_name: demo_borrow_system-usr-frontend
     networks:
       - proxynet
     build: ./FrontendV2
     restart: unless-stopped
 
   admin-frontend:
-    container_name: borrow_system-admin-frontend
+    container_name: demo_borrow_system-admin-frontend
     networks:
       - proxynet
     build: ./admin
     restart: unless-stopped
 
   backend_v2:
-    container_name: borrow_system-backend_v2
+    container_name: demo_borrow_system-backend_v2
     networks:
       - proxynet
     build: ./backendV2
-    ports:
-      - "8004:8004"
     environment:
       NODE_ENV: production
       DB_HOST: mysql_v2
@@ -31,7 +29,7 @@ services:
     restart: unless-stopped
 
   mysql_v2:
-    container_name: borrow_system-mysql-v2
+    container_name: demo_borrow_system-mysql-v2
     networks:
       - proxynet
     image: mysql:8.0

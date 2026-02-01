@@ -1,34 +1,34 @@
 services:
-  usr-frontend_v2:
+  demo_usr_frontend:
     container_name: demo_borrow_system-usr-frontend
     networks:
       - proxynet
     build: ./FrontendV2
     restart: unless-stopped
 
-  admin-frontend:
+  demo_admin_frontend:
     container_name: demo_borrow_system-admin-frontend
     networks:
       - proxynet
     build: ./admin
     restart: unless-stopped
 
-  backend_v2:
+  demo_backend_v2:
     container_name: demo_borrow_system-backend_v2
     networks:
       - proxynet
     build: ./backendV2
     environment:
       NODE_ENV: production
-      DB_HOST: mysql_v2
+      DB_HOST: demo_mysql_v2
       DB_USER: root
       DB_PASSWORD: ${DB_PASSWORD_V2}
       DB_NAME: borrow_system_new
     depends_on:
-      - mysql_v2
+      - demo_mysql_v2
     restart: unless-stopped
 
-  mysql_v2:
+  demo_mysql_v2:
     container_name: demo_borrow_system-mysql-v2
     networks:
       - proxynet
@@ -39,12 +39,12 @@ services:
       MYSQL_DATABASE: borrow_system_new
       TZ: Europe/Berlin
     volumes:
-      - mysql-v2-data:/var/lib/mysql
+      - demo_mysql-v2-data:/var/lib/mysql
       - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
 
 volumes:
   mysql-data:
-  mysql-v2-data:
+  demo_mysql-v2-data:
 
 networks:
   proxynet:

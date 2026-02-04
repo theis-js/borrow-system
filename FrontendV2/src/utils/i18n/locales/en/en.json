@@ -81,5 +81,10 @@
     "contactPage_messageLabel": "Message",
     "contactPage_messagePlaceholder": "Enter your message here...",
     "contactPage_messageErrorText": "This field cannot be empty.",
-    "contact": "Contact"
+    "contact": "Contact",
+    "take": "Take",
+    "return": "Return",
+    "take-loan-success": "Loan taken successfully",
+    "return-loan-success": "Loan returned successfully",
+    "network-error": "Network error. Please contact the administrator."
 }

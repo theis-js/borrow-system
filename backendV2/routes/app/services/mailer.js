@@ -41,7 +41,7 @@ function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
       ? `<ul style="margin:4px 0 0 18px; padding:0;">${items
           .map(
             (i) =>
-              `<li style="margin:2px 0; color:#111827; line-height:1.3;">${i}</li>`
+              `<li style="margin:2px 0; color:#111827; line-height:1.3;">${i}</li>`,
           )
           .join("")}</ul>`
       : "<span style='color:#111827;'>N/A</span>";
@@ -101,19 +101,19 @@ function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
               <tr>
                 <td style="padding:10px 14px; color:#6b7280; border-bottom:1px solid #ececec;">Startdatum</td>
                 <td style="padding:10px 14px; font-weight:600; border-bottom:1px solid #ececec; color:#111827;">${formatDateTime(
-                  startDate
+                  startDate,
                 )}</td>
               </tr>
               <tr>
                 <td style="padding:10px 14px; color:#6b7280; border-bottom:1px solid #ececec;">Enddatum</td>
                 <td style="padding:10px 14px; font-weight:600; border-bottom:1px solid #ececec; color:#111827;">${formatDateTime(
-                  endDate
+                  endDate,
                 )}</td>
               </tr>
               <tr>
                 <td style="padding:10px 14px; color:#6b7280;">Erstellt am</td>
                 <td style="padding:10px 14px; font-weight:600; color:#111827;">${formatDateTime(
-                  createdDate
+                  createdDate,
                 )}</td>
               </tr>
             </tbody>
@@ -174,8 +174,6 @@ export function sendMailLoan(user, items, startDate, endDate, createdDate) {
       html: buildLoanEmail({ user, items, startDate, endDate, createdDate }),
     });
 
-    // debugging logs
-    // console.log("Message sent:", info.messageId);
+    console.log("Loan message sent:", info.messageId);
   })();
-  // console.log("sendMailLoan called");
 }

@@ -86,5 +86,6 @@
     "return": "Zurückgeben",
     "take-loan-success": "Ausleihe erfolgreich abgeholt",
     "return-loan-success": "Ausleihe erfolgreich zurückgegeben",
-    "network-error": "Netzwerkfehler. Kontaktieren Sie den Administrator."
+    "network-error": "Netzwerkfehler. Kontaktieren Sie den Administrator.",
+    "contactPage_messageDescription": "Bitte geben Sie hier Ihre Nachricht ein. Der Systemadministrator (Theis Gaedigk) wird sich so schnell wie möglich bei Ihnen melden."
 }

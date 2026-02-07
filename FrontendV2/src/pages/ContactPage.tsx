@@ -1,4 +1,11 @@
-import { Field, Textarea, Button, Alert, Container } from "@chakra-ui/react";
+import {
+  Field,
+  Textarea,
+  Button,
+  Alert,
+  Container,
+  Text,
+} from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { API_BASE } from "@/config/api.config";
@@ -49,7 +56,7 @@ export const ContactPage = () => {
       <Header />
       <Field.Root invalid={message === ""}>
         <Field.Label>
-          {t("contactPage_messageLabel")}
+          <Text>{t("contactPage_messageDescription")}</Text>
           <Field.RequiredIndicator />
         </Field.Label>
         <Textarea

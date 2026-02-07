@@ -38,8 +38,6 @@ export function sendMail(username, message) {
       html: mailHtml,
     });
 
-    // debugging logs
-    // console.log("Message sent:", info.messageId);
+    console.log("Contact message sent: %s", info.messageId);
   })();
-  // console.log("sendMailLoan called");
 }

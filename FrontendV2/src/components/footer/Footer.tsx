@@ -5,15 +5,7 @@ export const Footer = () => {
   const { data: info } = useVersionInfoQuery();
 
   return (
-    <Box
-      as="footer"
-      py={4}
-      textAlign="center"
-      position="fixed"
-      bottom="0"
-      left="0"
-      right="0"
-    >
+    <Box as="footer" py={4} textAlign="center" width="100%">
       Made with ❤️ by Theis Gaedigk - Class of 2019 at MCS-Bochum
       <br />
       Frontend-Version: {info ? info["frontend-info"].version : "N/A"} |

@@ -84,6 +84,7 @@
     "contact": "Kontakt",
     "take": "Abholen",
     "return": "Zurückgeben",
+    "serverError": "Serverfehler. Bitte versuchen Sie es später erneut, oder laden Sie die Seite neu.",
     "take-loan-success": "Ausleihe erfolgreich abgeholt",
     "return-loan-success": "Ausleihe erfolgreich zurückgegeben",
     "network-error": "Netzwerkfehler. Kontaktieren Sie den Administrator.",

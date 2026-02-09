@@ -82,6 +82,7 @@
     "contactPage_messagePlaceholder": "Enter your message here...",
     "contactPage_messageErrorText": "This field cannot be empty.",
     "contact": "Contact",
+    "serverError": "Server error. Please try again later, or refresh the page.",
     "take": "Take",
     "return": "Return",
     "take-loan-success": "Loan taken successfully",

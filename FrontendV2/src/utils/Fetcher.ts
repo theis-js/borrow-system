@@ -1,10 +1,13 @@
 import Cookies from "js-cookie";
 import { API_BASE } from "@/config/api.config";
+import { useTranslation } from "react-i18next";
 
 export const getBorrowableItems = async (
   startDate: string,
-  endDate: string
+  endDate: string,
 ) => {
+  const { t } = useTranslation();
+
   try {
     const response = await fetch(`${API_BASE}/api/loans/borrowable-items`, {
       method: "POST",
@@ -21,8 +24,7 @@ export const getBorrowableItems = async (
         data: null,
         status: "error",
         title: "Server error",
-        description:
-          "Ein Fehler ist auf dem Server aufgetreten. Manchmal hilft es, die Seite neu zu laden.",
+        description: t("serverError"),
       };
     }
 
@@ -48,7 +50,7 @@ export const createLoan = async (
   itemIds: number[],
   startDate: string,
   endDate: string,
-  note: string | null
+  note: string | null,
 ) => {
   const response = await fetch(`${API_BASE}/api/loans/createLoan`, {
     method: "POST",

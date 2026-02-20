@@ -1,13 +1,10 @@
 import Cookies from "js-cookie";
 import { API_BASE } from "@/config/api.config";
-import { useTranslation } from "react-i18next";
 
 export const getBorrowableItems = async (
   startDate: string,
   endDate: string,
 ) => {
-  const { t } = useTranslation();
-
   try {
     const response = await fetch(`${API_BASE}/api/loans/borrowable-items`, {
       method: "POST",
@@ -24,7 +21,8 @@ export const getBorrowableItems = async (
         data: null,
         status: "error",
         title: "Server error",
-        description: t("serverError"),
+        description:
+          "An error occurred on the server. Sometimes reloading the page helps. Otherwise, please contact the administrator.",
       };
     }
 

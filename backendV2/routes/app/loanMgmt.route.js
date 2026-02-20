@@ -62,6 +62,7 @@ router.post("/createLoan", authenticate, async (req, res) => {
         mailInfo.data.start_date,
         mailInfo.data.end_date,
         mailInfo.data.created_at,
+        mailInfo.data.note,
       );
       return res.status(201).json({
         message: "Loan created successfully",

@@ -47,7 +47,7 @@ router.get(
     } else {
       res.status(404).json({ message: "Loan not found" });
     }
-  }
+  },
 );
 
 // Route for API to set the return date by the loan code
@@ -58,11 +58,11 @@ router.post(
     const loanCode = req.params.loan_code;
     const result = await setReturnDateV2(loanCode);
     if (result.success) {
-      res.status(200).json({ data: result.data });
+      res.status(200).json({});
     } else {
       res.status(500).json({ message: "Failed to set return date" });
     }
-  }
+  },
 );
 
 // Route for API to set the take away date by the loan code
@@ -73,11 +73,11 @@ router.post(
     const loanCode = req.params.loan_code;
     const result = await setTakeDateV2(loanCode);
     if (result.success) {
-      res.status(200).json({ data: result.data });
+      res.status(200).json({});
     } else {
-      res.status(500).json({ message: "Failed to set take date" });
+      res.status(500).json({ message: result.message });
     }
-  }
+  },
 );
 
 // Route for API to open a door

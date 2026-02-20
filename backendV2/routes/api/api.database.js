@@ -48,7 +48,8 @@ export const setReturnDateV2 = async (loanCode) => {
       [loanCode],
     );
 
-    if (items.length === 0) return { success: false };
+    if (items.length === 0)
+      return { success: false, message: "No items found for loan" };
 
     const itemIds = Array.isArray(items[0].loaned_items_id)
       ? items[0].loaned_items_id
@@ -71,11 +72,20 @@ export const setReturnDateV2 = async (loanCode) => {
     return { success: true, data: { returned: true } };
   } catch (error) {
     console.error("setReturnDateV2 error:", error);
-    return { success: false };
+    return { success: false, message: "Failed to set return date" };
   }
 };
 
 export const setTakeDateV2 = async (loanCode) => {
+  const [isTaken] = await pool.query(
+    "SELECT take_date FROM loans WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  if (isTaken.length === 0 || isTaken[0].take_date !== null) {
+    return { success: false, message: "Loan not found or already taken" };
+  }
+
   const [items] = await pool.query(
     "SELECT loaned_items_id FROM loans WHERE loan_code = ?",
     [loanCode],
@@ -86,7 +96,8 @@ export const setTakeDateV2 = async (loanCode) => {
     [loanCode],
   );
 
-  if (items.length === 0) return { success: false };
+  if (items.length === 0)
+    return { success: false, message: "No items found for loan" };
 
   const itemIds = Array.isArray(items[0].loaned_items_id)
     ? items[0].loaned_items_id
@@ -98,14 +109,14 @@ export const setTakeDateV2 = async (loanCode) => {
   );
 
   const [result] = await pool.query(
-    "UPDATE loans SET take_date = NOW() WHERE loan_code = ?",
+    "UPDATE loans SET take_date = NOW() WHERE loan_code = ? AND take_date IS NULL",
     [loanCode],
   );
 
   if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
-  return { success: false };
+  return { message: "Failed to set take date", success: false };
 };
 
 export const getAllLoansV2 = async () => {

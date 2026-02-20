@@ -34,7 +34,14 @@ const formatDateTime = (value) => {
   return "N/A";
 };
 
-function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
+function buildLoanEmail({
+  user,
+  items,
+  startDate,
+  endDate,
+  createdDate,
+  note,
+}) {
   const brand = process.env.MAIL_BRAND_COLOR || "#0ea5e9";
   const itemsList =
     Array.isArray(items) && items.length
@@ -116,6 +123,12 @@ function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
                   createdDate,
                 )}</td>
               </tr>
+              <tr>
+                <td style="padding:10px 14px; color:#6b7280; vertical-align:top;">Notiz</td>
+                <td style="padding:10px 14px; font-weight:600; color:#111827;">${
+                  note || "Keine Notiz"
+                }</td>
+              </tr>
             </tbody>
           </table>
           <p style="margin:22px 0 0 0; font-size:14px;">
@@ -134,7 +147,14 @@ function buildLoanEmail({ user, items, startDate, endDate, createdDate }) {
 </html>`;
 }
 
-function buildLoanEmailText({ user, items, startDate, endDate, createdDate }) {
+function buildLoanEmailText({
+  user,
+  items,
+  startDate,
+  endDate,
+  createdDate,
+  note,
+}) {
   const itemsText =
     Array.isArray(items) && items.length ? items.join(", ") : "N/A";
   return [
@@ -145,10 +165,18 @@ function buildLoanEmailText({ user, items, startDate, endDate, createdDate }) {
     `Start: ${formatDateTime(startDate)}`,
     `Ende: ${formatDateTime(endDate)}`,
     `Erstellt am: ${formatDateTime(createdDate)}`,
+    `Notiz: ${note || "Keine Notiz"}`,
   ].join("\n");
 }
 
-export function sendMailLoan(user, items, startDate, endDate, createdDate) {
+export function sendMailLoan(
+  user,
+  items,
+  startDate,
+  endDate,
+  createdDate,
+  note,
+) {
   const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
@@ -170,8 +198,16 @@ export function sendMailLoan(user, items, startDate, endDate, createdDate) {
         startDate,
         endDate,
         createdDate,
+        note,
       }),
-      html: buildLoanEmail({ user, items, startDate, endDate, createdDate }),
+      html: buildLoanEmail({
+        user,
+        items,
+        startDate,
+        endDate,
+        createdDate,
+        note,
+      }),
     });
 
     console.log("Loan message sent:", info.messageId);

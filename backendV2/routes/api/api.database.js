@@ -22,7 +22,7 @@ export const getItemsFromDatabaseV2 = async () => {
 export const getLoanByCodeV2 = async (loan_code) => {
   const [result] = await pool.query(
     "SELECT username, returned_date, take_date, lockers FROM loans WHERE loan_code = ?;",
-    [loan_code]
+    [loan_code],
   );
   if (result.length > 0) {
     return { success: true, data: result[0] };
@@ -33,7 +33,7 @@ export const getLoanByCodeV2 = async (loan_code) => {
 export const changeInSafeStateV2 = async (itemId) => {
   const [result] = await pool.query(
     "UPDATE items SET in_safe = NOT in_safe WHERE id = ?",
-    [itemId]
+    [itemId],
   );
   if (result.affectedRows > 0) {
     return { success: true };
@@ -42,50 +42,62 @@ export const changeInSafeStateV2 = async (itemId) => {
 };
 
 export const setReturnDateV2 = async (loanCode) => {
-  const [items] = await pool.query(
-    "SELECT loaned_items_id FROM loans WHERE loan_code = ?",
-    [loanCode]
-  );
+  try {
+    const [items] = await pool.query(
+      "SELECT loaned_items_id, username FROM loans WHERE loan_code = ?",
+      [loanCode],
+    );
 
-  const [owner] = await pool.query(
-    "SELECT username FROM loans WHERE loan_code = ?",
-    [loanCode]
-  );
+    if (items.length === 0)
+      return { success: false, message: "No items found for loan" };
 
-  if (items.length === 0) return { success: false };
+    const itemIds = Array.isArray(items[0].loaned_items_id)
+      ? items[0].loaned_items_id
+      : JSON.parse(items[0].loaned_items_id || "[]");
 
-  const itemIds = Array.isArray(items[0].loaned_items_id)
-    ? items[0].loaned_items_id
-    : JSON.parse(items[0].loaned_items_id || "[]");
+    const [result] = await pool.query(
+      "UPDATE loans SET returned_date = NOW() WHERE loan_code = ? AND returned_date IS NULL",
+      [loanCode],
+    );
 
-  const [setItemStates] = await pool.query(
-    "UPDATE items SET in_safe = 1, currently_borrowing = NULL, last_borrowed_person = (?) WHERE id IN (?)",
-    [owner[0].username, itemIds]
-  );
+    if (result.affectedRows === 0) return { success: false };
 
-  const [result] = await pool.query(
-    "UPDATE loans SET returned_date = NOW() WHERE loan_code = ?",
-    [loanCode]
-  );
+    if (itemIds.length > 0) {
+      await pool.query(
+        "UPDATE items SET in_safe = 1, currently_borrowing = NULL, last_borrowed_person = ? WHERE id IN (?)",
+        [items[0].username, itemIds],
+      );
+    }
 
-  if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
-    return { success: true };
+    return { success: true, data: { returned: true } };
+  } catch (error) {
+    console.error("setReturnDateV2 error:", error);
+    return { success: false, message: "Failed to set return date" };
   }
-  return { success: false };
 };
 
 export const setTakeDateV2 = async (loanCode) => {
+  const [isTaken] = await pool.query(
+    "SELECT take_date FROM loans WHERE loan_code = ?",
+    [loanCode],
+  );
+
+  if (isTaken.length === 0 || isTaken[0].take_date !== null) {
+    return { success: false, message: "Loan not found or already taken" };
+  }
+
   const [items] = await pool.query(
     "SELECT loaned_items_id FROM loans WHERE loan_code = ?",
-    [loanCode]
+    [loanCode],
   );
 
   const [owner] = await pool.query(
     "SELECT username FROM loans WHERE loan_code = ?",
-    [loanCode]
+    [loanCode],
   );
 
-  if (items.length === 0) return { success: false };
+  if (items.length === 0)
+    return { success: false, message: "No items found for loan" };
 
   const itemIds = Array.isArray(items[0].loaned_items_id)
     ? items[0].loaned_items_id
@@ -93,18 +105,18 @@ export const setTakeDateV2 = async (loanCode) => {
 
   const [setItemStates] = await pool.query(
     "UPDATE items SET in_safe = 0, currently_borrowing = (?) WHERE id IN (?)",
-    [owner[0].username, itemIds]
+    [owner[0].username, itemIds],
   );
 
   const [result] = await pool.query(
-    "UPDATE loans SET take_date = NOW() WHERE loan_code = ?",
-    [loanCode]
+    "UPDATE loans SET take_date = NOW() WHERE loan_code = ? AND take_date IS NULL",
+    [loanCode],
   );
 
   if (result.affectedRows > 0 && setItemStates.affectedRows > 0) {
     return { success: true };
   }
-  return { success: false };
+  return { message: "Failed to set take date", success: false };
 };
 
 export const getAllLoansV2 = async () => {
@@ -118,12 +130,12 @@ export const getAllLoansV2 = async () => {
 export const openDoor = async (doorKey) => {
   const [result] = await pool.query(
     "SELECT safe_nr, id FROM items WHERE door_key = ?;",
-    [doorKey]
+    [doorKey],
   );
   if (result.length > 0) {
     const [changeItemSate] = await pool.query(
       "UPDATE items SET in_safe = NOT in_safe WHERE id = ?",
-      [result[0].id]
+      [result[0].id],
     );
     if (changeItemSate.affectedRows > 0) {
       return { success: true, data: result[0] };

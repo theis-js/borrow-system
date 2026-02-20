@@ -12,7 +12,7 @@ import { triggerLogoutAtom } from "@/states/Atoms";
 import { MyLoansPage } from "./pages/MyLoansPage";
 import Landingpage from "./pages/Landingpage";
 import { changeLanguage } from "i18next";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Footer } from "./components/footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { API_BASE } from "@/config/api.config";
@@ -71,8 +71,8 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Flex direction="column" minH="100vh">
-        <Box as="main" flex="1">
+      <Flex direction="column" minH="100dvh">
+        <Flex as="main" flex="1" direction="column">
           <UserContext.Provider value={user}>
             <BrowserRouter>
               <Routes>
@@ -86,7 +86,7 @@ function App() {
               </Routes>
             </BrowserRouter>
           </UserContext.Provider>
-        </Box>
+        </Flex>
         <Footer />
       </Flex>
     </QueryClientProvider>

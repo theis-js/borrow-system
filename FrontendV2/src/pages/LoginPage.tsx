@@ -7,7 +7,6 @@ import Cookies from "js-cookie";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useTranslation } from "react-i18next";
-import { Footer } from "@/components/footer/Footer";
 import { API_BASE } from "@/config/api.config";
 
 export const LoginPage = () => {
@@ -71,7 +70,7 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex flex-1 items-center justify-center p-4">
       <form onSubmit={(e) => e.preventDefault()}>
         <Card.Root maxW="sm">
           <Card.Header>
@@ -115,7 +114,6 @@ export const LoginPage = () => {
           </Card.Footer>
         </Card.Root>
       </form>
-      <Footer />
     </div>
   );
 };

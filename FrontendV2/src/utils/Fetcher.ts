@@ -3,7 +3,7 @@ import { API_BASE } from "@/config/api.config";
 
 export const getBorrowableItems = async (
   startDate: string,
-  endDate: string
+  endDate: string,
 ) => {
   try {
     const response = await fetch(`${API_BASE}/api/loans/borrowable-items`, {
@@ -22,7 +22,7 @@ export const getBorrowableItems = async (
         status: "error",
         title: "Server error",
         description:
-          "Ein Fehler ist auf dem Server aufgetreten. Manchmal hilft es, die Seite neu zu laden.",
+          "An error occurred on the server. Sometimes reloading the page helps. Otherwise, please contact the administrator.",
       };
     }
 
@@ -48,7 +48,7 @@ export const createLoan = async (
   itemIds: number[],
   startDate: string,
   endDate: string,
-  note: string | null
+  note: string | null,
 ) => {
   const response = await fetch(`${API_BASE}/api/loans/createLoan`, {
     method: "POST",

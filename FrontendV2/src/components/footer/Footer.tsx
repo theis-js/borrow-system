@@ -9,10 +9,9 @@ export const Footer = () => {
       as="footer"
       py={4}
       textAlign="center"
-      position="fixed"
-      bottom="0"
-      left="0"
-      right="0"
+      width="100%"
+      flexShrink={0}
+      fontSize="sm"
     >
       Made with ❤️ by Theis Gaedigk - Class of 2019 at MCS-Bochum
       <br />

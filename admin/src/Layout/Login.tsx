@@ -3,6 +3,7 @@ import { useState } from "react";
 import { loginFunc } from "@/utils/loginUser";
 import MyAlert from "../components/myChakra/MyAlert";
 import { Button, Card, Field, Input, Stack } from "@chakra-ui/react";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [username, setUsername] = useState("");
@@ -43,8 +44,7 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
               </Field.Root>
               <Field.Root>
                 <Field.Label>password</Field.Label>
-                <Input
-                  type="password"
+                <PasswordInput
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

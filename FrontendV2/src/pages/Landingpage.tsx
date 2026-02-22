@@ -9,12 +9,13 @@ import {
   Card,
   SimpleGrid,
   Button,
+  Container,
 } from "@chakra-ui/react";
 import MyAlert from "@/components/myChakra/MyAlert";
 import { useTranslation } from "react-i18next";
 import { API_BASE } from "@/config/api.config";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { Header } from "@/components/Header";
 
 export const formatDateTime = (value: string | null | undefined) => {
   if (!value) return "N/A";
@@ -32,6 +33,7 @@ type Loan = {
   returned_date: string | null;
   take_date: string | null;
   loaned_items_name: string[] | string;
+  note: string | null;
 };
 
 type Device = {
@@ -46,7 +48,6 @@ type Device = {
 
 const Landingpage: React.FC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -59,7 +60,7 @@ const Landingpage: React.FC = () => {
   const setError = (
     status: "error" | "success",
     message: string,
-    description: string
+    description: string,
   ) => {
     setIsError(false);
     setErrorStatus(status);
@@ -85,7 +86,7 @@ const Landingpage: React.FC = () => {
           setError(
             "error",
             t("error-by-loading"),
-            t("unexpected-date-format_loan")
+            t("unexpected-date-format_loan"),
           );
         }
 
@@ -102,7 +103,7 @@ const Landingpage: React.FC = () => {
           setError(
             "error",
             t("error-by-loading"),
-            t("unexpected-date-format_device")
+            t("unexpected-date-format_device"),
           );
         }
       } catch (e) {
@@ -115,14 +116,8 @@ const Landingpage: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <Heading as="h1" size="lg" mb={2}>
-        Matthias-Claudius-Schule Technik
-      </Heading>
-
-      <Button onClick={() => navigate("/", { replace: true })}>
-        {t("back")}
-      </Button>
+    <Container className="px-6 sm:px-8 pt-10">
+      <Header />
 
       <Heading as="h2" size="md" mb={4}>
         {t("all-loans")}
@@ -168,6 +163,9 @@ const Landingpage: React.FC = () => {
               <Table.ColumnHeader>
                 <strong>{t("return-date")}</strong>
               </Table.ColumnHeader>
+              <Table.ColumnHeader>
+                <strong>{t("note")}</strong>
+              </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -184,6 +182,7 @@ const Landingpage: React.FC = () => {
                 </Table.Cell>
                 <Table.Cell>{formatDateTime(loan.take_date)}</Table.Cell>
                 <Table.Cell>{formatDateTime(loan.returned_date)}</Table.Cell>
+                <Table.Cell>{loan.note}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -260,7 +259,7 @@ const Landingpage: React.FC = () => {
           </HStack>
         </Button>
       </HStack>
-    </>
+    </Container>
   );
 };
 

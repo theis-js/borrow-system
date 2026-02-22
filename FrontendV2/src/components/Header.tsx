@@ -142,7 +142,7 @@ export const Header = () => {
                 value="help"
                 onSelect={() =>
                   window.open(
-                    "https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki",
+                    "https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki/?action=_pages",
                     "_blank",
                     "noopener,noreferrer",
                   )
@@ -279,7 +279,7 @@ export const Header = () => {
           </Button>
 
           <a
-            href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki"
+            href="https://git.the1s.de/Matthias-Claudius-Schule/borrow-system/wiki/?action=_pages"
             target="_blank"
           >
             <Button variant="ghost">

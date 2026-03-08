@@ -42,6 +42,21 @@ services:
     ports:
       - "3310:3306"
 
+  postgresql:
+    image: postgres
+    container_name: borrow_system-postgresql
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
+
+  adminer:
+    container_name: borrow_system-adminer
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
 volumes:
   mysql-data:
   mysql-v2-data:

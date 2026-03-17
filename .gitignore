@@ -117,3 +117,6 @@ ToDo.txt
 
 # only in development branch
 next-env.d.ts
+
+# psd files from footage
+footage/*.psd

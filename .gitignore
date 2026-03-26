@@ -120,3 +120,5 @@ next-env.d.ts
 
 # psd files from footage
 footage/*.psd
+
+icon/

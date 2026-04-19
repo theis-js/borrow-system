@@ -18,6 +18,7 @@ import { borrowAbleItemsAtom } from "@/states/Atoms";
 import { createLoan } from "@/utils/Fetcher";
 import { Header } from "@/components/Header";
 import { useTranslation } from "react-i18next";
+import { approvalAnimation } from "@/components/dotLottie";
 
 export interface User {
   username: string;
@@ -26,6 +27,8 @@ export interface User {
 
 export const HomePage = () => {
   const { t } = useTranslation();
+
+  const [showAnimation, setShowAnimation] = useState(false);
 
   const [borrowableItems, setBorrowableItems] = useAtom(borrowAbleItemsAtom);
   const [startDate, setStartDate] = useState("");
@@ -46,155 +49,172 @@ export const HomePage = () => {
     setSelectedItems((prevSelected) =>
       prevSelected.includes(itemId)
         ? prevSelected.filter((id) => id !== itemId)
-        : [...prevSelected, itemId]
+        : [...prevSelected, itemId],
     );
   };
 
+  const showApprovalAnimation = (seconds: number) => {
+    const milliseconds = seconds * 1000;
+
+    setShowAnimation(true);
+    window.setTimeout(() => {
+      setShowAnimation(false);
+    }, milliseconds);
+  };
+
   return (
-    <Container className="px-6 sm:px-8 pt-10">
-      <Header />
-      {isMsg && (
-        <MyAlert
-          status={msgStatus}
-          title={msgTitle}
-          description={msgDescription}
-        />
+    <>
+      {showAnimation && (
+        <div className="fixed inset-0 z-9999 flex items-center justify-center pointer-events-none">
+          <div>{approvalAnimation()}</div>
+        </div>
       )}
-      <Stack as="main">
-        <Text>{t("timezone-info")}</Text>
-        <label htmlFor="startDate">
-          <strong>
-            <Text>{t("start-date")}</Text>
-          </strong>
-        </label>
-        <Input
-          id="startDate"
-          placeholder={t("start-date")}
-          type="datetime-local"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        <label htmlFor="endDate">
-          <strong>
-            <Text>{t("end-date")}</Text>
-          </strong>
-        </label>
-        <Input
-          id="endDate"
-          placeholder={t("end-date")}
-          type="datetime-local"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
-        <Button
-          onClick={async () => {
-            setIsLoadingA(true);
-            if (!startDate || !endDate) {
-              setMsgStatus("error");
-              setMsgTitle(t("missing-fields"));
-              setMsgDescription(t("missing-fields-desc"));
-              setIsMsg(true);
-              setIsLoadingA(false);
-              return;
-            }
-            await getBorrowableItems(startDate, endDate).then((response) => {
-              setIsLoadingA(false);
-              if (response && response.status === "error") {
+      <Container className="px-6 sm:px-8 pt-10">
+        <Header />
+        {isMsg && (
+          <MyAlert
+            status={msgStatus}
+            title={msgTitle}
+            description={msgDescription}
+          />
+        )}
+        <Stack as="main">
+          <Text>{t("timezone-info")}</Text>
+          <label htmlFor="startDate">
+            <strong>
+              <Text>{t("start-date")}</Text>
+            </strong>
+          </label>
+          <Input
+            id="startDate"
+            placeholder={t("start-date")}
+            type="datetime-local"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <label htmlFor="endDate">
+            <strong>
+              <Text>{t("end-date")}</Text>
+            </strong>
+          </label>
+          <Input
+            id="endDate"
+            placeholder={t("end-date")}
+            type="datetime-local"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <Button
+            onClick={async () => {
+              setIsLoadingA(true);
+              if (!startDate || !endDate) {
                 setMsgStatus("error");
-                setMsgTitle(response.title || t("error"));
-                setMsgDescription(response.description || t("unknown-error"));
+                setMsgTitle(t("missing-fields"));
+                setMsgDescription(t("missing-fields-desc"));
                 setIsMsg(true);
+                setIsLoadingA(false);
                 return;
               }
-              setBorrowableItems(response.data);
-              setIsMsg(false);
-            });
-          }}
-        >
-          {t("get-borrowable-items")}
-        </Button>
-        {isLoadingA && (
-          <VStack colorPalette="teal">
-            <Spinner color="colorPalette.600" />
-            <Text color="colorPalette.600">{t("loading")}</Text>
-          </VStack>
-        )}
-        {borrowableItems.length > 0 && (
-          <Table.ScrollArea borderWidth="1px" rounded="md">
-            <Table.Root size="sm" stickyHeader>
-              <Table.Header>
-                <Table.Row bg="bg.subtle">
-                  <Table.ColumnHeader></Table.ColumnHeader>
-                  <Table.ColumnHeader>{t("item")}</Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-
-              <Table.Body>
-                {borrowableItems.map((item) => (
-                  <Table.Row key={item.id}>
-                    <Table.Cell>
-                      <input
-                        onChange={() => handleCheckboxChange(item.id)}
-                        type="checkbox"
-                        name={item.id}
-                        id={item.id}
-                      />
-                    </Table.Cell>
-                    <Table.Cell>{item.item_name}</Table.Cell>
-                  </Table.Row>
-                ))}
-                <Table.Row>
-                  <Table.Cell colSpan={2}>
-                    <InputGroup
-                      endElement={
-                        <Span color="fg.muted" textStyle="xs">
-                          {note.length} / {MAX_CHARACTERS}
-                        </Span>
-                      }
-                    >
-                      <Input
-                        placeholder={t("optional-note")}
-                        value={note}
-                        maxLength={MAX_CHARACTERS}
-                        onChange={(e) => {
-                          setNote(
-                            e.currentTarget.value.slice(0, MAX_CHARACTERS)
-                          );
-                        }}
-                      />
-                    </InputGroup>
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table.Root>
-          </Table.ScrollArea>
-        )}
-        {selectedItems.length >= 1 && (
-          <Button
-            onClick={() =>
-              createLoan(selectedItems, startDate, endDate, note).then(
-                (response) => {
-                  if (response.status === "error") {
-                    setMsgStatus("error");
-                    setMsgTitle(response.title || t("error"));
-                    setMsgDescription(
-                      response.description || t("unknown-error")
-                    );
-                    setIsMsg(true);
-                    return;
-                  }
-                  setMsgStatus("success");
-                  setMsgTitle(t("success"));
-                  setMsgDescription(t("loan-success"));
+              await getBorrowableItems(startDate, endDate).then((response) => {
+                setIsLoadingA(false);
+                if (response && response.status === "error") {
+                  setMsgStatus("error");
+                  setMsgTitle(response.title || t("error"));
+                  setMsgDescription(response.description || t("unknown-error"));
                   setIsMsg(true);
+                  return;
                 }
-              )
-            }
+                setBorrowableItems(response.data);
+                setIsMsg(false);
+              });
+            }}
           >
-            {t("create-loan")}
+            {t("get-borrowable-items")}
           </Button>
-        )}
-      </Stack>
-    </Container>
+          {isLoadingA && (
+            <VStack colorPalette="teal">
+              <Spinner color="colorPalette.600" />
+              <Text color="colorPalette.600">{t("loading")}</Text>
+            </VStack>
+          )}
+          {borrowableItems.length > 0 && (
+            <Table.ScrollArea borderWidth="1px" rounded="md">
+              <Table.Root size="sm" stickyHeader>
+                <Table.Header>
+                  <Table.Row bg="bg.subtle">
+                    <Table.ColumnHeader></Table.ColumnHeader>
+                    <Table.ColumnHeader>{t("item")}</Table.ColumnHeader>
+                  </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                  {borrowableItems.map((item) => (
+                    <Table.Row key={item.id}>
+                      <Table.Cell>
+                        <input
+                          onChange={() => handleCheckboxChange(item.id)}
+                          type="checkbox"
+                          name={item.id}
+                          id={item.id}
+                        />
+                      </Table.Cell>
+                      <Table.Cell>{item.item_name}</Table.Cell>
+                    </Table.Row>
+                  ))}
+                  <Table.Row>
+                    <Table.Cell colSpan={2}>
+                      <InputGroup
+                        endElement={
+                          <Span color="fg.muted" textStyle="xs">
+                            {note.length} / {MAX_CHARACTERS}
+                          </Span>
+                        }
+                      >
+                        <Input
+                          placeholder={t("optional-note")}
+                          value={note}
+                          maxLength={MAX_CHARACTERS}
+                          onChange={(e) => {
+                            setNote(
+                              e.currentTarget.value.slice(0, MAX_CHARACTERS),
+                            );
+                          }}
+                        />
+                      </InputGroup>
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table.Root>
+            </Table.ScrollArea>
+          )}
+          {selectedItems.length >= 1 && (
+            <Button
+              onClick={() =>
+                createLoan(selectedItems, startDate, endDate, note).then(
+                  (response) => {
+                    if (response.status === "error") {
+                      setMsgStatus("error");
+                      setMsgTitle(response.title || t("error"));
+                      setMsgDescription(
+                        response.description || t("unknown-error"),
+                      );
+                      setIsMsg(true);
+                      return;
+                    }
+                    showApprovalAnimation(3);
+                    setMsgStatus("success");
+                    setMsgTitle(t("success"));
+                    setMsgDescription(t("loan-success"));
+                    setIsMsg(true);
+                  },
+                )
+              }
+            >
+              {t("create-loan")}
+            </Button>
+          )}
+        </Stack>
+      </Container>
+    </>
   );
 };

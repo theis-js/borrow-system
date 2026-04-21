@@ -36,12 +36,43 @@ export const UserDialogue = (props: UserDialogueProps) => {
   const [msgTitle, setMsgTitle] = useState("");
   const [msgDescription, setMsgDescription] = useState("");
 
+  const [isMsgNAAS, setIsMsgNAAS] = useState(false);
+  const [msgStatusNAAS, setMsgStatusNAAS] = useState<"error" | "success">(
+    "error",
+  );
+  const [msgTitleNAAS, setMsgTitleNAAS] = useState("");
+  const [msgDescriptionNAAS, setMsgDescriptionNAAS] = useState("");
+
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // Dialog control
   const [isPwOpen, setPwOpen] = useState(false);
+  const [naasDialog, setNaasDialog] = useState(false);
+  const [naas, setNaas] = useState("");
+
+  const openNAAS = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/no`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
+
+      const data = await response.json();
+      setNaas(data.reason);
+      setNaasDialog(true);
+    } catch (error) {
+      setMsgStatusNAAS("error");
+      setMsgTitleNAAS(t("naas-error"));
+      setMsgDescriptionNAAS(t("naas-error-desc"));
+      setIsMsgNAAS(true);
+
+      console.log(msgStatusNAAS, msgTitleNAAS, msgDescriptionNAAS);
+    }
+  };
 
   const changePassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -147,14 +178,31 @@ export const UserDialogue = (props: UserDialogueProps) => {
             </Button>
           </Stack>
         </Card.Body>
-        <Card.Footer justifyContent="flex-end">
-          <Button variant="outline" onClick={() => props.setUserDialog(false)}>
-            {t("cancel")}
-          </Button>
+        <Card.Footer>
+          <Stack w="100%" gap={3}>
+            {isMsgNAAS && (
+              <MyAlert
+                status={msgStatusNAAS}
+                title={msgTitleNAAS}
+                description={msgDescriptionNAAS}
+              />
+            )}
+            <HStack justify="flex-end" gap={2} wrap="wrap">
+              <Button
+                variant="outline"
+                onClick={() => props.setUserDialog(false)}
+              >
+                {t("cancel")}
+              </Button>
+              <Button variant="outline" onClick={() => openNAAS()}>
+                {t("try-naas")}
+              </Button>
+            </HStack>
+          </Stack>
         </Card.Footer>
       </Card.Root>
 
-      {/* Passwort-Dialog (kontrolliert) */}
+      {/* Passwort-Dialog */}
       <Dialog.Root open={isPwOpen} onOpenChange={(e: any) => setPwOpen(e.open)}>
         <Portal>
           <Dialog.Backdrop />
@@ -215,6 +263,31 @@ export const UserDialogue = (props: UserDialogueProps) => {
           </Dialog.Positioner>
         </Portal>
       </Dialog.Root>
+
+      <HStack wrap="wrap" gap="4">
+        <Dialog.Root
+          placement={"center"}
+          open={naasDialog}
+          motionPreset="slide-in-bottom"
+        >
+          <Portal>
+            <Dialog.Backdrop />
+            <Dialog.Positioner>
+              <Dialog.Content>
+                <Dialog.Header>
+                  <Dialog.Title>{t("naas-header")}</Dialog.Title>
+                </Dialog.Header>
+                <Dialog.Body>
+                  <p>{naas}</p>
+                </Dialog.Body>
+                <Dialog.CloseTrigger asChild>
+                  <CloseButton onClick={() => setNaasDialog(false)} size="sm" />
+                </Dialog.CloseTrigger>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Portal>
+        </Dialog.Root>
+      </HStack>
     </Flex>
   );
 };

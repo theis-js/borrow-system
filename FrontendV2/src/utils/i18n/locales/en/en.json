@@ -88,5 +88,10 @@
     "take-loan-success": "Loan taken successfully",
     "return-loan-success": "Loan returned successfully",
     "network-error": "Network error. Please contact the administrator.",
-    "contactPage_messageDescription": "Please enter your message here. The system administrator (Theis Gaedigk) will get back to you as soon as possible."
+    "contactPage_messageDescription": "Please enter your message here. The system administrator (Theis Gaedigk) will get back to you as soon as possible.",
+    "naas": "No-as-a-service",
+    "try-naas": "Click me",
+    "naas-error": "Error with no-as-a-service",
+    "naas-error-desc": "An error occurred while communicating with no-as-a-service.",
+    "naas-header": "A good way to say no..."
 }

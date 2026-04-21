@@ -88,5 +88,10 @@
     "take-loan-success": "Ausleihe erfolgreich abgeholt",
     "return-loan-success": "Ausleihe erfolgreich zurückgegeben",
     "network-error": "Netzwerkfehler. Kontaktieren Sie den Administrator.",
-    "contactPage_messageDescription": "Bitte geben Sie hier Ihre Nachricht ein. Der Systemadministrator (Theis Gaedigk) wird sich so schnell wie möglich bei Ihnen melden."
+    "contactPage_messageDescription": "Bitte geben Sie hier Ihre Nachricht ein. Der Systemadministrator (Theis Gaedigk) wird sich so schnell wie möglich bei Ihnen melden.",
+    "naas": "No-as-a-service",
+    "try-naas": "Klick mich",
+    "naas-error": "Fehler mit no-as-a-service",
+    "naas-error-desc": "Ein Fehler ist beim Kommunizieren mit no-as-a-service aufgetreten.",
+    "naas-header": "Eine gute Möglichkeit, nein zu sagen..."
 }

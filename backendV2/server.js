@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import env from "dotenv";
+import dotenv from "dotenv";
 import info from "./info.json" assert { type: "json" };
 import { authenticate } from "./services/authentication.js";
 
@@ -18,9 +18,12 @@ import userMgmtRouterADMIN from "./routes/admin/userMgmt.route.js";
 // API routes
 import apiRouter from "./routes/api/api.route.js";
 
-env.config();
+dotenv.config();
 const app = express();
 const port = 8004;
+const naasURL = process.env.NAAS_URL;
+
+console.log(naasURL);
 
 app.use(cors());
 // Body-Parser VOR den Routen registrieren
@@ -45,6 +48,20 @@ app.set("view engine", "ejs");
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
+});
+
+app.get("/no", async (req, res) => {
+  try {
+    const response = await fetch(naasURL);
+    if (!response.ok) {
+      res.status(500).send("Request to no-as-a-service went wrong.");
+    }
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Error communicating with no-as-a-service:", error);
+    res.status(500).send("Error communicating with no-as-a-service.");
+  }
 });
 
 app.get("/verify", authenticate, async (req, res) => {

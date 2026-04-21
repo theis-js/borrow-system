@@ -8,6 +8,7 @@ This update provides some new features for the design. It also contains some imp
 - I also addded the regular header to the page
 - I have added three animations to the Borrow System
 - I have added a new icon for the frontend, which is now also used in the header and the favicon. It is a dark version of the old icon, which fits better to the overall design. I have made it with Icon Composer. The old icon is still used for the admin panel, which has a light design. (Maybe I will change the admin panel design in the future...)
+- When you go to your user card (over the user icon in the header) you have a new button "Click me". If you click it, you will get an message... _I am just saying: I have implemented the no-as-a-service code in to my Backend._
 
 ## Improvements
 
@@ -21,7 +22,7 @@ This update provides some new features for the design. It also contains some imp
 
 ---
 
-## Next version numbers
+## New version numbers
 
 **Backend:** v2.1.2
 

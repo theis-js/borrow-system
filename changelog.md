@@ -24,7 +24,7 @@ This update provides some new features for the design. It also contains some imp
 
 ## New version numbers
 
-**Backend:** v2.1.2
+**Backend:** v2.2
 
 **Frontend:** v2.2
 

@@ -84,6 +84,14 @@ export const MyLoansPage = () => {
       });
 
       if (!res.ok) {
+        if (res.status === 507) {
+          setMsgStatus("error");
+          setMsgTitle(t("error"));
+          setMsgDescription(t("error-deleting-loan-507"));
+          setIsMsg(true);
+          return;
+        }
+
         setMsgStatus("error");
         setMsgTitle(t("error"));
         setMsgDescription(t("error-deleting-loan"));

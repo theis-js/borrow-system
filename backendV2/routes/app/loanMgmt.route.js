@@ -134,6 +134,16 @@ router.delete("/delete-loan/:id", authenticate, async (req, res) => {
   if (result.success) {
     res.status(200).json({ message: "Loan deleted successfully" });
   } else {
+    if (result.code === "LOAN_NOT_FOUND") {
+      res.status(404).json({ message: "Loan not found" });
+    }
+
+    if (result.code === "LOAN_NOT_RETURNED") {
+      res.status(507).json({
+        message: "Cannot delete loan that has not been returned",
+      });
+    }
+
     res.status(500).json({ message: "Failed to delete loan" });
   }
 });

@@ -93,5 +93,6 @@
     "try-naas": "Klick mich",
     "naas-error": "Fehler mit no-as-a-service",
     "naas-error-desc": "Ein Fehler ist beim Kommunizieren mit no-as-a-service aufgetreten.",
-    "naas-header": "Eine gute Möglichkeit, nein zu sagen..."
+    "naas-header": "Eine gute Möglichkeit, nein zu sagen...",
+    "error-deleting-loan-507": "Die Ausleihe kann nicht gelöscht werden, da sie noch nicht zurückgegeben wurde."
 }

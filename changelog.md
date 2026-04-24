@@ -13,6 +13,7 @@ This update provides some new features for the design. It also contains some imp
 ## Improvements
 
 - I have the error logging for the API route wehre you can take loans improved.
+- If you try to delete a loan that has not been returned yet, you will get an 507 error code.
 
 ## Fixed bugs
 

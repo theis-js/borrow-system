@@ -23,8 +23,6 @@ const app = express();
 const port = 8004;
 const naasURL = process.env.NAAS_URL;
 
-console.log(naasURL);
-
 app.use(cors());
 // Body-Parser VOR den Routen registrieren
 app.use(express.json({ limit: "10mb" }));

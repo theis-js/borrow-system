@@ -93,5 +93,6 @@
     "try-naas": "Click me",
     "naas-error": "Error with no-as-a-service",
     "naas-error-desc": "An error occurred while communicating with no-as-a-service.",
-    "naas-header": "A good way to say no..."
+    "naas-header": "A good way to say no...",
+    "error-deleting-loan-507": "The loan cannot be deleted because it has not been returned yet."
 }

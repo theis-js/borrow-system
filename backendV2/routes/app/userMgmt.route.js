@@ -5,13 +5,16 @@ const router = express.Router();
 import dotenv from "dotenv";
 dotenv.config();
 
+const user_frontend_service = "User Frontend";
+const contact_form_service = "Contact Form Service";
+
 // database funcs import
 import { loginFunc, changePassword } from "./database/userMgmt.database.js";
 import { sendMail } from "./services/mailer_v2.js";
 
 router.post(
   "/login",
-  checkIfServiceIsActive("User Frontend"),
+  checkIfServiceIsActive(user_frontend_service),
   async (req, res) => {
     const result = await loginFunc(req.body.username, req.body.password);
     if (result.success) {
@@ -31,7 +34,7 @@ router.post(
 
 router.post(
   "/change-password",
-  checkIfServiceIsActive("User Frontend"),
+  checkIfServiceIsActive(user_frontend_service),
   authenticate,
   async (req, res) => {
     const oldPassword = req.body.oldPassword;
@@ -48,7 +51,7 @@ router.post(
 
 router.post(
   "/contact",
-  checkIfServiceIsActive("Contact Form Service"),
+  checkIfServiceIsActive(contact_form_service),
   authenticate,
   async (req, res) => {
     const message = req.body.message;

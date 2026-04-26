@@ -8,6 +8,9 @@ const router = express.Router();
 import dotenv from "dotenv";
 dotenv.config();
 
+const loan_service = "Loan Service";
+const loan_mailer_service = "Loan Mailer";
+
 // database funcs import
 import {
   createLoanInDatabase,
@@ -24,7 +27,7 @@ import { sendMailLoan } from "./services/mailer.js";
 
 router.post(
   "/createLoan",
-  checkIfServiceIsActive("Loan Service"),
+  checkIfServiceIsActive(loan_service),
   authenticate,
   async (req, res) => {
     try {
@@ -62,7 +65,7 @@ router.post(
       );
 
       if (result.success) {
-        if (await checkIfServiceIsActive2("Loan Mailer")) {
+        if (await checkIfServiceIsActive2(loan_mailer_service)) {
           const mailInfo = await getLoanInfoWithID(result.data.id);
           console.log(mailInfo);
           sendMailLoan(
@@ -102,7 +105,7 @@ router.post(
 
 router.get(
   "/loans",
-  checkIfServiceIsActive("Loan Service"),
+  checkIfServiceIsActive(loan_service),
   authenticate,
   async (req, res) => {
     const result = await getLoansFromDatabase(req.user.username);
@@ -118,7 +121,7 @@ router.get(
 
 router.post(
   "/set-return-date/:loan_code",
-  checkIfServiceIsActive("Loan Service"),
+  checkIfServiceIsActive(loan_service),
   authenticate,
   async (req, res) => {
     const loanCode = req.params.loan_code;
@@ -133,7 +136,7 @@ router.post(
 
 router.post(
   "/set-take-date/:loan_code",
-  checkIfServiceIsActive("Loan Service"),
+  checkIfServiceIsActive(loan_service),
   authenticate,
   async (req, res) => {
     const loanCode = req.params.loan_code;
@@ -157,7 +160,7 @@ router.get("/all-items", authenticate, async (req, res) => {
 
 router.delete(
   "/delete-loan/:id",
-  checkIfServiceIsActive("Loan Service"),
+  checkIfServiceIsActive(loan_service),
   authenticate,
   async (req, res) => {
     const loanId = req.params.id;
@@ -182,7 +185,7 @@ router.delete(
 
 router.get(
   "/all-loans",
-  checkIfServiceIsActive("Loan Service"),
+  checkIfServiceIsActive(loan_service),
   authenticate,
   async (req, res) => {
     const result = await getALLLoans();
@@ -196,7 +199,7 @@ router.get(
 
 router.post(
   "/borrowable-items",
-  checkIfServiceIsActive("Loan Service"),
+  checkIfServiceIsActive(loan_service),
   authenticate,
   async (req, res) => {
     const { startDate, endDate } = req.body || {};

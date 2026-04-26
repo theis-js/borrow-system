@@ -4,6 +4,9 @@ import { verifyAPIKeyDB } from "./database.js";
 import { checkIfServiceIsActive2 } from "./functions.js";
 env.config();
 
+const api_service = "API";
+const user_frontend_service = "User Frontend";
+
 const secretKey = process.env.SECRET_KEY;
 if (!secretKey) {
   throw new Error("Missing SECRET_KEY environment variable");
@@ -46,7 +49,7 @@ export async function authenticate(req, res, next) {
   const apiKey = req.params.key;
 
   if (authHeader) {
-    const serviceActive = await checkIfServiceIsActive2("User Frontend");
+    const serviceActive = await checkIfServiceIsActive2(user_frontend_service);
     if (!serviceActive) {
       return res
         .status(503)
@@ -69,7 +72,7 @@ export async function authenticate(req, res, next) {
       return res.status(403).json({ message: "Present token invalid" }); // present token invalid
     }
   } else if (apiKey) {
-    const serviceActive = await checkIfServiceIsActive2("API");
+    const serviceActive = await checkIfServiceIsActive2(api_service);
     if (!serviceActive) {
       return res
         .status(503)

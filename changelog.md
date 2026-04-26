@@ -4,14 +4,14 @@ This update provides some new features for the design. It also contains some imp
 
 ## New features
 
-- The overview page now has the note column and is overall better organised
-- I also addded the regular header to the page
-- I have added three animations to the Borrow System
-- I have added a new icon for the frontend, which is now also used in the header and the favicon. It is a dark version of the old icon, which fits better to the overall design. I have made it with Icon Composer. The old icon is still used for the admin panel, which has a light design. (Maybe I will change the admin panel design in the future...)
-- When you go to your user card (over the user icon in the header) you have a new button "Click me". If you click it, you will get an message... _I am just saying: I have implemented the no-as-a-service code in to my Backend._
+- **Deactivatable services:** I have added the ability to deactivate services, which can be useful for maintenance or other purposes. The admin can activate and deactivate services in the admin panel. If a service is deactivated, it will not be available for users and they will get an error message if they try to use it. They will also get an warning banner on the homepage.
+- **New Animations:** I have added some new animations to the frontend, which make the user experience more enjoyable.
+- **New Icon:** I have added a new icon for the frontend, which is now also used in the header and the favicon. It is a dark version of the old icon, which fits better to the overall design. I have made it with Icon Composer. The old icon is still used for the admin panel, which has a light design. (Maybe I will change the admin panel design in the future...)
+- **New Button:** When you go to your user card (over the user icon in the header) you have a new button "Click me". If you click it, you will get an message... _I am just saying: I have implemented the no-as-a-service code in to my Backend._
 
 ## Improvements
 
+- The overview page now has the note column and is overall better organised
 - I have the error logging for the API route wehre you can take loans improved.
 - If you try to delete a loan that has not been returned yet, you will get an 507 error code.
 
@@ -29,7 +29,7 @@ This update provides some new features for the design. It also contains some imp
 
 **Frontend:** v2.2
 
-**Admin panel:** v1.3.2
+**Admin panel:** v1.4
 
 ---
 

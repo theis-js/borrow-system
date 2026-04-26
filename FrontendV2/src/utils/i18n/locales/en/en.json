@@ -94,5 +94,8 @@
     "naas-error": "Error with no-as-a-service",
     "naas-error-desc": "An error occurred while communicating with no-as-a-service.",
     "naas-header": "A good way to say no...",
-    "error-deleting-loan-507": "The loan cannot be deleted because it has not been returned yet."
+    "error-deleting-loan-507": "The loan cannot be deleted because it has not been returned yet.",
+    "serviceDeactivatedHeadline": "Service deactivated",
+    "contactPage_serviceDeactivatedText": "The contact service is currently deactivated. Please try again later.",
+    "loan_page_serviceDeactivatedText": "The loan service is currently deactivated. Please try again later."
 }

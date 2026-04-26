@@ -42,6 +42,12 @@ export const ContactPage = () => {
         text: t("contactPage_successText"),
       });
       setMessage("");
+    } else if (result.status === 503) {
+      setAlert({
+        type: "error",
+        headline: t("serviceDeactivatedHeadline"),
+        text: t("contactPage_serviceDeactivatedText"),
+      });
     } else {
       setAlert({
         type: "error",

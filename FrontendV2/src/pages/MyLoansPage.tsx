@@ -52,6 +52,13 @@ export const MyLoansPage = () => {
         });
 
         if (!res.ok) {
+          if (res.status === 503) {
+            setMsgStatus("error");
+            setMsgTitle(t("serviceDeactivatedHeadline"));
+            setMsgDescription(t("loan_page_serviceDeactivatedText"));
+            setIsMsg(true);
+            return;
+          }
           setMsgStatus("error");
           setMsgTitle(t("error"));
           setMsgDescription(t("error-fetching-loans"));

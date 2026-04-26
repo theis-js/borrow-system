@@ -15,6 +15,7 @@ This update provides some new features for the design. It also contains some imp
 - Improved error logging
 - If you try to delete a loan that has not been returned yet, you will get an 507 error code.
 - When the admin deletes a loan, the loan will be still visible in the database, but it will be marked as deleted. This is to prevent data loss and to keep track of deleted loans.
+- Mailer improvements: The mailer is now more clearly organised. Two large code files are now split into five smaller code files which are easier to maintain. Also the design of the mails has improved.
 
 ## Fixed bugs
 

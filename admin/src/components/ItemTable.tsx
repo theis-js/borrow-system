@@ -57,32 +57,32 @@ const ItemTable: React.FC = () => {
 
   const handleItemNameChange = (id: number, value: string) => {
     setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, item_name: value } : it))
+      prev.map((it) => (it.id === id ? { ...it, item_name: value } : it)),
     );
   };
 
   const handleCanBorrowRoleChange = (id: number, value: string) => {
     setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, can_borrow_role: value } : it))
+      prev.map((it) => (it.id === id ? { ...it, can_borrow_role: value } : it)),
     );
   };
 
   const handleLockerNumberChange = (id: number, value: string) => {
     setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, safe_nr: value } : it))
+      prev.map((it) => (it.id === id ? { ...it, safe_nr: value } : it)),
     );
   };
 
   const handleDoorKeyChange = (id: number, value: string) => {
     setItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, door_key: value } : it))
+      prev.map((it) => (it.id === id ? { ...it, door_key: value } : it)),
     );
   };
 
   const setError = (
     status: "error" | "success",
     message: string,
-    description: string
+    description: string,
   ) => {
     setIsError(false);
     setErrorStatus(status);
@@ -102,7 +102,7 @@ const ItemTable: React.FC = () => {
             headers: {
               Authorization: `Bearer ${Cookies.get("token")}`,
             },
-          }
+          },
         );
         const data = await response.json();
         return data;
@@ -193,185 +193,229 @@ const ItemTable: React.FC = () => {
 
       {/* make table fill available width, like UserTable */}
       {!isLoading && (
-        <Table.Root
-          size="sm"
-          striped
-          w="100%"
-          style={{ tableLayout: "auto" }} // Spalten nach Content
-        >
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader>
-                <strong>#</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Gegenstand</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Ausleih Berechtigung</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Im Schließfach</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
-                <strong>Schließfachnummer</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
-                <strong>Schlüssel</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Eintrag erstellt am</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Eintrag aktualisiert am</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>LaP *</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Dav **</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader width="1%" whiteSpace="nowrap">
-                <strong>Aktionen</strong>
-              </Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {items.map((item) => (
-              <Table.Row key={item.id}>
-                <Table.Cell>{item.id}</Table.Cell>
-                <Table.Cell>
-                  <Input
-                    size="sm"
-                    w="max-content"
-                    onChange={(e) =>
-                      handleItemNameChange(item.id, e.target.value)
-                    }
-                    value={item.item_name}
-                  />
-                </Table.Cell>
-                <Table.Cell>
-                  <Input
-                    size="sm"
-                    w="max-content"
-                    onChange={(e) =>
-                      handleCanBorrowRoleChange(item.id, e.target.value)
-                    }
-                    value={item.can_borrow_role}
-                  />
-                </Table.Cell>
-                <Table.Cell>
-                  <Button
-                    onClick={() =>
-                      changeSafeState(item.id).then(() => setReload(!reload))
-                    }
-                    size="xs"
-                    rounded="full"
-                    px={3}
-                    py={1}
-                    gap={2}
-                    variant="ghost"
-                    color={item.in_safe ? "green.600" : "red.600"}
-                    borderWidth="1px"
-                    borderColor={item.in_safe ? "green.300" : "red.300"}
-                    _hover={{
-                      bg: item.in_safe ? "green.50" : "red.50",
-                      borderColor: item.in_safe ? "green.400" : "red.400",
-                      transform: "translateY(-1px)",
-                      shadow: "sm",
-                    }}
-                    _active={{ transform: "translateY(0)" }}
-                    aria-label={
-                      item.in_safe ? "Mark as not in safe" : "Mark as in safe"
-                    }
-                  >
-                    <Icon
-                      as={item.in_safe ? CheckCircle2 : XCircle}
-                      boxSize={3.5}
-                      mr={2}
-                    />
-                    <Text as="span" fontSize="xs" fontWeight="semibold">
-                      {item.in_safe ? "Yes" : "No"}
-                    </Text>
-                  </Button>
-                </Table.Cell>
-                <Table.Cell>
-                  <Input
-                    size="sm"
-                    w="max-content"
-                    onChange={(e) =>
-                      handleLockerNumberChange(item.id, e.target.value)
-                    }
-                    value={item.safe_nr}
-                  />
-                </Table.Cell>
-                <Table.Cell>
-                  <Input
-                    size="sm"
-                    w="max-content"
-                    onChange={(e) =>
-                      handleDoorKeyChange(item.id, e.target.value)
-                    }
-                    value={item.door_key}
-                  />
-                </Table.Cell>
-                <Table.Cell>{formatDateTime(item.entry_created_at)}</Table.Cell>
-                <Table.Cell>{formatDateTime(item.entry_updated_at)}</Table.Cell>
-                <Table.Cell>{item.last_borrowed_person}</Table.Cell>
-                <Table.Cell>{item.currently_borrowing}</Table.Cell>
-                <Table.Cell whiteSpace="nowrap">
-                  <Button
-                    onClick={() =>
-                      handleEditItems(
-                        item.id,
-                        item.item_name,
-                        item.safe_nr,
-                        item.door_key,
-                        item.can_borrow_role
-                      ).then((response) => {
-                        if (response.success) {
-                          setError(
-                            "success",
-                            "Gegenstand erfolgreich bearbeitet!",
-                            "Gegenstand " +
-                              '"' +
-                              item.item_name +
-                              '" mit ID ' +
-                              item.id +
-                              " bearbeitet."
-                          );
-                        }
-                      })
-                    }
-                    colorPalette="teal"
-                    size="sm"
-                  >
-                    <Save />
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      deleteItem(item.id).then((response) => {
-                        if (response.success) {
-                          setItems(items.filter((i) => i.id !== item.id));
-                          setError(
-                            "success",
-                            "Gegenstand gelöscht",
-                            "Der Gegenstand wurde erfolgreich gelöscht."
-                          );
-                        }
-                      })
-                    }
-                    colorPalette="red"
-                    size="sm"
-                    ml={2}
-                  >
-                    <Trash2 />
-                  </Button>
-                </Table.Cell>
+        <Table.ScrollArea flex="1" minH={0} rounded="md" mt={4}>
+          <Table.Root
+            size="sm"
+            striped
+            stickyHeader
+            css={{
+              "& [data-sticky]": {
+                position: "sticky",
+                zIndex: 1,
+                bg: "bg",
+
+                _after: {
+                  content: '""',
+                  position: "absolute",
+                  pointerEvents: "none",
+                  top: "0",
+                  bottom: "-1px",
+                  width: "32px",
+                },
+              },
+
+              "& [data-sticky=end]": {
+                _after: {
+                  insetInlineEnd: "0",
+                  translate: "100% 0",
+                  shadow: "inset 8px 0px 8px -8px rgba(0, 0, 0, 0.16)",
+                },
+              },
+
+              "& [data-sticky=start]": {
+                _after: {
+                  insetInlineStart: "0",
+                  translate: "-100% 0",
+                  shadow: "inset -8px 0px 8px -8px rgba(0, 0, 0, 0.16)",
+                },
+              },
+
+              "& thead tr": {
+                shadow: "0 1px 0 0 {colors.border}",
+                "&:has(th[data-sticky])": {
+                  zIndex: 2,
+                },
+              },
+            }}
+          >
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>
+                  <strong>#</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Gegenstand</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Ausleih Berechtigung</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Im Schließfach</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader width="1%" whiteSpace="nowrap">
+                  <strong>Schließfachnummer</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader width="1%" whiteSpace="nowrap">
+                  <strong>Schlüssel</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Eintrag erstellt am</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Eintrag aktualisiert am</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>LaP *</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Dav **</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader width="1%" whiteSpace="nowrap">
+                  <strong>Aktionen</strong>
+                </Table.ColumnHeader>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
+            </Table.Header>
+            <Table.Body>
+              {items.map((item) => (
+                <Table.Row key={item.id}>
+                  <Table.Cell>{item.id}</Table.Cell>
+                  <Table.Cell>
+                    <Input
+                      size="sm"
+                      w="max-content"
+                      onChange={(e) =>
+                        handleItemNameChange(item.id, e.target.value)
+                      }
+                      value={item.item_name}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Input
+                      size="sm"
+                      w="max-content"
+                      onChange={(e) =>
+                        handleCanBorrowRoleChange(item.id, e.target.value)
+                      }
+                      value={item.can_borrow_role}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      onClick={() =>
+                        changeSafeState(item.id).then(() => setReload(!reload))
+                      }
+                      size="xs"
+                      rounded="full"
+                      px={3}
+                      py={1}
+                      gap={2}
+                      variant="ghost"
+                      color={item.in_safe ? "green.600" : "red.600"}
+                      borderWidth="1px"
+                      borderColor={item.in_safe ? "green.300" : "red.300"}
+                      _hover={{
+                        bg: item.in_safe ? "green.50" : "red.50",
+                        borderColor: item.in_safe ? "green.400" : "red.400",
+                        transform: "translateY(-1px)",
+                        shadow: "sm",
+                      }}
+                      _active={{ transform: "translateY(0)" }}
+                      aria-label={
+                        item.in_safe ? "Mark as not in safe" : "Mark as in safe"
+                      }
+                    >
+                      <Icon
+                        as={item.in_safe ? CheckCircle2 : XCircle}
+                        boxSize={3.5}
+                        mr={2}
+                      />
+                      <Text as="span" fontSize="xs" fontWeight="semibold">
+                        {item.in_safe ? "Yes" : "No"}
+                      </Text>
+                    </Button>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Input
+                      size="sm"
+                      w="max-content"
+                      onChange={(e) =>
+                        handleLockerNumberChange(item.id, e.target.value)
+                      }
+                      value={item.safe_nr}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Input
+                      size="sm"
+                      w="max-content"
+                      onChange={(e) =>
+                        handleDoorKeyChange(item.id, e.target.value)
+                      }
+                      value={item.door_key}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    {formatDateTime(item.entry_created_at)}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {formatDateTime(item.entry_updated_at)}
+                  </Table.Cell>
+                  <Table.Cell>{item.last_borrowed_person}</Table.Cell>
+                  <Table.Cell>{item.currently_borrowing}</Table.Cell>
+                  <Table.Cell whiteSpace="nowrap">
+                    <Button
+                      onClick={() =>
+                        handleEditItems(
+                          item.id,
+                          item.item_name,
+                          item.safe_nr,
+                          item.door_key,
+                          item.can_borrow_role,
+                        ).then((response) => {
+                          if (response.success) {
+                            setError(
+                              "success",
+                              "Gegenstand erfolgreich bearbeitet!",
+                              "Gegenstand " +
+                                '"' +
+                                item.item_name +
+                                '" mit ID ' +
+                                item.id +
+                                " bearbeitet.",
+                            );
+                          }
+                        })
+                      }
+                      colorPalette="teal"
+                      size="sm"
+                    >
+                      <Save />
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        deleteItem(item.id).then((response) => {
+                          if (response.success) {
+                            setItems(items.filter((i) => i.id !== item.id));
+                            setError(
+                              "success",
+                              "Gegenstand gelöscht",
+                              "Der Gegenstand wurde erfolgreich gelöscht.",
+                            );
+                          }
+                        })
+                      }
+                      colorPalette="red"
+                      size="sm"
+                      ml={2}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Table.ScrollArea>
       )}
       <Text>* LaP = Letzte ausleihende Person</Text>
       <Text>** Dav = Derzeit ausgeliehen von</Text>

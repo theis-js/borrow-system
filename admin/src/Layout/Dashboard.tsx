@@ -47,7 +47,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         viewAPI={() => setActiveView("API")}
         viewConfig={() => setActiveView("Server Konfiguration")}
       />
-      <Box flex="1" display="flex" flexDirection="column">
+      <Box flex="1" display="flex" flexDirection="column" minH={0}>
         <Flex
           as="header"
           align="center"
@@ -68,7 +68,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             </Button>
           </Flex>
         </Flex>
-        <Box as="main" flex="1" p={6}>
+        <Box as="main" flex="1" p={6} minH={0} overflow="hidden">
           {activeView === "" && (
             <Flex
               align="center"

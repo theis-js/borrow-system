@@ -133,12 +133,6 @@ export const HomePage = () => {
           >
             {t("get-borrowable-items")}
           </Button>
-          {isLoadingA && (
-            <VStack colorPalette="teal">
-              <Spinner color="colorPalette.600" />
-              <Text color="colorPalette.600">{t("loading")}</Text>
-            </VStack>
-          )}
           {borrowableItems.length > 0 && (
             <Table.ScrollArea borderWidth="1px" rounded="md">
               <Table.Root size="sm" stickyHeader>
@@ -191,9 +185,11 @@ export const HomePage = () => {
           )}
           {selectedItems.length >= 1 && (
             <Button
-              onClick={() =>
+              onClick={() => {
+                setIsLoadingA(true);
                 createLoan(selectedItems, startDate, endDate, note).then(
                   (response) => {
+                    setIsLoadingA(false);
                     if (response.status === "error") {
                       setMsgStatus("error");
                       setMsgTitle(response.title || t("error"));
@@ -209,11 +205,17 @@ export const HomePage = () => {
                     setMsgDescription(t("loan-success"));
                     setIsMsg(true);
                   },
-                )
-              }
+                );
+              }}
             >
               {t("create-loan")}
             </Button>
+          )}
+          {isLoadingA && (
+            <VStack colorPalette="teal">
+              <Spinner color="colorPalette.600" />
+              <Text color="colorPalette.600">{t("loading")}</Text>
+            </VStack>
           )}
         </Stack>
       </Container>

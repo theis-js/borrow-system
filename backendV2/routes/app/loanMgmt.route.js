@@ -4,9 +4,14 @@ import {
   checkIfServiceIsActive,
   checkIfServiceIsActive2,
 } from "../../services/functions.js";
-const router = express.Router();
+
+// mailer imports
+import { sendMail } from "../../services/mailer/send.js";
+import { loanMail } from "../../services/mailer/templates/loan_created.js";
+
 import dotenv from "dotenv";
 dotenv.config();
+const router = express.Router();
 
 const loan_service = "Loan Service";
 const loan_mailer_service = "Loan Mailer";
@@ -23,7 +28,6 @@ import {
   setReturnDate,
   setTakeDate,
 } from "./database/loansMgmt.database.js";
-import { sendMailLoan } from "./services/mailer.js";
 
 router.post(
   "/createLoan",
@@ -63,19 +67,24 @@ router.post(
         note,
         itemIds,
       );
-
       if (result.success) {
         if (await checkIfServiceIsActive2(loan_mailer_service)) {
           const mailInfo = await getLoanInfoWithID(result.data.id);
           console.log(mailInfo);
-          sendMailLoan(
-            mailInfo.data.username,
+          const { html, text } = loanMail(
+            req.user.first_name + " " + req.user.last_name,
             mailInfo.data.loaned_items_name,
             mailInfo.data.start_date,
             mailInfo.data.end_date,
             mailInfo.data.created_at,
             mailInfo.data.note,
           );
+          await sendMail({
+            to: process.env.MAIL_SENDEES,
+            subject: "Neue Ausleihe erstellt!",
+            html,
+            text,
+          });
         }
 
         return res.status(201).json({

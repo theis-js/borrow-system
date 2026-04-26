@@ -99,5 +99,7 @@
     "contactPage_serviceDeactivatedText": "Der Kontaktservice ist derzeit deaktiviert. Bitte versuchen Sie es später erneut.",
     "loan_page_serviceDeactivatedText": "Der Ausleihservice ist derzeit deaktiviert. Bitte versuchen Sie es später erneut.",
     "is-deactivated": "ist deaktiviert.",
-    "deactivated-services": "Deaktivierte Services"
+    "deactivated-services": "Deaktivierte Services",
+    "contactPage_messageErrorHeadline": "Fehler bei der Nachrichteneingabe",
+    "contactPage_messageErrorText2": "Bitte geben Sie eine Nachricht ein, bevor Sie sie senden."
 }

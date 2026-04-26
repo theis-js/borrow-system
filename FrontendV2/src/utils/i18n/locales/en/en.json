@@ -99,5 +99,7 @@
     "contactPage_serviceDeactivatedText": "The contact service is currently deactivated. Please try again later.",
     "loan_page_serviceDeactivatedText": "The loan service is currently deactivated. Please try again later.",
     "is-deactivated": "is deactivated.",
-    "deactivated-services": "Deactivated services"
+    "deactivated-services": "Deactivated services",
+    "contactPage_messageErrorHeadline": "Error submitting message",
+    "contactPage_messageErrorText2": "Please enter a message before sending it."
 }

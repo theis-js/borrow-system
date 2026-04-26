@@ -14,7 +14,10 @@ import {
   changePassword,
   getDeactivatedServices,
 } from "./database/userMgmt.database.js";
-import { sendMail } from "./services/mailer_v2.js";
+
+// mailer imports
+import { sendMail } from "../../services/mailer/send.js";
+import { contactMail } from "../../services/mailer/templates/contact.js";
 
 router.post(
   "/login",
@@ -58,12 +61,29 @@ router.post(
   checkIfServiceIsActive(contact_form_service),
   authenticate,
   async (req, res) => {
-    const message = req.body.message;
-    const username = req.user.username;
+    try {
+      const message = req.body?.message;
+      const username = req.user?.first_name + " " + req.user?.last_name;
 
-    sendMail(username, message);
+      if (!username || !message) {
+        return res
+          .status(400)
+          .json({ message: "Username and message are required" });
+      }
 
-    res.status(200).json({ message: "Contact message sent successfully" });
+      const { html, text } = contactMail({ username, message });
+      await sendMail({
+        to: process.env.MAIL_SENDEES_CONTACT,
+        subject: "Neue Nachricht!",
+        html,
+        text,
+      });
+
+      res.status(200).json({ message: "Contact message sent successfully" });
+    } catch (error) {
+      console.error("Failed to send contact mail:", error);
+      res.status(500).json({ message: "Failed to send contact message" });
+    }
   },
 );
 

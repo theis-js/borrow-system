@@ -17,7 +17,10 @@ export const getAllLoans = async () => {
 };
 
 export const deleteLoanById = async (loanId) => {
-  const [result] = await pool.query("DELETE FROM loans WHERE id = ?", [loanId]);
+  const [result] = await pool.query(
+    "UPDATE loans SET deleted = true, deleted_admin = true WHERE id = ?",
+    [loanId],
+  );
   if (result.affectedRows > 0) return { success: true };
   return { success: false };
 };

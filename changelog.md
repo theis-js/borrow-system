@@ -11,9 +11,10 @@ This update provides some new features for the design. It also contains some imp
 
 ## Improvements
 
-- The overview page now has the note column and is overall better organised
-- I have the error logging for the API route wehre you can take loans improved.
+- The overview page now shows the note column and is overall better organised.
+- Improved error logging
 - If you try to delete a loan that has not been returned yet, you will get an 507 error code.
+- When the admin deletes a loan, the loan will be still visible in the database, but it will be marked as deleted. This is to prevent data loss and to keep track of deleted loans.
 
 ## Fixed bugs
 

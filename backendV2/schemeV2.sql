@@ -27,6 +27,7 @@ CREATE TABLE loans (
   loaned_items_id json NOT NULL DEFAULT ('[]'),
   loaned_items_name json NOT NULL DEFAULT ('[]'),
   deleted bool NOT NULL DEFAULT false,
+  deleted_admin bool NOT NULL DEFAULT false,
   note varchar(500) DEFAULT NULL,
   PRIMARY KEY (id),
   CHECK (loan_code REGEXP '^[0-9]{6}$')

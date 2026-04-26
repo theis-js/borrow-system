@@ -69,6 +69,7 @@ export const Header = () => {
       className="mb-6"
       position="relative"
       pr={{ base: 10, md: 0 }} // Platz für den Mobile-Button rechts
+      marginBottom={1}
     >
       {/* Mobile: Drei-Punkte-Button, vertikal zentriert im Header */}
       <Box

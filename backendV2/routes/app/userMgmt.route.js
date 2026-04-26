@@ -9,7 +9,11 @@ const user_frontend_service = "User Frontend";
 const contact_form_service = "Contact Form Service";
 
 // database funcs import
-import { loginFunc, changePassword } from "./database/userMgmt.database.js";
+import {
+  loginFunc,
+  changePassword,
+  getDeactivatedServices,
+} from "./database/userMgmt.database.js";
 import { sendMail } from "./services/mailer_v2.js";
 
 router.post(
@@ -62,5 +66,14 @@ router.post(
     res.status(200).json({ message: "Contact message sent successfully" });
   },
 );
+
+router.get("/deactivated-services", authenticate, async (req, res) => {
+  const result = await getDeactivatedServices();
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json({ message: "Failed to fetch deactivated services" });
+  }
+});
 
 export default router;

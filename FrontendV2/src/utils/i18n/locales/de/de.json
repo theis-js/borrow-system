@@ -94,5 +94,10 @@
     "naas-error": "Fehler mit no-as-a-service",
     "naas-error-desc": "Ein Fehler ist beim Kommunizieren mit no-as-a-service aufgetreten.",
     "naas-header": "Eine gute Möglichkeit, nein zu sagen...",
-    "error-deleting-loan-507": "Die Ausleihe kann nicht gelöscht werden, da sie noch nicht zurückgegeben wurde."
+    "error-deleting-loan-507": "Die Ausleihe kann nicht gelöscht werden, da sie noch nicht zurückgegeben wurde.",
+    "serviceDeactivatedHeadline": "Service deaktiviert",
+    "contactPage_serviceDeactivatedText": "Der Kontaktservice ist derzeit deaktiviert. Bitte versuchen Sie es später erneut.",
+    "loan_page_serviceDeactivatedText": "Der Ausleihservice ist derzeit deaktiviert. Bitte versuchen Sie es später erneut.",
+    "is-deactivated": "ist deaktiviert.",
+    "deactivated-services": "Deaktivierte Services"
 }

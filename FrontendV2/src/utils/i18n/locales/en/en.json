@@ -97,5 +97,7 @@
     "error-deleting-loan-507": "The loan cannot be deleted because it has not been returned yet.",
     "serviceDeactivatedHeadline": "Service deactivated",
     "contactPage_serviceDeactivatedText": "The contact service is currently deactivated. Please try again later.",
-    "loan_page_serviceDeactivatedText": "The loan service is currently deactivated. Please try again later."
+    "loan_page_serviceDeactivatedText": "The loan service is currently deactivated. Please try again later.",
+    "is-deactivated": "is deactivated.",
+    "deactivated-services": "Deactivated services"
 }

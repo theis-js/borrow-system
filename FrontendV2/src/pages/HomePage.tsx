@@ -19,6 +19,7 @@ import { createLoan } from "@/utils/Fetcher";
 import { Header } from "@/components/Header";
 import { useTranslation } from "react-i18next";
 import { approvalAnimation } from "@/components/dotLottie";
+import { DeactivatedServices } from "@/components/DeactivatedServices";
 
 export interface User {
   username: string;
@@ -71,6 +72,7 @@ export const HomePage = () => {
       )}
       <Container className="px-6 sm:px-8 pt-10">
         <Header />
+        <DeactivatedServices />
         {isMsg && (
           <MyAlert
             status={msgStatus}

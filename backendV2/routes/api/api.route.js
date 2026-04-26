@@ -5,7 +5,7 @@ const router = express.Router();
 import dotenv from "dotenv";
 dotenv.config();
 
-const loan_service = loan_service;
+const loan_service = "Loan Service";
 
 import {
   getItemsFromDatabaseV2,

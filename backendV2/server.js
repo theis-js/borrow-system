@@ -14,6 +14,7 @@ import loanDataMgmtRouter from "./routes/admin/loanDataMgmt.route.js";
 import itemDataMgmtRouter from "./routes/admin/itemDataMgmt.route.js";
 import apiDataMgmtRouter from "./routes/admin/apiDataMgmt.route.js";
 import userMgmtRouterADMIN from "./routes/admin/userMgmt.route.js";
+import serverConfMgmtRouter from "./routes/admin/serverConfMgmt.route.js";
 
 // API routes
 import apiRouter from "./routes/api/api.route.js";
@@ -38,6 +39,7 @@ app.use("/api/admin/user-data", userDataMgmtRouter);
 app.use("/api/admin/item-data", itemDataMgmtRouter);
 app.use("/api/admin/api-data", apiDataMgmtRouter);
 app.use("/api/admin/user-mgmt", userMgmtRouterADMIN);
+app.use("/api/admin/server-config", serverConfMgmtRouter);
 
 // API routes
 app.use("/api", apiRouter);

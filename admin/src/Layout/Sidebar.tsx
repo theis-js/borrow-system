@@ -9,6 +9,7 @@ type SidebarProps = {
   viewSchliessfaecher: () => void;
   viewUser: () => void;
   viewAPI: () => void;
+  viewConfig: () => void;
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -16,6 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   viewGegenstaende,
   viewUser,
   viewAPI,
+  viewConfig
 }) => {
   const [info, setInfo] = useState<any>(null);
 
@@ -82,6 +84,15 @@ const Sidebar: React.FC<SidebarProps> = ({
             onClick={viewAPI}
           >
             API Keys
+          </Link>
+          <Link
+            px={3}
+            py={2}
+            rounded="md"
+            _hover={{ bg: "gray.700", textDecoration: "none" }}
+            onClick={viewConfig}
+          >
+            Server Konfiguration
           </Link>
         </VStack>
 

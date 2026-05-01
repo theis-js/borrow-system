@@ -4,14 +4,14 @@ services:
   #    build: ./FrontendV2
   #    ports:
   #      - "8001:80"
-  #    restart: unless-stopped
+  #    restart: always
 
   #  admin-frontend:
   #    container_name: borrow_system-admin-frontend
   #    build: ./admin
   #    ports:
   #      - "8003:80"
-  #    restart: unless-stopped
+  #    restart: always
 
   backend_v2:
     container_name: borrow_system-backend_v2
@@ -26,12 +26,12 @@ services:
       DB_NAME: borrow_system_new
     depends_on:
       - mysql_v2
-    restart: unless-stopped
+    restart: always
 
   mysql_v2:
     container_name: borrow_system-mysql-v2
     image: mysql:8.0
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_V2}
       MYSQL_DATABASE: borrow_system_new
@@ -41,6 +41,15 @@ services:
       - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
     ports:
       - "3310:3306"
+
+  no-as-a-service:
+    container_name: borrow_system-naas
+    ports:
+      - "3000:3000"
+    build:
+      context: ./no-as-a-service
+      dockerfile: Dockerfile
+    restart: always
 
 volumes:
   mysql-data:

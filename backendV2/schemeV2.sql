@@ -28,6 +28,7 @@ CREATE TABLE loans (
   loaned_items_id json NOT NULL DEFAULT ('[]'),
   loaned_items_name json NOT NULL DEFAULT ('[]'),
   deleted bool NOT NULL DEFAULT false,
+  deleted_admin bool NOT NULL DEFAULT false,
   note varchar(500) DEFAULT NULL,
   PRIMARY KEY (id),
   CHECK (loan_code REGEXP '^[0-9]{6}$')
@@ -56,3 +57,14 @@ CREATE TABLE apiKeys (
   PRIMARY KEY (id),
   CHECK (api_key REGEXP '^[0-9]{8}$')
 ) ENGINE=InnoDB;
+
+CREATE TABLE functions (
+  id INT NOT NULL AUTO_INCREMENT,
+  function_name VARCHAR(500) NOT NULL UNIQUE,
+  active BOOLEAN NOT NULL DEFAULT true,
+  entry_updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  entry_created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
+INSERT INTO functions (function_name) VALUES ("Loan Mailer"), ("Loan Service"), ("Contact Form Service"), ("User Frontend"), ("API")

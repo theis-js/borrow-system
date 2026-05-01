@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Image,
   Heading,
   Stack,
   Text,
@@ -67,6 +68,7 @@ export const Header = () => {
       className="mb-6"
       position="relative"
       pr={{ base: 10, md: 0 }} // Platz für den Mobile-Button rechts
+      marginBottom={1}
     >
       {/* Mobile: Drei-Punkte-Button, vertikal zentriert im Header */}
       <Box
@@ -179,6 +181,13 @@ export const Header = () => {
         <Stack gap={1}>
           {/* Titelzeile ohne Mobile-Menu (wurde nach oben verlegt) */}
           <Flex align="center" justify="space-between" gap={2}>
+            <Image
+              src="/icon_borrow-system-frontend_dark.png"
+              alt="borrow-system logo"
+              boxSize="10"
+              objectFit="contain"
+              flexShrink={0}
+            />
             <Heading
               size="2xl"
               className="tracking-tight text-slate-900 dark:text-slate-100"

@@ -7,6 +7,7 @@ import UserTable from "../components/UserTable";
 import ItemTable from "../components/ItemTable";
 import LoanTable from "../components/LoanTable";
 import APIKeyTable from "@/components/APIKeyTable";
+import ServerConfig from "@/components/ServerConfig";
 import { MoveLeft } from "lucide-react";
 
 type DashboardProps = {
@@ -44,8 +45,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         viewSchliessfaecher={() => setActiveView("Schließfächer")}
         viewUser={() => setActiveView("User")}
         viewAPI={() => setActiveView("API")}
+        viewConfig={() => setActiveView("Server Konfiguration")}
       />
-      <Box flex="1" display="flex" flexDirection="column">
+      <Box flex="1" display="flex" flexDirection="column" minH={0}>
         <Flex
           as="header"
           align="center"
@@ -66,7 +68,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             </Button>
           </Flex>
         </Flex>
-        <Box as="main" flex="1" p={6}>
+        <Box as="main" flex="1" p={6} minH={0} overflow="hidden">
           {activeView === "" && (
             <Flex
               align="center"
@@ -88,6 +90,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           {activeView === "Ausleihen" && <LoanTable />}
           {activeView === "Gegenstände" && <ItemTable />}
           {activeView === "API" && <APIKeyTable />}
+          {activeView === "Server Konfiguration" && <ServerConfig />}
         </Box>
       </Box>
     </Flex>

@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Box,
   Table,
   Spinner,
   Text,
@@ -31,7 +32,7 @@ const LoanTable: React.FC = () => {
   const setError = (
     status: "error" | "success",
     message: string,
-    description: string
+    description: string,
   ) => {
     setIsError(false);
     setErrorStatus(status);
@@ -65,7 +66,7 @@ const LoanTable: React.FC = () => {
             headers: {
               Authorization: `Bearer ${Cookies.get("token")}`,
             },
-          }
+          },
         );
         const data = await response.json();
         return data;
@@ -83,7 +84,7 @@ const LoanTable: React.FC = () => {
   }, [reload]);
 
   return (
-    <>
+    <Box h="full" display="flex" flexDirection="column" minH={0}>
       {/* Action toolbar */}
       <HStack
         mb={4}
@@ -131,86 +132,131 @@ const LoanTable: React.FC = () => {
         </VStack>
       )}
       {!isLoading && (
-        <Table.Root size="sm" striped>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader>
-                <strong>#</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Besitzer</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Ausleih code</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Startdatum</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Enddatum</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Ausleihdatum</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Rückgabedatum</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Erstellt am</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Ausgeliehene Artikel</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Notiz</strong>
-              </Table.ColumnHeader>
-              <Table.ColumnHeader>
-                <strong>Aktionen</strong>
-              </Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {items.map((item) => (
-              <Table.Row color={item.deleted ? "red" : "white"} key={item.id}>
-                <Table.Cell>{item.id}</Table.Cell>
-                <Table.Cell>{item.username}</Table.Cell>
-                <Table.Cell>
-                  <Code>{item.loan_code}</Code>
-                </Table.Cell>
-                <Table.Cell>{formatDateTime(item.start_date)}</Table.Cell>
-                <Table.Cell>{formatDateTime(item.end_date)}</Table.Cell>
-                <Table.Cell>{formatDateTime(item.take_date)}</Table.Cell>
-                <Table.Cell>{formatDateTime(item.returned_date)}</Table.Cell>
-                <Table.Cell>{formatDateTime(item.created_at)}</Table.Cell>
-                <Table.Cell>{item.loaned_items_name.join(", ")}</Table.Cell>
-                <Table.Cell>{item.note}</Table.Cell>
-                <Table.Cell>
-                  <Button
-                    onClick={() =>
-                      deleteLoan(item.id).then((response) => {
-                        if (response.success) {
-                          setItems(items.filter((i) => i.id !== item.id));
-                          setError(
-                            "success",
-                            "Loan deleted",
-                            "The loan has been successfully deleted."
-                          );
-                        }
-                      })
-                    }
-                    colorPalette="red"
-                    size="sm"
-                    ml={2}
-                  >
-                    <Trash2 />
-                  </Button>
-                </Table.Cell>
+        <Table.ScrollArea flex="1" minH={0} rounded="md" mt={4}>
+          <Table.Root
+            size="sm"
+            striped
+            stickyHeader
+            css={{
+              "& [data-sticky]": {
+                position: "sticky",
+                zIndex: 1,
+                bg: "bg",
+
+                _after: {
+                  content: '""',
+                  position: "absolute",
+                  pointerEvents: "none",
+                  top: "0",
+                  bottom: "-1px",
+                  width: "32px",
+                },
+              },
+
+              "& [data-sticky=end]": {
+                _after: {
+                  insetInlineEnd: "0",
+                  translate: "100% 0",
+                  shadow: "inset 8px 0px 8px -8px rgba(0, 0, 0, 0.16)",
+                },
+              },
+
+              "& [data-sticky=start]": {
+                _after: {
+                  insetInlineStart: "0",
+                  translate: "-100% 0",
+                  shadow: "inset -8px 0px 8px -8px rgba(0, 0, 0, 0.16)",
+                },
+              },
+
+              "& thead tr": {
+                shadow: "0 1px 0 0 {colors.border}",
+                "&:has(th[data-sticky])": {
+                  zIndex: 2,
+                },
+              },
+            }}
+          >
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>
+                  <strong>#</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Besitzer</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Ausleihcode</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Startdatum</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Enddatum</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Ausleihdatum</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Rückgabedatum</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Erstellt am</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Ausgeliehene Artikel</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Notiz</strong>
+                </Table.ColumnHeader>
+                <Table.ColumnHeader>
+                  <strong>Aktionen</strong>
+                </Table.ColumnHeader>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
+            </Table.Header>
+            <Table.Body>
+              {items.map((item) => (
+                <Table.Row color={item.deleted ? "red" : "white"} key={item.id}>
+                  <Table.Cell>{item.id}</Table.Cell>
+                  <Table.Cell>{item.username}</Table.Cell>
+                  <Table.Cell>
+                    <Code>{item.loan_code}</Code>
+                  </Table.Cell>
+                  <Table.Cell>{formatDateTime(item.start_date)}</Table.Cell>
+                  <Table.Cell>{formatDateTime(item.end_date)}</Table.Cell>
+                  <Table.Cell>{formatDateTime(item.take_date)}</Table.Cell>
+                  <Table.Cell>{formatDateTime(item.returned_date)}</Table.Cell>
+                  <Table.Cell>{formatDateTime(item.created_at)}</Table.Cell>
+                  <Table.Cell>{item.loaned_items_name.join(", ")}</Table.Cell>
+                  <Table.Cell>{item.note}</Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      onClick={() =>
+                        deleteLoan(item.id).then((response) => {
+                          if (response.success) {
+                            setItems(items.filter((i) => i.id !== item.id));
+                            setError(
+                              "success",
+                              "Loan deleted",
+                              "The loan has been successfully deleted.",
+                            );
+                          }
+                        })
+                      }
+                      colorPalette="red"
+                      size="sm"
+                      ml={2}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Table.ScrollArea>
       )}
-    </>
+    </Box>
   );
 };
 

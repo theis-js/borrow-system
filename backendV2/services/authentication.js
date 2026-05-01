@@ -1,7 +1,11 @@
 import { SignJWT, jwtVerify } from "jose";
 import env from "dotenv";
 import { verifyAPIKeyDB } from "./database.js";
+import { checkIfServiceIsActive2 } from "./functions.js";
 env.config();
+
+const api_service = "API";
+const user_frontend_service = "User Frontend";
 
 const secretKey = process.env.SECRET_KEY;
 if (!secretKey) {
@@ -45,6 +49,13 @@ export async function authenticate(req, res, next) {
   const apiKey = req.params.key;
 
   if (authHeader) {
+    const serviceActive = await checkIfServiceIsActive2(user_frontend_service);
+    if (!serviceActive) {
+      return res
+        .status(503)
+        .json({ message: "User Frontend is currently unavailable." });
+    }
+
     const parts = authHeader.split(" ");
     const scheme = parts[0];
     const token = parts[1];
@@ -61,6 +72,13 @@ export async function authenticate(req, res, next) {
       return res.status(403).json({ message: "Present token invalid" }); // present token invalid
     }
   } else if (apiKey) {
+    const serviceActive = await checkIfServiceIsActive2(api_service);
+    if (!serviceActive) {
+      return res
+        .status(503)
+        .json({ message: "API Service is currently unavailable." });
+    }
+
     try {
       await verifyAPIKey(apiKey);
       return next();

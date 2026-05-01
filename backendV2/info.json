@@ -1,11 +1,11 @@
 {
     "backend-info": {
-        "version": "v2.2 (dev)"
+        "version": "v2.2 (demo)"
     },
     "frontend-info": {
-        "version": "v2.2 (dev)"
+        "version": "v2.2 (demo)"
     },
     "admin-panel-info": {
-        "version": "v1.4 (dev)"
+        "version": "v1.4 (demo)"
     }
 }

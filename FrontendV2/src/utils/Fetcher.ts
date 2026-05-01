@@ -17,6 +17,16 @@ export const getBorrowableItems = async (
     });
 
     if (!response.ok) {
+      if (response.status === 503) {
+        return {
+          data: null,
+          status: "error",
+          title: "Service deactivated",
+          description:
+            "The loan service is currently deactivated. Please try again later.",
+        };
+      }
+
       return {
         data: null,
         status: "error",
@@ -60,6 +70,16 @@ export const createLoan = async (
   });
 
   if (!response.ok) {
+    if (response.status === 503) {
+      return {
+        data: null,
+        status: "error",
+        title: "Service deactivated",
+        description:
+          "The loan service is currently deactivated. Please try again later.",
+      };
+    }
+
     return {
       data: null,
       status: "error",

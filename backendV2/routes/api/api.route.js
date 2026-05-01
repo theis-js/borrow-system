@@ -1,8 +1,11 @@
 import express from "express";
 import { authenticate } from "../../services/authentication.js";
+import { checkIfServiceIsActive } from "../../services/functions.js";
 const router = express.Router();
 import dotenv from "dotenv";
 dotenv.config();
+
+const loan_service = "Loan Service";
 
 import {
   getItemsFromDatabaseV2,
@@ -39,6 +42,7 @@ router.post("/change-state/:key/:itemId", authenticate, async (req, res) => {
 router.get(
   "/get-loan-by-code/:key/:loan_code",
   authenticate,
+  checkIfServiceIsActive(loan_service),
   async (req, res) => {
     const loan_code = req.params.loan_code;
     const result = await getLoanByCodeV2(loan_code);
@@ -54,6 +58,7 @@ router.get(
 router.post(
   "/set-return-date/:key/:loan_code",
   authenticate,
+  checkIfServiceIsActive(loan_service),
   async (req, res) => {
     const loanCode = req.params.loan_code;
     const result = await setReturnDateV2(loanCode);
@@ -69,6 +74,7 @@ router.post(
 router.post(
   "/set-take-date/:key/:loan_code",
   authenticate,
+  checkIfServiceIsActive(loan_service),
   async (req, res) => {
     const loanCode = req.params.loan_code;
     const result = await setTakeDateV2(loanCode);

@@ -234,6 +234,23 @@ export const getBorrowableItemsFromDatabase = async (
 };
 
 export const SETdeleteLoanFromDatabase = async (loanId) => {
+  const [checkIfdatesReturned] = await pool.query(
+    "SELECT take_date, returned_date FROM loans WHERE id = ? AND deleted = 0",
+    [loanId],
+  );
+
+  if (checkIfdatesReturned.length === 0) {
+    return { success: false, code: "LOAN_NOT_FOUND" };
+  }
+
+  const { take_date, returned_date } = checkIfdatesReturned[0];
+  const bothNull = take_date === null && returned_date === null;
+  const bothSet = take_date !== null && returned_date !== null;
+
+  if (!(bothNull || bothSet)) {
+    return { success: false, code: "LOAN_NOT_RETURNED" };
+  }
+
   const [result] = await pool.query(
     "UPDATE loans SET deleted = 1 WHERE id = ?;",
     [loanId],

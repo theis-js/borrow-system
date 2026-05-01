@@ -79,6 +79,16 @@ const Landingpage: React.FC = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
         });
+        if (loanRes.status === 503) {
+          setError(
+            "error",
+            t("serviceDeactivatedHeadline"),
+            t("loan_page_serviceDeactivatedText"),
+          );
+          setIsLoading(false);
+          return;
+        }
+
         const loanData = await loanRes.json();
         if (Array.isArray(loanData)) {
           setLoans(loanData);

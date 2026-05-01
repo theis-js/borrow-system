@@ -1,0 +1,3 @@
+[submodule "no-as-a-service"]
+	path = no-as-a-service
+	url = https://github.com/hotheadhacker/no-as-a-service.git

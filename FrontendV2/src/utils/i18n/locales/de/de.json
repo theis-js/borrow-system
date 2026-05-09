@@ -60,7 +60,7 @@
     "sure-delete-loan-2": "Für den Admin bleibt sie weiterhin sichtbar.",
     "delete": "Löschen",
     "change-language": "Sprache ändern",
-    "timezone-info": "Die angezeigten Daten und Uhrzeiten werden in deutscher Zeitzone dargestellt und müssen auch so eingegeben werden.",
+    "timezone-info": "Die angezeigten Daten und Uhrzeiten werden in deutscher Zeitzone dargestellt und müssen auch so eingegeben werden. Das gesamte System ist auf die deutsche Zeitzone eingestellt.",
     "optional-note": "Optionale Notiz",
     "note": "Notiz",
     "user-info-desc": "Hier können Sie Ihre persönlichen Informationen einsehen und das Passwort ändern. Falls Sie weitere Änderungen benötigen, wenden Sie sich bitte an einen Administrator.",

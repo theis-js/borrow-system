@@ -60,7 +60,7 @@
     "sure-delete-loan-2": "It will remain visible to the admin.",
     "delete": "Delete",
     "change-language": "Change language",
-    "timezone-info": "The displayed dates and times are shown in Berlin timezone and must also be entered as such.",
+    "timezone-info": "The displayed dates and times are shown in Berlin timezone and must also be entered as such. The entire system is set to Berlin timezone.",
     "optional-note": "Optional note",
     "note": "Note",
     "user-info-desc": "Here you can view your personal information and change your password. If you need to make further changes, please contact an administrator.",

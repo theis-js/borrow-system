@@ -63,11 +63,9 @@ export const createLoanInDatabase = async (
       };
     }
 
-    const itemNames = itemIds
-      .map(
-        (id) => itemsRows.find((r) => Number(r.id) === Number(id))?.item_name,
-      )
-      .filter(Boolean);
+    const itemNames = itemIds.map(
+      (id) => itemsRows.find((r) => Number(r.id) === Number(id)).item_name,
+    );
 
     // Build lockers array (unique, only 2-digit numbers from safe_nr)
     const lockers = [

@@ -107,6 +107,32 @@ export const createLoanInDatabase = async (
       };
     }
 
+    let index = false;
+    let candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
+
+    try {
+      const [exists] = await conn.query(
+        "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
+        [candidate],
+      );
+    } catch (error) {
+      while ((i = false)) {
+        candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
+
+        const [exists] = await conn.query(
+          "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
+          [candidate],
+        );
+
+        // sets index to true if the 6 digit code does not exist
+        if (exists.length == 0) {
+          index = true;
+        }
+      }
+    }
+
+    /*
+
     // Generate unique loan_code (retry a few times)
     let loanCode = null;
     for (let i = 0; i < 6; i++) {
@@ -128,6 +154,8 @@ export const createLoanInDatabase = async (
         message: "Failed to generate unique loan code",
       };
     }
+      
+      */
 
     // Insert loan (now includes lockers)
     const [insertRes] = await conn.query(

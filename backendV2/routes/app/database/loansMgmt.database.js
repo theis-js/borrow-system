@@ -108,54 +108,23 @@ export const createLoanInDatabase = async (
     }
 
     let index = false;
-    let candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
+    let candidate;
+    let loanCode;
 
-    try {
-      const [exists] = await conn.query(
-        "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
+    // Generates 6-digit loan code
+    do {
+      candidate = Math.floor(100000 + Math.random() * 899999);
+
+      const [rows] = await conn.query(
+        "SELECT 1 FROM loans where loan_code = ? LIMIT 1",
         [candidate],
       );
-    } catch (error) {
-      while ((i = false)) {
-        candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
 
-        const [exists] = await conn.query(
-          "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
-          [candidate],
-        );
-
-        // sets index to true if the 6 digit code does not exist
-        if (exists.length == 0) {
-          index = true;
-        }
-      }
-    }
-
-    /*
-
-    // Generate unique loan_code (retry a few times)
-    let loanCode = null;
-    for (let i = 0; i < 6; i++) {
-      const candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
-      const [exists] = await conn.query(
-        "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
-        [candidate],
-      );
-      if (exists.length === 0) {
+      if (rows.length == 0) {
+        index = true;
         loanCode = candidate;
-        break;
       }
-    }
-    if (!loanCode) {
-      await conn.rollback();
-      return {
-        success: false,
-        code: "SERVER_ERROR",
-        message: "Failed to generate unique loan code",
-      };
-    }
-      
-      */
+    } while (index === false);
 
     // Insert loan (now includes lockers)
     const [insertRes] = await conn.query(

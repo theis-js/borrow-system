@@ -2,21 +2,24 @@ services:
   usr-frontend_v2:
     container_name: borrow_system-usr-frontend
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.6
     build: ./FrontendV2
     restart: unless-stopped
 
   admin-frontend:
     container_name: borrow_system-admin-frontend
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.3
     build: ./admin
     restart: unless-stopped
 
   backend_v2:
     container_name: borrow_system-backend_v2
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.5
     build: ./backendV2
     environment:
       NODE_ENV: production
@@ -31,7 +34,8 @@ services:
   mysql_v2:
     container_name: borrow_system-mysql-v2
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.12
     image: mysql:8.0
     restart: unless-stopped
     environment:
@@ -45,7 +49,8 @@ services:
   no-as-a-service:
     container_name: borrow_system-naas
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.2
     build:
       context: ./no-as-a-service
       dockerfile: Dockerfile

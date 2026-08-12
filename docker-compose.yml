@@ -2,21 +2,24 @@ services:
   demo_usr_frontend:
     container_name: demo_borrow_system-usr-frontend
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.14
     build: ./FrontendV2
     restart: unless-stopped
 
   demo_admin_frontend:
     container_name: demo_borrow_system-admin-frontend
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.11
     build: ./admin
     restart: unless-stopped
 
   demo_backend_v2:
     container_name: demo_borrow_system-backend_v2
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.2
     build: ./backendV2
     environment:
       NODE_ENV: production
@@ -31,7 +34,8 @@ services:
   demo_mysql_v2:
     container_name: demo_borrow_system-mysql-v2
     networks:
-      - proxynet
+      proxynet:
+        ipv4_address: 172.20.0.10
     image: mysql:8.0
     restart: unless-stopped
     environment:
@@ -43,9 +47,10 @@ services:
       - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
 
   no-as-a-service:
-    container_name: borrow_system-naas
-    ports:
-      - "3000:3000"
+    container_name: demo_borrow_system-naas
+    networks:
+      proxynet:
+        ipv4_address: 172.20.0.31
     build:
       context: ./no-as-a-service
       dockerfile: Dockerfile

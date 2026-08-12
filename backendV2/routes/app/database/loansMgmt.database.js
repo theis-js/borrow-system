@@ -63,11 +63,9 @@ export const createLoanInDatabase = async (
       };
     }
 
-    const itemNames = itemIds
-      .map(
-        (id) => itemsRows.find((r) => Number(r.id) === Number(id))?.item_name,
-      )
-      .filter(Boolean);
+    const itemNames = itemIds.map(
+      (id) => itemsRows.find((r) => Number(r.id) === Number(id)).item_name,
+    );
 
     // Build lockers array (unique, only 2-digit numbers from safe_nr)
     const lockers = [
@@ -109,27 +107,24 @@ export const createLoanInDatabase = async (
       };
     }
 
-    // Generate unique loan_code (retry a few times)
-    let loanCode = null;
-    for (let i = 0; i < 6; i++) {
-      const candidate = Math.floor(100000 + Math.random() * 899999); // 6 digits
-      const [exists] = await conn.query(
-        "SELECT 1 FROM loans WHERE loan_code = ? LIMIT 1",
+    let index = false;
+    let candidate;
+    let loanCode;
+
+    // Generates 6-digit loan code
+    do {
+      candidate = Math.floor(100000 + Math.random() * 899999);
+
+      const [rows] = await conn.query(
+        "SELECT 1 FROM loans where loan_code = ? LIMIT 1",
         [candidate],
       );
-      if (exists.length === 0) {
+
+      if (rows.length == 0) {
+        index = true;
         loanCode = candidate;
-        break;
       }
-    }
-    if (!loanCode) {
-      await conn.rollback();
-      return {
-        success: false,
-        code: "SERVER_ERROR",
-        message: "Failed to generate unique loan code",
-      };
-    }
+    } while (index === false);
 
     // Insert loan (now includes lockers)
     const [insertRes] = await conn.query(

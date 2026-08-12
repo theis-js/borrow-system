@@ -12,7 +12,7 @@ const pool = mysql
   .promise();
 
 export const getAllLoans = async () => {
-  const [rows] = await pool.query("SELECT * FROM loans");
+  const [rows] = await pool.query("SELECT * FROM loans WHERE deleted_admin = 0;");
   return { success: true, data: rows };
 };
 

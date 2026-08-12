@@ -121,10 +121,28 @@ export const MyLoansPage = () => {
 
   const formatDate = (iso: string | null) => {
     if (!iso) return "-";
-    const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
-    if (!m) return iso;
-    const [, y, M, d, h, min] = m;
-    return `${d}.${M}.${y} ${h}:${min}`;
+    const date = new Date(iso);
+    if (isNaN(date.getTime())) return iso;
+    return date.toLocaleString("de-DE", {
+      timeZone: "Europe/Berlin",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const dateAndTime = (isISO: boolean) => {
+    const date = new Date();
+
+    if (isISO) {
+      return date.toISOString();
+    }
+
+    if (!isISO) {
+      return date;
+    }
   };
 
   const handleTakeAction = async (loanCode: string) => {
@@ -151,7 +169,7 @@ export const MyLoansPage = () => {
       setLoans((prev) =>
         prev.map((loan) =>
           loan.loan_code === loanCode
-            ? { ...loan, take_date: new Date().toISOString() }
+            ? { ...loan, take_date: dateAndTime(true) }
             : loan,
         ),
       );
@@ -191,7 +209,7 @@ export const MyLoansPage = () => {
       setLoans((prev) =>
         prev.map((loan) =>
           loan.loan_code === loanCode
-            ? { ...loan, returned_date: new Date().toISOString() }
+            ? { ...loan, returned_date: dateAndTime(true) }
             : loan,
         ),
       );

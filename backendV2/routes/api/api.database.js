@@ -119,14 +119,6 @@ export const setTakeDateV2 = async (loanCode) => {
   return { message: "Failed to set take date", success: false };
 };
 
-export const getAllLoansV2 = async () => {
-  const [result] = await pool.query("SELECT * FROM loans;");
-  if (result.length > 0) {
-    return { success: true, data: result };
-  }
-  return { success: false };
-};
-
 export const openDoor = async (doorKey) => {
   const [result] = await pool.query(
     "SELECT safe_nr, id FROM items WHERE door_key = ?;",

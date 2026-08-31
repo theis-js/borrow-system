@@ -11,7 +11,7 @@ services:
     container_name: borrow_system-admin-frontend
     networks:
       proxynet:
-        ipv4_address: 172.20.0.3
+        ipv4_address: 172.20.0.35
     build: ./admin
     restart: unless-stopped
 

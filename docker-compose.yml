@@ -50,7 +50,7 @@ services:
     container_name: borrow_system-naas
     networks:
       proxynet:
-        ipv4_address: 172.20.0.2
+        ipv4_address: 172.20.0.36
     build:
       context: ./no-as-a-service
       dockerfile: Dockerfile

@@ -3,7 +3,7 @@ services:
     container_name: demo_borrow_system-usr-frontend
     networks:
       proxynet:
-        ipv4_address: 172.20.0.14
+        ipv4_address: 172.20.0.51
     build: ./FrontendV2
     restart: unless-stopped
 
@@ -11,7 +11,7 @@ services:
     container_name: demo_borrow_system-admin-frontend
     networks:
       proxynet:
-        ipv4_address: 172.20.0.11
+        ipv4_address: 172.20.0.52
     build: ./admin
     restart: unless-stopped
 
@@ -19,7 +19,7 @@ services:
     container_name: demo_borrow_system-backend_v2
     networks:
       proxynet:
-        ipv4_address: 172.20.0.2
+        ipv4_address: 172.20.0.50
     build: ./backendV2
     environment:
       NODE_ENV: production
@@ -35,7 +35,7 @@ services:
     container_name: demo_borrow_system-mysql-v2
     networks:
       proxynet:
-        ipv4_address: 172.20.0.10
+        ipv4_address: 172.20.0.53
     image: mysql:8.0
     restart: unless-stopped
     environment:
@@ -50,7 +50,7 @@ services:
     container_name: demo_borrow_system-naas
     networks:
       proxynet:
-        ipv4_address: 172.20.0.31
+        ipv4_address: 172.20.0.54
     build:
       context: ./no-as-a-service
       dockerfile: Dockerfile

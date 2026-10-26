@@ -13,23 +13,23 @@ services:
   #      - "8003:80"
   #    restart: always
 
-  backend_v2:
-    container_name: borrow_system-backend_v2
-    build: ./backendV2
-    ports:
-      - "8004:8004"
-    environment:
-      NODE_ENV: production
-      DB_HOST: mysql_v2
-      DB_USER: root
-      DB_PASSWORD: ${DB_PASSWORD_V2}
-      DB_NAME: borrow_system_new
-    depends_on:
-      - mysql_v2
-    restart: always
+  # backend_v2:
+  #   container_name: borrow_system-backend_v2
+  #   build: ./backend
+  #   ports:
+  #     - "8004:8004"
+  #   environment:
+  #     NODE_ENV: production
+  #     DB_HOST: mysql_v2
+  #     DB_USER: root
+  #     DB_PASSWORD: ${DB_PASSWORD_V2}
+  #     DB_NAME: borrow_system_new
+  #   depends_on:
+  #     - mysql_v2
+  #   restart: always
 
-  mysql_v2:
-    container_name: borrow_system-mysql-v2
+  mysql:
+    container_name: borrow-system_mysql
     image: mysql:8.0
     restart: always
     environment:
@@ -43,7 +43,7 @@ services:
       - "3310:3306"
 
   no-as-a-service:
-    container_name: borrow_system-naas
+    container_name: borrow-system_naas
     ports:
       - "3000:3000"
     build:

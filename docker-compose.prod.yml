@@ -1,0 +1,65 @@
+services:
+  usr-frontend:
+    container_name: borrow-system_usr-frontend
+    networks:
+      proxynet:
+        ipv4_address: 172.20.0.6
+    build: ./frontend
+    restart: unless-stopped
+
+  admin-frontend:
+    container_name: borrow-system_admin-frontend
+    networks:
+      proxynet:
+        ipv4_address: 172.20.0.35
+    build: ./admin
+    restart: unless-stopped
+
+  backend_v2:
+    container_name: borrow-system_backend
+    networks:
+      proxynet:
+        ipv4_address: 172.20.0.5
+    build: ./backend
+    environment:
+      NODE_ENV: production
+      DB_HOST: mysql_v2
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD_V2}
+      DB_NAME: borrow_system_new
+    depends_on:
+      - mysql_v2
+    restart: unless-stopped
+
+  mysql:
+    container_name: borrow-system_mysql
+    networks:
+      proxynet:
+        ipv4_address: 172.20.0.12
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_V2}
+      MYSQL_DATABASE: borrow_system_new
+      TZ: Europe/Berlin
+    volumes:
+      - mysql-v2-data:/var/lib/mysql
+      - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
+
+  no-as-a-service:
+    container_name: borrow-system_naas
+    networks:
+      proxynet:
+        ipv4_address: 172.20.0.36
+    build:
+      context: ./no-as-a-service
+      dockerfile: Dockerfile
+    restart: always
+
+volumes:
+  mysql-data:
+  mysql-v2-data:
+
+networks:
+  proxynet:
+    external: true

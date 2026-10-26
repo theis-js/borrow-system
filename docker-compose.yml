@@ -30,7 +30,7 @@ services:
       MAIL_SENDEES: ${MAIL_SENDEES}
       NAAS_URL: ${NAAS_URL}
     depends_on:
-      - mysql_v2
+      - mysql
     restart: always
 
   mysql:
@@ -38,7 +38,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_V2}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: borrow_system_new
       TZ: Europe/Berlin
     volumes:

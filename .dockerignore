@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/dist-ssr
+.git
+.idea
+.vscode
+**/.env
+**/.env.*
+**/.DS_Store
+**/*.log
+docs
+pics
+icon
+no-as-a-service

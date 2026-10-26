@@ -1,43 +1,42 @@
 services:
   usr-frontend:
     container_name: borrow-system_usr-frontend
-    networks:
-      proxynet:
-        ipv4_address: 172.20.0.6
     build: ./frontend
-    restart: unless-stopped
+    environment:
+      VITE_BACKEND_URL: ${BACKEND_URL}
+    restart: always
 
   admin-frontend:
     container_name: borrow-system_admin-frontend
-    networks:
-      proxynet:
-        ipv4_address: 172.20.0.35
     build: ./admin
-    restart: unless-stopped
+    environment:
+      VITE_BACKEND_URL: ${BACKEND_URL}
+    restart: always
 
-  backend_v2:
+  backend:
     container_name: borrow-system_backend
-    networks:
-      proxynet:
-        ipv4_address: 172.20.0.5
     build: ./backend
     environment:
       NODE_ENV: production
-      DB_HOST: mysql_v2
+      DB_HOST: borrow-system_mysql
       DB_USER: root
-      DB_PASSWORD: ${DB_PASSWORD_V2}
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: borrow_system_new
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_SENDEES_CONTACT: ${MAIL_SENDEES_CONTACT}
+      MAIL_SENDEES: ${MAIL_SENDEES}
+      NAAS_URL: ${NAAS_URL}
     depends_on:
       - mysql_v2
-    restart: unless-stopped
+    restart: always
 
   mysql:
     container_name: borrow-system_mysql
-    networks:
-      proxynet:
-        ipv4_address: 172.20.0.12
     image: mysql:8.0
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_V2}
       MYSQL_DATABASE: borrow_system_new
@@ -48,9 +47,6 @@ services:
 
   no-as-a-service:
     container_name: borrow-system_naas
-    networks:
-      proxynet:
-        ipv4_address: 172.20.0.36
     build:
       context: ./no-as-a-service
       dockerfile: Dockerfile
@@ -59,7 +55,3 @@ services:
 volumes:
   mysql-data:
   mysql-v2-data:
-
-networks:
-  proxynet:
-    external: true

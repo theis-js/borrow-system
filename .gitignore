@@ -11,6 +11,8 @@ dist/
 build/
 out/
 
+docker-compose.override.yml
+
 # Environment variables
 .env
 .env.local

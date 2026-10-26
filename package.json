@@ -5,8 +5,7 @@
   "workspaces": [
     "backend",
     "frontend",
-    "admin",
-    "shared"
+    "admin"
   ],
   "description": "",
   "main": "index.js",

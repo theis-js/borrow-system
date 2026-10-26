@@ -19,17 +19,21 @@ A small full‑stack system to log in, view available items, reserve them for a 
 ## Contents
 
 - Frontend: [frontend/](frontend)
-  - Vite/Tailwind config: [frontend/vite.config.ts](frontend/vite.config.ts), [frontend/tailwind.config.js](frontend/tailwind.config.js)
-  - App entry: [frontend/src/main.tsx](frontend/src/main.tsx), [frontend/src/App.tsx](frontend/src/App.tsx)
-  - UI: [frontend/src/layout/Layout.tsx](frontend/src/layout/Layout.tsx), [frontend/src/components](frontend/src/components)
-  - Data/utilities: [frontend/src/utils/fetchData.ts](frontend/src/utils/fetchData.ts), [frontend/src/utils/userHandler.ts](frontend/src/utils/userHandler.ts), [frontend/src/utils/toastify.ts](frontend/src/utils/toastify.ts)
+    - Vite/Tailwind
+      config: [frontend/vite.config.ts](frontend/vite.config.ts), [frontend/tailwind.config.js](frontend/tailwind.config.js)
+    - App entry: [frontend/src/main.tsx](frontend/src/main.tsx), [frontend/src/App.tsx](frontend/src/App.tsx)
+    -
+    UI: [frontend/src/layout/Layout.tsx](frontend/src/layout/Layout.tsx), [frontend/src/components](frontend/src/components)
+    -
+    Data/utilities: [frontend/src/utils/fetchData.ts](frontend/src/utils/fetchData.ts), [frontend/src/utils/userHandler.ts](frontend/src/utils/userHandler.ts), [frontend/src/utils/toastify.ts](frontend/src/utils/toastify.ts)
 - Backend: [backend/](backend)
-  - Server: [backend/server.js](backend/server.js)
-  - Routes: [backend/routes/api.js](backend/routes/api.js), [backend/routes/apiV2.js](backend/routes/apiV2.js)
-  - DB + services: [backend/services/database.js](backend/services/database.js), [backend/services/tokenService.js](backend/services/tokenService.js)
-  - Schema/seed: [backend/scheme.sql](backend/scheme.sql)
+    - Server: [backend/server.js](backend/server.js)
+    - Routes: [backend/routes/api.js](backend/routes/api.js), [backend/routes/apiV2.js](backend/routes/apiV2.js)
+    - DB +
+      services: [backend/services/database.js](backend/services/database.js), [backend/services/tokenService.js](backend/services/tokenService.js)
+    - Schema/seed: [backend/scheme.sql](backend/scheme.sql)
 - Docs: [docs/](docs)
-  - API docs (see below): [docs/backend_API_docs/README.md](docs/backend_API_docs/README.md)
+    - API docs (see below): [docs/backend_API_docs/README.md](docs/backend_API_docs/README.md)
 
 ## Features (high‑level)
 
@@ -41,7 +45,8 @@ A small full‑stack system to log in, view available items, reserve them for a 
 Key frontend utilities:
 
 - [`utils.fetchData.fetchAllData`](frontend/src/utils/fetchData.ts): loads items, loans, and user loans after login.
-- [`utils.fetchData.getBorrowableItems`](frontend/src/utils/fetchData.ts): fetches borrowable items for the selected time range.
+- [`utils.fetchData.getBorrowableItems`](frontend/src/utils/fetchData.ts): fetches borrowable items for the selected
+  time range.
 - [`utils.userHandler.createLoan`](frontend/src/utils/userHandler.ts): creates a new loan for selected items.
 - [`utils.userHandler.handleDeleteLoan`](frontend/src/utils/userHandler.ts): deletes a loan and syncs local state.
 - [`utils.toastify.myToast`](frontend/src/utils/toastify.ts): toast notifications.
@@ -54,20 +59,18 @@ UI flow (main screens):
 
 ## Development
 
-- Scripts: see [frontend/package.json](frontend/package.json) and [backend/package.json](backend/package.json)
-  - Frontend: `npm run dev`, `npm run build`, `npm run preview`, `npm run lint`
-  - Backend: `npm start`
-- Linting: ESLint configured via [frontend/eslint.config.js](frontend/eslint.config.js)
-- TypeScript configs: [frontend/tsconfig.app.json](frontend/tsconfig.app.json), [frontend/tsconfig.node.json](frontend/tsconfig.node.json)
+- The NAAS (no-as-a-service) and the mysql database are running in a docker container
+- `frontend`, `backend` and `admin` are both in a vite dev server and can be started by `npm run dev` in the root
+  directory.
 
 ## Configuration notes
 
-- Vite/Tailwind integration via [frontend/vite.config.ts](frontend/vite.config.ts) and `@tailwindcss/vite`; CSS entry uses `@import "tailwindcss"` in [frontend/src/index.css](frontend/src/index.css).
+- Vite/Tailwind integration via [frontend/vite.config.ts](frontend/vite.config.ts) and `@tailwindcss/vite`; CSS entry
+  uses `@import "tailwindcss"` in [frontend/src/index.css](frontend/src/index.css).
 - Toasts wired in [frontend/src/main.tsx](frontend/src/main.tsx) with `react-toastify`.
-- Local state is stored in `localStorage` keys: `allItems`, `allLoans`, `userLoans`, `borrowableItems`. Cross‑component updates are signaled via window events from [`utils.fetchData`](frontend/src/utils/fetchData.ts).
+- Local state is stored in `localStorage` keys: `allItems`, `allLoans`, `userLoans`, `borrowableItems`. Cross‑component
+  updates are signaled via window events from [`utils.fetchData`](frontend/src/utils/fetchData.ts).
 
 ## API documentation
 
-Refer to the dedicated API docs:
-
-`docs/backend_API_docs/README.md`
+Refer to the dedicated [API-Docs](docs/backend_API_docs/README.md)

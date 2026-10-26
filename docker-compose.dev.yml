@@ -1,0 +1,56 @@
+services:
+  #  usr-frontend_v2:
+  #    container_name: borrow_system-usr-frontend
+  #    build: ./FrontendV2
+  #    ports:
+  #      - "8001:80"
+  #    restart: always
+
+  #  admin-frontend:
+  #    container_name: borrow_system-admin-frontend
+  #    build: ./admin
+  #    ports:
+  #      - "8003:80"
+  #    restart: always
+
+  # backend_v2:
+  #   container_name: borrow_system-backend_v2
+  #   build: ./backend
+  #   ports:
+  #     - "8004:8004"
+  #   environment:
+  #     NODE_ENV: production
+  #     DB_HOST: mysql_v2
+  #     DB_USER: root
+  #     DB_PASSWORD: ${DB_PASSWORD_V2}
+  #     DB_NAME: borrow_system_new
+  #   depends_on:
+  #     - mysql_v2
+  #   restart: always
+
+  mysql:
+    container_name: borrow-system_mysql
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_V2}
+      MYSQL_DATABASE: borrow_system_new
+      TZ: Europe/Berlin
+    volumes:
+      - mysql-v2-data:/var/lib/mysql
+      - ./mysql-timezone.cnf:/etc/mysql/conf.d/timezone.cnf:ro
+    ports:
+      - "3310:3306"
+
+  no-as-a-service:
+    container_name: borrow-system_naas
+    ports:
+      - "3000:3000"
+    build:
+      context: ./no-as-a-service
+      dockerfile: Dockerfile
+    restart: always
+
+volumes:
+  mysql-data:
+  mysql-v2-data:

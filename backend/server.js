@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import info from "./info.json" assert { type: "json" };
+import info from "./info.json" with { type: "json" };
 import { authenticate } from "./services/authentication.js";
 import { rateLimit } from "express-rate-limit";
 

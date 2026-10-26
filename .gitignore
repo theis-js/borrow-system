@@ -11,6 +11,8 @@ dist/
 build/
 out/
 
+docker-compose.override.yml
+
 # Environment variables
 .env
 .env.local
@@ -119,6 +121,6 @@ ToDo.txt
 next-env.d.ts
 
 # psd files from footage
-footage/*.psd
+pics/*.psd
 
 icon/

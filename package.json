@@ -1,0 +1,35 @@
+{
+  "name": "borrow-system",
+  "version": "2.3.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "admin"
+  ],
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "prettier": "^3.9.6"
+  },
+  "scripts": {
+    "dev:docker": "docker compose -f docker-compose.dev.yml up -d",
+    "dev": "npm run dev:docker && concurrently --kill-others \"npm:dev:frontend\" \"npm:dev:backend\" \"npm:dev:admin\"",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:backend": "npm run dev -w backend",
+    "dev:admin": "npm run dev -w admin",
+    "dev:stop": "docker compose -f docker-compose.dev.yml down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.the1s.de/theis.gaedigk/borrow-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

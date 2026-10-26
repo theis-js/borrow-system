@@ -12,6 +12,17 @@ RUN npm ci -w backend --omit=dev
 
 COPY backend/ backend/
 
+# Generate info.json from the workspace package.json versions, without the "-dev" suffix
+RUN node -e ' \
+  const fs = require("fs"); \
+  const v = (p) => "v" + JSON.parse(fs.readFileSync(p + "/package.json")).version.replace(/-dev$/, ""); \
+  fs.writeFileSync("backend/info.json", JSON.stringify({ \
+    "backend-info": { version: v("backend") }, \
+    "frontend-info": { version: v("frontend") }, \
+    "admin-panel-info": { version: v("admin") } \
+  }, null, 4)); \
+'
+
 WORKDIR /app/backend
 EXPOSE 8004
 CMD ["npm", "start"]
